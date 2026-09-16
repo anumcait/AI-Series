@@ -97,3 +97,11 @@ was clarified as:
 > **Triggering Action:** User clicks the "Save" button within the application.
 >
 > **Observed Behavior:** The application unexpectedly crashes immediately after the "Save" button is clicked.
+
+### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/0690fd17-11e8-47be-a79a-05b7044c7fb6" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/44c4ae6f-b0fc-45c8-a2b1-7fcfebb00226" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/f587a5cb-8ee0-4c8f-8e19-6f4b9a18b415" />
+
+
+
