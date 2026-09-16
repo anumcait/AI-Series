@@ -208,7 +208,7 @@ As the series grows, new projects and supporting resources will be added here.
 
 # 🚀 Follow the Journey
 
-I'll be sharing each project, key learnings, and practical experiments throughout this AI journey.
+As the series grows, additional projects and supporting resources will be added.
 
 If you're also learning AI, feel free to explore the projects, experiment with the code, and build along with me!
 
