@@ -1,4 +1,4 @@
-Clarify Bugs with AI
+### Day1 - Clarify Bugs with AI
 
 Bug Description Clarifier
 
