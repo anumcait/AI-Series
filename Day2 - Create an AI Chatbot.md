@@ -1,4 +1,4 @@
-## Day2 - Create an AI Chatbot
+# Day2 - Create an AI Chatbot
 AI ChatBot
 
 The AI development team at Nautilus is tasked with building a role-play chatbot using OpenAI's API.
@@ -111,4 +111,11 @@ python chatbot.py
 ## Expected Behavior
 
 The program should call the OpenAI chat model and print a friendly travel-guide greeting that asks the user where they want to go.
+
+### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/ee26a4d9-df21-410a-9ef3-e08a6534548e" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/1ff132b3-d1b4-4392-9194-07ab4bbc53e7" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/1e7b0262-b076-45ed-a153-98d083df60aa" />
+
+
 
