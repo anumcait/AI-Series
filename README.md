@@ -1,8 +1,9 @@
 # 🤖 AI Series
 
-Welcome to my AI Series — a hands-on journey where I build practical AI projects, experiment with modern AI technologies, and document what I learn along the way.
+A hands-on AI learning series focused on building practical projects, exploring modern AI technologies, and documenting the concepts behind each implementation.
 
 The goal is simple: **learn by building.** 🚀
+
 
 ## 🎯 What This Series Covers
 
