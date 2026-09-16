@@ -198,9 +198,7 @@ AI-Series/
 │
 ├── Day1 - Clarify Bugs with AI.md
 ├── Day2 - AI Travel Guide Chatbot.md
-├── chatbot.py
 ├── Notes.md
-├── day.md
 └── README.md
 ```
 
