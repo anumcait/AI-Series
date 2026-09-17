@@ -119,3 +119,12 @@ The generated output should be a one-line comment/docstring describing the purpo
 ```text
 # Calculates the area of a rectangle using its length and width.
 ```
+### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/6e531736-b32d-4a04-809d-28adaad1a417" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/410d1d7d-3343-458a-a167-254dbd3a4328" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/52ffdfa9-0ffd-4e66-86f6-3bf778b378ef" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/3ece65fd-0559-4f9e-958f-6276a23221d3" />
+
+
+
+
