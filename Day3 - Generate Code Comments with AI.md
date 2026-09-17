@@ -38,7 +38,7 @@ python3 -m venv venv && source venv/bin/activate && pip install openai
 
 You are allowed up to 10 OpenAI requests. Past this limit you may encounter a rate limiter error, so optimize your request usage.
 
-## Task
+## Objective
 
 Build a Python-based AI module that analyzes a code snippet and generates a clear, one-line comment or docstring describing its purpose.
 
