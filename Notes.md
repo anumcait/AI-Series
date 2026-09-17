@@ -806,3 +806,571 @@ Print AI response
 ```
 
 This demonstrates the basic pattern for connecting a Python application to an OpenAI-compatible chat API and displaying the model's generated response.
+
+---
+
+# Day 3 — AI Comment Generator
+
+## 1. The Main Idea
+
+One useful application of AI in software development is **automatically understanding and documenting code**.
+
+When developers write code, they often need comments or docstrings to explain what the code does. For simple functions this is easy, but in large projects, manually documenting everything can take a lot of time.
+
+AI can help by taking a piece of code as input and generating a short description of its purpose.
+
+For example:
+
+```python
+def calculate_area(length, width):
+    return length * width
+```
+
+An AI model can understand that the function multiplies `length` and `width` to calculate an area and produce a comment such as:
+
+```text
+# Calculates the area using the given length and width.
+```
+
+So the basic concept is:
+
+**Source code → AI → Human-readable explanation**
+
+---
+
+## 2. What is an AI Module?
+
+An AI module is simply a piece of software that communicates with an AI model to perform a particular task.
+
+In this example, the Python program acts as the module.
+
+Its responsibility is to:
+
+1. Accept some source code.
+2. Tell the AI what we want to know about that code.
+3. Send the request to an AI model.
+4. Receive the model's response.
+5. Give that response back to the program.
+
+The AI model does the actual language understanding, while Python handles the communication and program logic.
+
+---
+
+## 3. Why Use an API?
+
+A Python program cannot automatically "think" like an AI model.
+
+Instead, it communicates with an AI service through an **API**.
+
+API stands for **Application Programming Interface**.
+
+An API provides a defined way for one program to communicate with another service.
+
+In this case:
+
+```text
+Python Program
+     ↓
+   API Request
+     ↓
+   AI Service
+     ↓
+   AI Model
+     ↓
+   API Response
+     ↓
+Python Program
+```
+
+The Python application sends information to the AI service and receives generated text in response.
+
+---
+
+## 4. The OpenAI Python Library
+
+Writing HTTP requests manually every time we want to communicate with an AI service would be inconvenient.
+
+The OpenAI Python package provides a client that makes this communication easier.
+
+It can be installed using:
+
+```bash
+pip install openai
+```
+
+Then Python can import the client:
+
+```python
+from openai import OpenAI
+```
+
+The `OpenAI` class provides methods for communicating with compatible OpenAI API endpoints.
+
+---
+
+## 5. API Keys and Environment Variables
+
+An API usually requires authentication.
+
+An **API key** is a credential that identifies and authorizes the application making the request.
+
+A key should generally not be written directly into source code like this:
+
+```python
+api_key = "my-secret-key"
+```
+
+If the code is uploaded to GitHub or shared with somebody else, the secret could be exposed.
+
+A common solution is to store credentials in **environment variables**.
+
+Python can read an environment variable using the `os` module:
+
+```python
+import os
+
+api_key = os.environ.get("OPENAI_API_KEY")
+```
+
+The same idea can be used for the API base URL:
+
+```python
+base_url = os.environ.get("OPENAI_API_BASE")
+```
+
+This separates configuration and secrets from application code.
+
+---
+
+## 6. Creating the Client
+
+Once the credentials are available, they can be supplied to the client:
+
+```python
+client = OpenAI(
+    api_key=os.environ.get("OPENAI_API_KEY"),
+    base_url=os.environ.get("OPENAI_API_BASE")
+)
+```
+
+Here:
+
+- `api_key` provides authentication.
+- `base_url` specifies the API endpoint.
+- `client` becomes the object through which the program communicates with the AI service.
+
+The important programming idea is that we create the client once and then use it when making requests.
+
+---
+
+## 7. Functions Make the Code Reusable
+
+Instead of writing the AI request directly for one particular code snippet, we can put the logic inside a function.
+
+For example:
+
+```python
+def generate_comment(code_snippet: str) -> str:
+```
+
+This function represents a reusable operation:
+
+> "Give me some code, and I will give you a comment describing it."
+
+The function accepts `code_snippet` as a parameter.
+
+That means it can work with many different pieces of code.
+
+For example:
+
+```python
+generate_comment(code1)
+generate_comment(code2)
+generate_comment(code3)
+```
+
+The function does not need to know beforehand what the code will be.
+
+---
+
+## 8. Type Hints
+
+The function contains:
+
+```python
+code_snippet: str
+```
+
+and:
+
+```python
+-> str
+```
+
+These are Python **type hints**.
+
+`code_snippet: str` tells the reader that `code_snippet` is expected to be a string.
+
+`-> str` indicates that the function is expected to return a string.
+
+Type hints do not change the basic purpose of the function. They mainly make code easier to understand, maintain, and analyze with development tools.
+
+---
+
+## 9. What is a Prompt?
+
+A **prompt** is the instruction or input given to an AI model.
+
+For this application, simply sending the code may not be enough.
+
+We need to tell the model what we want it to do.
+
+For example:
+
+```text
+Generate a clear, concise one-line comment explaining the purpose of this code.
+```
+
+The instruction tells the model what kind of output we expect.
+
+A good prompt should clearly specify:
+
+- What the AI should analyze.
+- What it should produce.
+- How the output should be formatted.
+- Any limitations on the response.
+
+---
+
+## 10. Dynamic Prompts
+
+The interesting part is that the code being analyzed changes.
+
+Therefore, the prompt needs to be **dynamic**.
+
+Python f-strings make this easy:
+
+```python
+prompt = f"""
+Generate a clear, concise one-line comment explaining the purpose
+of the following Python code.
+
+Code:
+{code_snippet}
+"""
+```
+
+The `{code_snippet}` portion is replaced with the actual value supplied to the function.
+
+For example, if the input is:
+
+```python
+def add(a, b):
+    return a + b
+```
+
+the AI receives a prompt containing that code.
+
+If another function is supplied, the prompt automatically changes.
+
+This is why parameterization is important.
+
+---
+
+## 11. Why Prompt Instructions Matter
+
+AI models generate responses based on the instructions and information provided to them.
+
+Compare these two requests:
+
+```text
+Explain this code.
+```
+
+and:
+
+```text
+Generate a clear, concise one-line comment explaining the purpose
+of this Python code. Return only the comment.
+```
+
+The second instruction is more specific about the desired output.
+
+For an application, predictable output is useful because the program may want to directly use the generated text.
+
+This is an example of **prompt engineering**: designing instructions that guide the model toward the desired result.
+
+---
+
+## 12. Chat Messages
+
+The AI request uses a `messages` structure:
+
+```python
+messages=[
+    {"role": "user", "content": prompt}
+]
+```
+
+A message contains a role and content.
+
+The `user` role represents the instruction being provided to the model.
+
+The `content` contains the actual prompt.
+
+Conceptually:
+
+```text
+Role: user
+Content: "Generate a comment for this code..."
+```
+
+The API uses this structured format to represent the conversation sent to the model.
+
+---
+
+## 13. Choosing a Model
+
+An AI service can provide multiple models, each designed for different capabilities and trade-offs.
+
+The model specified for this exercise is:
+
+```text
+openai/gpt-4.1-mini
+```
+
+The model name tells the API which model should process the request.
+
+Choosing a model is an important part of AI application development because different models can have different capabilities, latency, and cost characteristics.
+
+---
+
+## 14. Controlling the Response Length
+
+The request includes:
+
+```python
+max_tokens=30
+```
+
+A token is a unit used by language models when processing text.
+
+It is not exactly the same thing as a word or character.
+
+For example, a short sentence may consist of several tokens.
+
+Since the application only needs a short comment, limiting the generated output helps prevent unnecessarily long responses.
+
+The value `30` is the maximum requested output length for this task.
+
+---
+
+## 15. Temperature
+
+Another parameter is:
+
+```python
+temperature=0.2
+```
+
+Temperature influences how varied or random the model's output can be.
+
+A lower value generally encourages more predictable and focused responses.
+
+A higher value can produce more variation.
+
+For a code-comment generator, we generally want a concise and consistent description rather than highly creative text, which is why a low temperature is appropriate here.
+
+---
+
+## 16. Understanding the API Response
+
+After sending the request, the API returns a response object.
+
+It is stored in:
+
+```python
+response
+```
+
+The generated message can be accessed through:
+
+```python
+response.choices[0].message.content
+```
+
+Conceptually, the response contains information similar to:
+
+```text
+Response
+ └── choices
+      └── first result
+           └── message
+                └── content
+```
+
+The `content` is the actual text generated by the model.
+
+---
+
+## 17. Why Use `.strip()`?
+
+The generated content can sometimes contain unnecessary spaces or newline characters.
+
+Using:
+
+```python
+comment = response.choices[0].message.content.strip()
+```
+
+removes whitespace from the beginning and end.
+
+This gives the application a cleaner string.
+
+---
+
+## 18. Print vs Return
+
+These two operations have different purposes:
+
+```python
+print(comment)
+```
+
+displays the result in the terminal.
+
+Whereas:
+
+```python
+return comment
+```
+
+sends the result back to whatever code called the function.
+
+For example:
+
+```python
+result = generate_comment(code)
+```
+
+After the function finishes, `result` can contain the generated comment.
+
+A function can therefore both display a result and return it for further use.
+
+---
+
+## 19. The Complete Concept
+
+The complete application can be understood as several layers:
+
+```text
+Python Function
+      ↓
+Build Dynamic Prompt
+      ↓
+OpenAI Client
+      ↓
+API Request
+      ↓
+Selected AI Model
+      ↓
+Generated Response
+      ↓
+Extract Text
+      ↓
+Print / Return
+```
+
+Each part has a separate responsibility.
+
+Python handles the application logic.
+
+The prompt describes the task.
+
+The API provides communication with the AI service.
+
+The model analyzes the code and generates natural language.
+
+The response-processing code extracts the useful result.
+
+---
+
+## 20. Why This Pattern Is Useful
+
+The same pattern can be used for many developer tools.
+
+Instead of generating comments, an application could ask an AI model to:
+
+- Explain a function.
+- Generate documentation.
+- Summarize a file.
+- Generate unit tests.
+- Suggest improvements.
+- Convert code between languages.
+- Find possible bugs.
+- Generate commit messages.
+- Explain error messages.
+
+The main pattern remains similar:
+
+```text
+Input
+  ↓
+Prompt
+  ↓
+AI Model
+  ↓
+Response
+  ↓
+Application Output
+```
+
+---
+
+## 21. Important Takeaways
+
+The most important concepts from this exercise are:
+
+**API** — a way for software to communicate with another service.
+
+**API key** — a credential used to authenticate requests.
+
+**Environment variable** — a way to provide configuration or secrets to an application without putting them directly in source code.
+
+**OpenAI client** — a Python object used to communicate with the configured AI API.
+
+**Prompt** — the instruction and information given to the AI model.
+
+**Parameterization** — designing code so the input can change instead of hardcoding one specific value.
+
+**Model** — the AI system that processes the prompt and generates a response.
+
+**Temperature** — a setting that influences response variability.
+
+**Tokens** — units used by language models to process and generate text.
+
+**Response** — the data returned by the AI service after processing the request.
+
+**Return value** — the result a Python function gives back to its caller.
+
+---
+
+## 22. The Bigger Picture
+
+This small project demonstrates the foundation of building **AI-powered applications**.
+
+The AI itself is not the entire application.
+
+The application is responsible for:
+
+- collecting input,
+- preparing instructions,
+- communicating with the model,
+- processing the response,
+- and presenting or using the result.
+
+Understanding this separation is important because most real-world AI applications follow the same general architecture.
+
+The model provides the intelligence, while the surrounding Python program provides the structure and behavior needed to turn that intelligence into a useful tool.
+
+---
