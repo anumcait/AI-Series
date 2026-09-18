@@ -1373,4 +1373,357 @@ Understanding this separation is important because most real-world AI applicatio
 
 The model provides the intelligence, while the surrounding Python program provides the structure and behavior needed to turn that intelligence into a useful tool.
 
+
+# Day 4 - AI Comparison Lab
+
+## 1. Objective
+
+The goal of this task is to build a small Python program that uses an OpenAI-compatible API to compare the chips used in two iPhone models.
+
+The two models are:
+
+- iPhone 13
+- iPhone 17
+
+The program must return the comparison result as **one word only**.
+
+---
+
+## 2. Project Structure
+
+The project is located at:
+
+```text
+/root/openaiproject
+```
+
+Important files:
+
+```text
+openaiproject/
+├── compare.py
+├── day.md
+├── notes.md
+└── venv/
+```
+
+The `venv` directory contains the Python virtual environment and should not be uploaded to GitHub.
+
+---
+
+## 3. Python Virtual Environment
+
+A virtual environment keeps the project's Python packages separate from the system Python installation.
+
+Create and activate it with:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Install the OpenAI Python package:
+
+```bash
+pip install openai
+```
+
+---
+
+## 4. API Configuration
+
+The OpenAI API key and base URL are provided through environment variables.
+
+The program reads them using:
+
+```python
+os.environ.get("OPENAI_API_KEY")
+os.environ.get("OPENAI_API_BASE")
+```
+
+The API key should **never be written directly into source code or committed to GitHub**.
+
+The environment variables can be loaded from `/root/.bash_profile`:
+
+```bash
+source /root/.bash_profile
+```
+
+---
+
+## 5. Creating the OpenAI Client
+
+The OpenAI client is created using the API key and base URL:
+
+```python
+import os
+from openai import OpenAI
+
+client = OpenAI(
+    api_key=os.environ.get("OPENAI_API_KEY"),
+    base_url=os.environ.get("OPENAI_API_BASE")
+)
+```
+
+`os` is used to access environment variables.
+
+`OpenAI` creates the client used to communicate with the API.
+
+---
+
+## 6. The compare() Function
+
+The required function accepts two parameters:
+
+```python
+def compare(item1: str, item2: str) -> str:
+```
+
+- `item1` is the first iPhone model.
+- `item2` is the second iPhone model.
+- `-> str` indicates that the function returns a string.
+
+The prompt is parameterized, meaning the function can work with different items instead of having the model names permanently written into the prompt.
+
+---
+
+## 7. Prompt Design
+
+The prompt tells the AI exactly what information to compare and how the answer should be formatted.
+
+Example:
+
+```python
+prompt = (
+    f"Compare the chips used in {item1} and {item2}. "
+    "Return ONLY the chip name used in the second model. "
+    "Output exactly one word. No explanation, no punctuation."
+)
+```
+
+The important part is the explicit output instruction.
+
+Without a strict format instruction, the model may return an explanation such as:
+
+```text
+The iPhone 13 uses the A15 Bionic chip.
+The iPhone 17 uses the A17.
+```
+
+The task requires only:
+
+```text
+A17
+```
+
+---
+
+## 8. Sending the Prompt to the Model
+
+The prompt is sent using the chat completion API:
+
+```python
+response = client.chat.completions.create(
+    model="openai/gpt-4.1-mini",
+    messages=[
+        {"role": "user", "content": prompt}
+    ],
+    max_tokens=100,
+    temperature=0.5
+)
+```
+
+### Parameters
+
+- `model` specifies the AI model.
+- `messages` contains the conversation sent to the model.
+- `role: "user"` identifies the message as the user's request.
+- `content` contains the constructed prompt.
+- `max_tokens=100` limits the maximum response length.
+- `temperature=0.5` controls response variability.
+
+---
+
+## 9. Getting the Model's Answer
+
+The returned answer is extracted with:
+
+```python
+response.choices[0].message.content.strip()
+```
+
+`strip()` removes unnecessary whitespace around the answer.
+
+The function therefore returns:
+
+```python
+return response.choices[0].message.content.strip()
+```
+
+---
+
+## 10. Complete compare.py
+
+The completed program is:
+
+```python
+import os
+from openai import OpenAI
+
+client = OpenAI(
+    api_key=os.environ.get("OPENAI_API_KEY"),
+    base_url=os.environ.get("OPENAI_API_BASE")
+)
+
+def compare(item1: str, item2: str) -> str:
+    prompt = (
+        f"Compare the chips used in {item1} and {item2}. "
+        "Return ONLY the chip name used in the second model. "
+        "Output exactly one word. No explanation, no punctuation."
+    )
+
+    response = client.chat.completions.create(
+        model="openai/gpt-4.1-mini",
+        messages=[
+            {"role": "user", "content": prompt}
+        ],
+        max_tokens=100,
+        temperature=0.5
+    )
+
+    return response.choices[0].message.content.strip()
+
+response = compare("iphone 13", "iphone 17")
+print(response)
+```
+
+---
+
+## 11. Running the Program
+
+Activate the virtual environment:
+
+```bash
+source venv/bin/activate
+```
+
+Make sure the environment variables are available:
+
+```bash
+source /root/.bash_profile
+```
+
+Run:
+
+```bash
+python compare.py
+```
+
+The completed execution produced:
+
+```text
+A17
+```
+
+---
+
+## 12. Troubleshooting
+
+### Model returns a full explanation
+
+If the output contains multiple sentences, make the prompt stricter:
+
+```text
+Return ONLY the chip name used in the second model.
+Output exactly one word.
+No explanation, no punctuation.
+```
+
+### API key error
+
+Check that the environment variable is available:
+
+```bash
+echo $OPENAI_API_KEY
+```
+
+Do not paste the key into `compare.py`.
+
+### Module not found
+
+If Python reports that `openai` cannot be found:
+
+```bash
+source venv/bin/activate
+pip install openai
+```
+
+### Wrong Python environment
+
+Check the active Python:
+
+```bash
+which python
+```
+
+It should point to the project's virtual environment.
+
+---
+
+## 13. GitHub Preparation
+
+The virtual environment should not be committed because it contains installed packages and environment-specific files.
+
+A suitable `.gitignore` is:
+
+```gitignore
+venv/
+__pycache__/
+.env
+```
+
+Add the project files:
+
+```bash
+git add compare.py day.md notes.md .gitignore
+```
+
+Create a commit:
+
+```bash
+git commit -m "Add AI chip comparison lab"
+```
+
+Push to GitHub:
+
+```bash
+git push
+```
+
+---
+
+## 14. Key Concepts Learned
+
+This exercise demonstrates:
+
+- Python functions with parameters and return types.
+- Environment variables for configuration and secrets.
+- Creating an OpenAI-compatible client.
+- Constructing parameterized prompts with f-strings.
+- Sending user messages to a chat model.
+- Controlling model output with `max_tokens` and `temperature`.
+- Extracting text from an API response.
+- Using a virtual environment.
+- Running a Python program from the terminal.
+- Preparing project files for GitHub.
+- Keeping API credentials out of source control.
+
+## Final Result
+
+The AI comparison program successfully compared the requested iPhone models and produced the required one-word output:
+
+```text
+A17
+```
+
 ---
