@@ -84,3 +84,13 @@ A17
 The comparison successfully returned `A17`.
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/8bb5363d-d263-48c1-a409-ad4e63f243b9" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/84532af6-1ed7-4763-8af0-324ea0644203" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/762f0704-b776-48a6-b517-92aedc35e7f0" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/0ba344c0-a115-4122-bb42-aa9cd3b84671" />
+
+
+
+
+
+
