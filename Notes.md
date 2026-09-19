@@ -2105,3 +2105,4 @@ The main concepts demonstrated by this task are:
 ## Final result
 
 The AI Converter successfully accepts a paragraph, sends a parameterized instruction to an allowed AI model, receives concise bullet points, and prints them to the console.
+
