@@ -1727,3 +1727,381 @@ A17
 ```
 
 ---
+
+# Day 5 - AI Converter
+
+## 1. What is the task?
+
+The goal is to build a small Python module that uses an AI model to convert a paragraph into concise, meaningful bullet points.
+
+The input paragraph is:
+
+> Artificial Intelligence is transforming industries by automating tasks, improving decision-making, and enabling new innovations across healthcare, finance, and education.
+
+The program should send this paragraph to an OpenAI-compatible chat API and print the AI-generated bullet points.
+
+---
+
+## 2. Required Python setup
+
+A virtual environment keeps the project's Python packages isolated from the system Python.
+
+Create it with:
+
+```bash
+python3 -m venv venv
+```
+
+Activate it:
+
+```bash
+source venv/bin/activate
+```
+
+Install the OpenAI Python package:
+
+```bash
+pip install openai
+```
+
+It is important to activate the virtual environment before running the program. Otherwise, using `/usr/bin/python` may produce:
+
+```text
+ModuleNotFoundError: No module named 'openai'
+```
+
+The correct Python should be the one inside:
+
+```text
+/root/openaiproject/venv/bin/python
+```
+
+---
+
+## 3. API credentials
+
+The lab provides the API key and API base URL through `/root/.bash_profile`.
+
+Load them with:
+
+```bash
+source /root/.bash_profile
+```
+
+The program reads them from environment variables:
+
+```python
+os.environ.get("OPENAI_API_KEY")
+os.environ.get("OPENAI_API_BASE")
+```
+
+This is preferable to placing the secret API key directly in the source code.
+
+The client is created with:
+
+```python
+client = OpenAI(
+    api_key=os.environ.get("OPENAI_API_KEY"),
+    base_url=os.environ.get("OPENAI_API_BASE"),
+)
+```
+
+The `base_url` is important because this lab uses an OpenAI-compatible service rather than necessarily using the standard OpenAI endpoint.
+
+---
+
+## 4. Checking available models
+
+The task originally specifies:
+
+```text
+openai/gpt-4.1
+```
+
+However, model availability can change in the lab environment.
+
+The environment provides an `ALLOWED_MODELS` variable:
+
+```bash
+echo "$ALLOWED_MODELS"
+```
+
+In this environment, the available list included:
+
+```text
+openai/gpt-4.1-mini
+```
+
+but did not include:
+
+```text
+openai/gpt-4.1
+```
+
+Therefore, `openai/gpt-4.1-mini` was used because it is an allowed model and the lab forum indicated that the grader accepts it.
+
+The API model endpoint can also be checked:
+
+```bash
+curl -s "$OPENAI_API_BASE/models" \
+  -H "Authorization: Bearer $OPENAI_API_KEY"
+```
+
+An empty result such as:
+
+```json
+{"object":"list","data":[]}
+```
+
+means that the endpoint is not currently advertising any models. In that situation, repeatedly running the script will not solve the problem.
+
+---
+
+## 5. The conversion function
+
+The required function is:
+
+```python
+def convert_to_bullets(text: str) -> str:
+```
+
+It accepts exactly one parameter, `text`.
+
+The type annotation:
+
+```python
+text: str
+```
+
+means the function expects a string.
+
+The return annotation:
+
+```python
+-> str
+```
+
+means it returns a string containing the generated bullet points.
+
+---
+
+## 6. Parameterized prompt
+
+The prompt must use the supplied paragraph dynamically rather than hardcoding the paragraph inside the prompt.
+
+An f-string is used:
+
+```python
+prompt = f"""Convert the following paragraph into short, meaningful bullet points.
+Keep the bullet points concise and easy to read.
+
+Paragraph:
+{text}
+"""
+```
+
+The `{text}` placeholder is replaced with the actual argument passed to the function.
+
+This makes the function reusable for different paragraphs.
+
+---
+
+## 7. Sending the request
+
+The AI request uses the chat completions API:
+
+```python
+response = client.chat.completions.create(
+    model="openai/gpt-4.1-mini",
+    messages=[{"role": "user", "content": prompt}],
+    max_tokens=150,
+    temperature=0.1,
+)
+```
+
+Important parameters:
+
+- `model` selects the AI model.
+- `messages` contains the conversation sent to the model.
+- `role="user"` identifies the prompt as a user request.
+- `content=prompt` sends the generated prompt.
+- `max_tokens=150` limits the response length.
+- `temperature=0.1` makes the output relatively consistent and focused.
+
+The complete API result is stored in the required variable:
+
+```python
+response
+```
+
+---
+
+## 8. Extracting the AI response
+
+The actual generated text is obtained with:
+
+```python
+response.choices[0].message.content
+```
+
+The function returns this value:
+
+```python
+return response.choices[0].message.content
+```
+
+---
+
+## 9. Running the conversion
+
+The paragraph is assigned to `text`:
+
+```python
+text = """Artificial Intelligence is transforming industries by automating tasks, improving decision-making, and enabling new innovations across healthcare, finance, and education."""
+```
+
+Then the function is called:
+
+```python
+response = convert_to_bullets(text)
+```
+
+Finally, the result is printed:
+
+```python
+print(response)
+```
+
+This also satisfies the requirement to store the result in a variable named `response`.
+
+---
+
+## 10. Complete solution
+
+```python
+import os
+from openai import OpenAI
+
+client = OpenAI(
+    api_key=os.environ.get("OPENAI_API_KEY"),
+    base_url=os.environ.get("OPENAI_API_BASE"),
+)
+
+def convert_to_bullets(text: str) -> str:
+    prompt = f"""Convert the following paragraph into short, meaningful bullet points.
+Keep the bullet points concise and easy to read.
+
+Paragraph:
+{text}
+"""
+
+    response = client.chat.completions.create(
+        model="openai/gpt-4.1-mini",
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=150,
+        temperature=0.1,
+    )
+
+    return response.choices[0].message.content
+
+text = """Artificial Intelligence is transforming industries by automating tasks, improving decision-making, and enabling new innovations across healthcare, finance, and education."""
+
+response = convert_to_bullets(text)
+print(response)
+```
+
+---
+
+## 11. Execution
+
+From the project directory:
+
+```bash
+cd /root/openaiproject
+source venv/bin/activate
+source /root/.bash_profile
+python converter.py
+```
+
+The successful execution produced:
+
+```text
+- AI automates tasks across industries
+- Enhances decision-making processes
+- Drives innovations in healthcare, finance, and education
+```
+
+---
+
+## 12. Important debugging lessons
+
+### `ModuleNotFoundError`
+
+If this command is used:
+
+```bash
+/usr/bin/python /root/openaiproject/converter.py
+```
+
+the system Python may not have the `openai` package installed.
+
+Use the virtual environment instead:
+
+```bash
+source /root/openaiproject/venv/bin/activate
+python converter.py
+```
+
+### `403 Model not supported`
+
+If the API returns:
+
+```text
+403 - Model 'openai/gpt-4.1' is not supported.
+```
+
+the problem is model availability, not the Python installation.
+
+Check:
+
+```bash
+echo "$ALLOWED_MODELS"
+```
+
+and use a model that the current lab environment permits when the lab's grading guidance allows it.
+
+### Terminal paste errors
+
+Errors such as:
+
+```text
+bash: ~curl: command not found
+```
+
+or:
+
+```text
+bash: $'\E[200~echo': command not found
+```
+
+are caused by accidentally pasting extra terminal characters. Type or paste the command starting directly with `curl` or `echo`.
+
+---
+
+## 13. Key concepts to remember
+
+The main concepts demonstrated by this task are:
+
+1. **Virtual environments** isolate Python dependencies.
+2. **Environment variables** safely provide API configuration.
+3. **OpenAI-compatible clients** can communicate with custom API endpoints using `base_url`.
+4. **Parameterized prompts** make functions reusable.
+5. **Chat completion messages** specify the user's request to the model.
+6. **Model availability** depends on the current lab/API configuration.
+7. **Type hints** such as `text: str -> str` document expected input and output.
+8. The API result is stored in `response`, and the generated content is extracted from the response object.
+9. Always verify the environment before spending limited API requests.
+
+## Final result
+
+The AI Converter successfully accepts a paragraph, sends a parameterized instruction to an allowed AI model, receives concise bullet points, and prints them to the console.
