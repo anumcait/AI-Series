@@ -121,3 +121,11 @@ The AI Converter successfully transforms the supplied paragraph into concise bul
 
 ### Screenshots
 
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/59dd44f3-02b7-462f-8c16-b58f636dfd0a" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/6c02d185-1a83-463a-85fd-79ffa58a09e9" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/02bf2346-1067-4a9a-a76c-27e93a0803d4" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/efeae4f0-c75b-48ec-9ecc-9c82aa9e6afc" />
+
+
+
+
