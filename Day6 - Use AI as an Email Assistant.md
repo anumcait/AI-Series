@@ -124,10 +124,6 @@ Could you please send me that report as soon as possible? Thank you.
 
 The AI Email Assistant successfully rewrites the provided informal message into a polite and professional email using the OpenAI-compatible API.
 
-## Objective
-
-Build a Python-based AI module that improves email communication by rewriting informal messages into polite and professional emails.
-
 ## Completion
 
 - Created `email_assistant.py`
@@ -142,3 +138,11 @@ Build a Python-based AI module that improves email communication by rewriting in
 - Successfully transformed the supplied informal email into professional wording
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/20430c80-6a2a-4ab8-af85-074e296a6ec7" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/47f65c8f-bb59-4526-baed-5608eb8eb43f" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/bd9129cd-626d-4232-869b-51689f6336af" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/0d17bdf9-08ef-4fde-8da1-c0c96e8411ad" />
+
+
+
+
