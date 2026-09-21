@@ -2106,3 +2106,426 @@ The main concepts demonstrated by this task are:
 
 The AI Converter successfully accepts a paragraph, sends a parameterized instruction to an allowed AI model, receives concise bullet points, and prints them to the console.
 
+
+Here is a focused `notes.md` for **Day 6 – Use AI as an Email Assistant**, written like concise lecturer notes while covering the complete workflow.
+
+# Day 6 - Use AI as an Email Assistant
+
+## Introduction
+
+In this task, we build a Python-based AI Email Assistant.
+
+The purpose of the application is to take an informal email message and rewrite it into a polite and professional email using an OpenAI-compatible API.
+
+For example:
+
+```text
+hey send me that report asap
+```
+
+can be transformed into:
+
+```text
+Could you please send me that report as soon as possible? Thank you.
+```
+
+The important concept is that Python handles the application logic, while the AI model performs the language rewriting.
+
+---
+
+## Objective
+
+Build a Python program that:
+
+1. Accepts email text as input.
+2. Creates a professional rewriting prompt.
+3. Sends the prompt to an AI chat model.
+4. Receives the rewritten email.
+5. Stores the result in `response`.
+6. Prints the rewritten email.
+
+---
+
+## Step 1 - Project Directory
+
+Move into the project directory:
+
+```bash
+cd /root/openaiproject
+```
+
+The required Python file is:
+
+```text
+/root/openaiproject/email_assistant.py
+```
+
+---
+
+## Step 2 - Create Virtual Environment
+
+Create a Python virtual environment:
+
+```bash
+python3 -m venv venv
+```
+
+Activate it:
+
+```bash
+source venv/bin/activate
+```
+
+A virtual environment keeps project dependencies isolated from the system Python installation.
+
+---
+
+## Step 3 - Load Environment Configuration
+
+Load the provided API configuration:
+
+```bash
+source /root/.bash_profile
+```
+
+The program can access the API key and base URL through environment variables:
+
+```python
+os.environ.get("OPENAI_API_KEY")
+os.environ.get("OPENAI_API_BASE")
+```
+
+This avoids putting the API key directly into the source code.
+
+---
+
+## Step 4 - Install OpenAI Package
+
+Install the Python OpenAI package:
+
+```bash
+pip install openai
+```
+
+The package provides the `OpenAI` client used to communicate with the API.
+
+---
+
+## Step 5 - Create the OpenAI Client
+
+The required imports are:
+
+```python
+import os
+from openai import OpenAI
+```
+
+Create the client:
+
+```python
+client = OpenAI(
+    api_key=os.environ.get("OPENAI_API_KEY"),
+    base_url=os.environ.get("OPENAI_API_BASE"),
+)
+```
+
+Here:
+
+- `api_key` retrieves the API key from the environment.
+- `base_url` retrieves the API endpoint from the environment.
+- `client` is used to send requests to the AI model.
+
+---
+
+## Step 6 - Create the Email Function
+
+The function must accept exactly one parameter:
+
+```python
+def rewrite_email(text: str) -> str:
+```
+
+The `text` parameter contains the email that needs to be rewritten.
+
+The `-> str` type hint indicates that the function returns a string.
+
+---
+
+## Step 7 - Create a Parameterized Prompt
+
+Inside the function, create the prompt:
+
+```python
+prompt = f"""Rewrite the following email politely and professionally.
+Preserve the original meaning while improving the tone and wording.
+
+Email:
+{text}
+"""
+```
+
+The important part is:
+
+```python
+{text}
+```
+
+This makes the prompt parameterized.
+
+Therefore, the same function can process different emails rather than being limited to one hardcoded message.
+
+For example:
+
+```text
+Email:
+hey send me that report asap
+```
+
+is automatically inserted into the prompt.
+
+---
+
+## Step 8 - Send the Prompt to the AI Model
+
+Send the prompt using the chat completion API:
+
+```python
+response = client.chat.completions.create(
+    model="openai/gpt-4.1-mini",
+    messages=[
+        {"role": "user", "content": prompt}
+    ],
+    max_tokens=60,
+    temperature=0.1,
+)
+```
+
+### Model
+
+```python
+model="openai/gpt-4.1-mini"
+```
+
+The compatible model available for the environment is used.
+
+### Messages
+
+```python
+messages=[
+    {"role": "user", "content": prompt}
+]
+```
+
+The prompt is sent as a user message.
+
+### Max Tokens
+
+```python
+max_tokens=60
+```
+
+This limits the maximum amount of generated output.
+
+Because the requested email is short, 60 tokens is sufficient.
+
+### Temperature
+
+```python
+temperature=0.1
+```
+
+A low temperature makes the response more controlled and consistent, which is useful for professional rewriting.
+
+---
+
+## Step 9 - Extract the AI Response
+
+The generated text can be accessed with:
+
+```python
+response.choices[0].message.content
+```
+
+The function returns this generated text:
+
+```python
+return response.choices[0].message.content.strip()
+```
+
+Using `.strip()` removes unnecessary whitespace around the response.
+
+---
+
+## Complete `email_assistant.py`
+
+The complete program is:
+
+```python
+import os
+from openai import OpenAI
+
+client = OpenAI(
+    api_key=os.environ.get("OPENAI_API_KEY"),
+    base_url=os.environ.get("OPENAI_API_BASE"),
+)
+
+def rewrite_email(text: str) -> str:
+    prompt = f"""Rewrite the following email politely and professionally.
+Preserve the original meaning while improving the tone and wording.
+
+Email:
+{text}
+"""
+
+    response = client.chat.completions.create(
+        model="openai/gpt-4.1-mini",
+        messages=[
+            {"role": "user", "content": prompt}
+        ],
+        max_tokens=60,
+        temperature=0.1,
+    )
+
+    return response.choices[0].message.content.strip()
+
+text = "hey send me that report asap"
+
+response = rewrite_email(text)
+print(response)
+```
+
+---
+
+## Step 10 - Run the Program
+
+Activate the virtual environment and load the environment configuration:
+
+```bash
+cd /root/openaiproject
+source venv/bin/activate
+source /root/.bash_profile
+```
+
+Run the program:
+
+```bash
+python email_assistant.py
+```
+
+---
+
+## Input
+
+The input email is:
+
+```text
+hey send me that report asap
+```
+
+This is informal and uses abbreviated language.
+
+The AI is instructed to preserve the meaning while making the message polite and professional.
+
+---
+
+## Output
+
+A suitable output is:
+
+```text
+Could you please send me that report as soon as possible? Thank you.
+```
+
+The meaning remains the same: the sender wants the report soon.
+
+The wording is improved by:
+
+- Using a polite request.
+- Expanding informal wording.
+- Removing the abrupt tone.
+- Adding professional phrasing.
+
+---
+
+## How the Program Works
+
+The complete flow is:
+
+```text
+Email Text
+    ↓
+rewrite_email()
+    ↓
+Parameterized Prompt
+    ↓
+OpenAI Client
+    ↓
+Chat Model
+    ↓
+response
+    ↓
+Generated Professional Email
+    ↓
+Console
+```
+
+Python does not manually rewrite the email. It provides the instructions and input to the AI model, receives the generated response, and displays it.
+
+---
+
+## Important Concepts
+
+### Environment Variables
+
+```python
+os.environ.get("OPENAI_API_KEY")
+os.environ.get("OPENAI_API_BASE")
+```
+
+These allow configuration to be supplied externally instead of hardcoding credentials.
+
+### Function
+
+```python
+def rewrite_email(text: str) -> str:
+```
+
+The function makes the solution reusable for different email messages.
+
+### Parameterized Prompt
+
+```python
+{text}
+```
+
+The input text is dynamically inserted into the prompt.
+
+### API Response
+
+```python
+response
+```
+
+The complete response returned by the model is stored in this variable.
+
+### Generated Content
+
+```python
+response.choices[0].message.content
+```
+
+This accesses the actual text generated by the model.
+
+---
+
+## Key Takeaways
+
+- The OpenAI Python package allows Python applications to communicate with an AI model.
+- API credentials can be loaded from environment variables.
+- Functions make AI functionality reusable.
+- Parameterized prompts allow different emails to be processed.
+- `max_tokens` controls the maximum response length.
+- A low `temperature` helps produce consistent professional wording.
+- The model performs the language transformation.
+- Python receives and prints the generated result.
+
