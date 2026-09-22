@@ -203,4 +203,10 @@ The Resume Extractor demonstrates how an AI model can convert unstructured resum
 - Printed the extracted keywords
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/c39fa747-cc41-4e12-994c-ea085659a5f7" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/4bb83c2a-fbd7-40d6-aec4-266987addbe0" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/66191418-5b90-444e-9f1c-5febdb7186c9" />
+
+
+
 
