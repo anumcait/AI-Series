@@ -1,4 +1,4 @@
-# Day 7 - Generate Haikus with AI
+# Day 8 - Generate Haikus with AI
 
 Haiku Generator
 
