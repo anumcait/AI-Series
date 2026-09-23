@@ -198,3 +198,13 @@ The Haiku Generator demonstrates how an AI model can generate structured short-f
 - Set `temperature=0.0`
 - Stored the model output in `response`
 - Printed the generated three-line haiku
+
+### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/b030dca6-6b07-4149-a29b-ca0331ee95b0" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/65c4635e-205f-42ae-b52d-fbdfbdf853dd" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/af5ab316-47f4-4c6a-8dd5-361ef6c173cc" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/68c9d17e-698d-4f9e-ae4a-d31c4c35bdf6" />
+
+
+
+
