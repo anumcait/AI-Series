@@ -207,3 +207,9 @@ The AI Summarizer demonstrates how an OpenAI-compatible model can transform a lo
 - Printed the generated one-line summary
 
 ## Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/63029ed2-73b7-47ad-bd72-b7a44741f227" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/594ba02a-7f10-4eeb-966b-1b5b155eeedd" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/f8575192-6b09-4dca-be0a-19fb380b0c95" />
+
+
+
