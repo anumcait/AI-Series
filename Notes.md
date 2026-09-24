@@ -3225,3 +3225,599 @@ This task demonstrates the basic workflow for an AI-powered Python application:
 The important programming concepts are environment variables, virtual environments, Python functions, f-strings, API clients, structured API responses, and prompt design.
 
 ---
+
+Below is a concise but **lecturer-style `notes.md`** covering the concepts, workflow, code, parameters, environment variables, API call, and important details without becoming unnecessarily large.
+
+# Day 9 — AI Summarizer Notes
+
+## 1. What Are We Building?
+
+The goal is to build a simple **AI Summarizer** using Python and an OpenAI-compatible API.
+
+The application takes a paragraph as input and asks an AI model to convert it into a **short, clear, single-line summary**.
+
+The important concepts demonstrated are:
+
+- Creating an OpenAI client
+- Reading API configuration from environment variables
+- Creating a reusable Python function
+- Building a parameterized prompt
+- Sending a prompt to a chat model
+- Reading the model response
+- Printing the generated result
+
+---
+
+## 2. Project Directory
+
+The project is located at:
+
+```bash
+/root/openaiproject
+```
+
+Always move into the project directory before working:
+
+```bash
+cd /root/openaiproject
+```
+
+This ensures that files such as `summarizer.py` are created in the expected location.
+
+---
+
+## 3. Virtual Environment
+
+A virtual environment keeps the Python packages for this project isolated from the system Python installation.
+
+Create it with:
+
+```bash
+python3 -m venv venv
+```
+
+Activate it with:
+
+```bash
+source venv/bin/activate
+```
+
+After activation, Python and installed packages will use this project's virtual environment.
+
+---
+
+## 4. API Configuration
+
+The API configuration is stored in:
+
+```bash
+/root/.bash_profile
+```
+
+Load it with:
+
+```bash
+source /root/.bash_profile
+```
+
+The important environment variables are:
+
+```text
+OPENAI_API_KEY
+OPENAI_API_BASE
+```
+
+We can read them from Python using:
+
+```python
+os.environ.get("OPENAI_API_KEY")
+os.environ.get("OPENAI_API_BASE")
+```
+
+This is preferable to putting credentials directly into the Python source code.
+
+---
+
+## 5. Installing the OpenAI Package
+
+The Python OpenAI package is required to communicate with the OpenAI-compatible API.
+
+Install it using:
+
+```bash
+pip install openai
+```
+
+The package provides the `OpenAI` client used by our Python program.
+
+---
+
+## 6. Creating the OpenAI Client
+
+First import the required modules:
+
+```python
+import os
+from openai import OpenAI
+```
+
+Then create the client:
+
+```python
+client = OpenAI(
+    api_key=os.environ.get("OPENAI_API_KEY"),
+    base_url=os.environ.get("OPENAI_API_BASE"),
+)
+```
+
+### What is happening here?
+
+`OpenAI` creates the API client.
+
+`api_key` provides authentication.
+
+`base_url` tells the client which OpenAI-compatible API endpoint to use.
+
+Instead of hardcoding these values, the program retrieves them from environment variables.
+
+---
+
+## 7. The `summarize()` Function
+
+The main functionality is placed inside:
+
+```python
+def summarize(text: str) -> str:
+```
+
+This function has:
+
+- `text: str` — the input paragraph
+- `-> str` — the function returns a string
+
+Using a function makes the summarizer reusable. We can provide different paragraphs without changing the API logic.
+
+---
+
+## 8. Parameterized Prompt
+
+The prompt must contain the paragraph supplied to the function.
+
+We can use an f-string:
+
+```python
+prompt = f"""
+Summarize the following paragraph into a single-line summary.
+
+Paragraph:
+{text}
+
+Requirements:
+- Output exactly one line.
+- Keep the summary concise and easy to understand.
+- Capture the main idea of the paragraph.
+- Do not include a title, numbering, explanation, or extra text.
+"""
+```
+
+The important part is:
+
+```python
+{text}
+```
+
+This makes the prompt **parameterized**.
+
+If `text` contains a different paragraph, the prompt automatically changes.
+
+For example:
+
+```python
+text = "Artificial Intelligence enables machines to mimic human intelligence..."
+```
+
+will cause that paragraph to be inserted into the prompt.
+
+---
+
+## 9. Why Give Instructions in the Prompt?
+
+The AI model can generate many different forms of answers.
+
+Our requirement is specifically a **single-line summary**, so the prompt gives the model clear instructions.
+
+The important instructions are:
+
+- Summarize the paragraph
+- Keep it concise
+- Capture the main idea
+- Return exactly one line
+- Do not add explanations or extra text
+
+Clear prompts help the model produce output closer to the required format.
+
+---
+
+## 10. Calling the Chat Model
+
+The AI request is made with:
+
+```python
+result = client.chat.completions.create(
+    model="openai/gpt-4.1-mini",
+    messages=[
+        {"role": "user", "content": prompt}
+    ],
+    max_tokens=60,
+    temperature=0.5,
+)
+```
+
+There are several important parameters here.
+
+### Model
+
+```python
+model="openai/gpt-4.1-mini"
+```
+
+This specifies the AI model that should process the request.
+
+### Messages
+
+```python
+messages=[
+    {"role": "user", "content": prompt}
+]
+```
+
+The model receives the prompt as a user message.
+
+The `role` is:
+
+```text
+user
+```
+
+The actual prompt is passed through:
+
+```python
+content=prompt
+```
+
+### Maximum Tokens
+
+```python
+max_tokens=60
+```
+
+This limits the amount of output generated by the model.
+
+Since we only need a short summary, 60 tokens is sufficient.
+
+### Temperature
+
+```python
+temperature=0.5
+```
+
+Temperature controls the randomness of the model's output.
+
+A value of `0.5` allows some variation while keeping the response relatively focused.
+
+---
+
+## 11. Reading the Model Response
+
+The API returns a response object.
+
+The generated text can be accessed with:
+
+```python
+result.choices[0].message.content
+```
+
+We remove unnecessary whitespace using:
+
+```python
+response = result.choices[0].message.content.strip()
+```
+
+The variable `response` therefore contains the generated summary.
+
+The `.strip()` method removes leading and trailing whitespace.
+
+---
+
+## 12. Returning the Summary
+
+The function returns the generated text:
+
+```python
+return response
+```
+
+Therefore:
+
+```python
+summarize(text)
+```
+
+returns a string containing the AI-generated summary.
+
+---
+
+## 13. Main Program
+
+The script can use:
+
+```python
+if __name__ == "__main__":
+```
+
+This means the following code runs when the Python file is executed directly.
+
+The paragraph is stored in:
+
+```python
+text = (
+    "Artificial Intelligence enables machines to mimic human intelligence, "
+    "performing tasks such as learning, problem-solving, and decision-making "
+    "with increasing accuracy."
+)
+```
+
+Then the summarizer is called:
+
+```python
+response = summarize(text)
+```
+
+Finally, the result is displayed:
+
+```python
+print(response)
+```
+
+---
+
+## 14. Complete Program
+
+The complete `summarizer.py` file is:
+
+```python
+import os
+
+from openai import OpenAI
+
+client = OpenAI(
+    api_key=os.environ.get("OPENAI_API_KEY"),
+    base_url=os.environ.get("OPENAI_API_BASE"),
+)
+
+
+def summarize(text: str) -> str:
+    prompt = f"""
+Summarize the following paragraph into a single-line summary.
+
+Paragraph:
+{text}
+
+Requirements:
+- Output exactly one line.
+- Keep the summary concise and easy to understand.
+- Capture the main idea of the paragraph.
+- Do not include a title, numbering, explanation, or extra text.
+"""
+
+    result = client.chat.completions.create(
+        model="openai/gpt-4.1-mini",
+        messages=[
+            {"role": "user", "content": prompt}
+        ],
+        max_tokens=60,
+        temperature=0.5,
+    )
+
+    response = result.choices[0].message.content.strip()
+    return response
+
+
+if __name__ == "__main__":
+    text = (
+        "Artificial Intelligence enables machines to mimic human intelligence, "
+        "performing tasks such as learning, problem-solving, and decision-making "
+        "with increasing accuracy."
+    )
+
+    response = summarize(text)
+    print(response)
+```
+
+---
+
+## 15. Running the Program
+
+Before running the program, activate the environment and load the API configuration:
+
+```bash
+cd /root/openaiproject
+source venv/bin/activate
+source /root/.bash_profile
+```
+
+Then run:
+
+```bash
+python summarizer.py
+```
+
+The program sends **one API request** and prints the generated summary.
+
+The task allows a maximum of 10 requests, so unnecessary test requests should be avoided.
+
+---
+
+## 16. Expected Behavior
+
+The input paragraph is:
+
+```text
+Artificial Intelligence enables machines to mimic human intelligence, performing tasks such as learning, problem-solving, and decision-making with increasing accuracy.
+```
+
+The model should produce a concise one-line summary similar to:
+
+```text
+AI enables machines to perform human-like tasks such as learning, problem-solving, and decision-making.
+```
+
+The exact wording can vary because the summary is generated by the AI model.
+
+---
+
+## 17. Important Concepts to Remember
+
+### Environment Variables
+
+Environment variables keep configuration and credentials outside the source code.
+
+```python
+os.environ.get("OPENAI_API_KEY")
+os.environ.get("OPENAI_API_BASE")
+```
+
+### Parameterized Prompt
+
+The input is dynamically inserted into the prompt:
+
+```python
+{text}
+```
+
+This allows the same function to summarize different paragraphs.
+
+### Function
+
+The reusable interface is:
+
+```python
+summarize(text: str) -> str
+```
+
+It accepts text and returns a summary.
+
+### Model
+
+The required model is:
+
+```text
+openai/gpt-4.1-mini
+```
+
+### Chat Message
+
+The prompt is sent as a user message:
+
+```python
+{"role": "user", "content": prompt}
+```
+
+### Output Limit
+
+```python
+max_tokens=60
+```
+
+This keeps the generated answer short.
+
+### Temperature
+
+```python
+temperature=0.5
+```
+
+This controls response variability.
+
+### Response
+
+The generated text is extracted with:
+
+```python
+result.choices[0].message.content.strip()
+```
+
+and stored in:
+
+```python
+response
+```
+
+---
+
+## 18. Execution Flow
+
+The entire application follows this sequence:
+
+```text
+Start
+  ↓
+Move to /root/openaiproject
+  ↓
+Activate virtual environment
+  ↓
+Load API configuration
+  ↓
+Create OpenAI client
+  ↓
+Call summarize(text)
+  ↓
+Build parameterized prompt
+  ↓
+Send prompt to gpt-4.1-mini
+  ↓
+Receive model response
+  ↓
+Extract generated text
+  ↓
+Store it in response
+  ↓
+Print summary
+  ↓
+End
+```
+
+---
+
+## 19. Key Requirements Checklist
+
+- [x] Work directory: `/root/openaiproject`
+- [x] Virtual environment created
+- [x] OpenAI package installed
+- [x] API configuration loaded from `/root/.bash_profile`
+- [x] `OPENAI_API_KEY` used for the API key
+- [x] `OPENAI_API_BASE` used for the API base URL
+- [x] OpenAI client created
+- [x] Function named `summarize`
+- [x] Function signature: `summarize(text: str) -> str`
+- [x] Prompt parameterized with the input paragraph
+- [x] Model: `openai/gpt-4.1-mini`
+- [x] Message role: `user`
+- [x] Prompt passed as message content
+- [x] `max_tokens=60`
+- [x] `temperature=0.5`
+- [x] API result stored in `response`
+- [x] Summary printed to the terminal
+- [x] Output requested as a single-line summary
+
+## 20. Main Takeaway
+
+This exercise demonstrates the basic pattern used in many AI applications:
+
+**Input → Prompt → AI Model → Response → Application Output**
+
+The Python program separates the AI functionality into a reusable `summarize()` function, dynamically inserts the user's text into a prompt, sends that prompt to an OpenAI-compatible model, extracts the generated response, and prints the result.
+
+This same pattern can later be extended to applications such as issue summarization, document processing, support-ticket analysis, and developer-assistant tools.
+
+---
