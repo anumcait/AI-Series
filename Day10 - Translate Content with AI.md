@@ -212,3 +212,9 @@ French: Bonjour, comment ça va ?
 - Successfully executed the program
 
 ## Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/9c7412b1-5237-4f7c-9546-65fd4940fab5" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/c89de2f7-6ab0-4648-8ad6-d3ee2328ab96" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/c01a1c1f-e139-4bdf-8c3e-53c5080191e9" />
+
+
+
