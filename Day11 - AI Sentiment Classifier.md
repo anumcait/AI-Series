@@ -415,3 +415,14 @@ You should also gain experience with:
 - Basic troubleshooting
 
 ---
+
+### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/9dd50662-5426-46fb-8ada-c479b1f87e64" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/561187c3-1279-4d8a-88aa-e7a87d8bb503" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/0865d426-4edb-4144-ab6a-23529cf1f033" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/932bfe1e-657b-4a7f-93a1-38c40f78c403" />
+
+
+
+
+
