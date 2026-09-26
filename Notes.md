@@ -4222,3 +4222,803 @@ Print result
 ## Key Takeaway
 
 The main lesson is how to combine **Python functions, parameterized prompts, environment-based API configuration, and an OpenAI-compatible model** to build a reusable AI translation application.
+
+# Day 11 Notes — AI Sentiment Classifier with Gemini API
+
+## 1. What We Are Building
+
+In this task, we build a simple **AI Sentiment Classifier** using Python and the Gemini API.
+
+The program will:
+
+- Accept a customer review.
+- Build a parameterized prompt.
+- Send the review to an AI model.
+- Classify the review as Positive, Neutral, or Negative.
+- Provide a short explanation.
+- Print the sentiment and explanation to the console.
+
+The first input used in this task is:
+
+```text
+The product arrived quickly and works perfectly.
+```
+
+---
+
+## 2. Project Directory
+
+Unlike the previous KodeKloud labs, Day 11 is part of my own AI Engineering practice project.
+
+The project is located at:
+
+```bash
+cd /d/AI-KodeKloud
+```
+
+The Day 11 implementation is inside:
+
+```text
+Practice-Lab/
+└── Day-11/
+    └── sentiment_classifier.py
+```
+
+The project structure is:
+
+```text
+AI-KodeKloud/
+├── Day1 - ...
+├── Day2 - ...
+├── ...
+├── Day10 - ...
+├── Day11 - AI Sentiment Classifier.md
+│
+├── Practice-Lab/
+│   └── Day-11/
+│       └── sentiment_classifier.py
+│
+├── Notes.md
+├── README.md
+└── venv/
+```
+
+The `venv` directory is local to the development environment and should not be pushed to GitHub.
+
+---
+
+## 3. Virtual Environment
+
+A virtual environment keeps the Python packages for this project isolated from the system Python installation.
+
+Create it with:
+
+```bash
+python3 -m venv venv
+```
+
+Because this project is being developed on Windows using Git Bash, the virtual environment is activated with:
+
+```bash
+source venv/Scripts/activate
+```
+
+After activation, the terminal shows:
+
+```text
+(venv)
+```
+
+This confirms that the virtual environment is active.
+
+---
+
+## 4. Installing the Gemini SDK
+
+The Day 11 lab uses Google's Gemini API instead of the OpenAI API used in the previous KodeKloud labs.
+
+Install the Gemini Python SDK:
+
+```bash
+pip install google-genai
+```
+
+The package provides the `google.genai` module used to create the Gemini client and send model requests.
+
+---
+
+## 5. API Configuration
+
+For this self-created lab, I do not use the KodeKloud API configuration.
+
+Instead, the Gemini API key is stored in an environment variable:
+
+```text
+GEMINI_API_KEY
+```
+
+In Git Bash, the API key can be set with:
+
+```bash
+export GEMINI_API_KEY="your-api-key"
+```
+
+The application reads the key using:
+
+```python
+import os
+
+api_key = os.environ.get("GEMINI_API_KEY")
+```
+
+The API key should never be written directly into the Python source code.
+
+It should also never be committed to GitHub.
+
+---
+
+## 6. Creating the Gemini Client
+
+First import the required modules:
+
+```python
+import os
+
+from google import genai
+```
+
+Then create the Gemini client:
+
+```python
+client = genai.Client(
+    api_key=os.environ.get("GEMINI_API_KEY")
+)
+```
+
+Here:
+
+- `GEMINI_API_KEY` contains the API credential.
+- `os.environ.get()` reads the value from the environment.
+- `client` is used to communicate with the Gemini API.
+
+Using an environment variable keeps the API key separate from the source code.
+
+---
+
+## 7. Creating a Parameterized Function
+
+The main function is:
+
+```python
+def classify_sentiment(review: str) -> str:
+```
+
+The function accepts one parameter:
+
+- `review` — the customer review that needs to be analyzed.
+
+The `-> str` indicates that the function returns a string.
+
+The function is parameterized so that different customer reviews can be analyzed without changing the function itself.
+
+For example:
+
+```python
+classify_sentiment("The product is excellent.")
+```
+
+and:
+
+```python
+classify_sentiment("The application crashes every time.")
+```
+
+can use the same function.
+
+---
+
+## 8. Building the Prompt
+
+The prompt must use the review dynamically.
+
+The basic structure is:
+
+```python
+prompt = f"""
+Classify the following customer review as exactly one of:
+Positive, Neutral, or Negative.
+
+Also provide a short explanation.
+
+Review:
+{review}
+
+Return the result in this format:
+
+Sentiment: <Positive|Neutral|Negative>
+Explanation: <short explanation>
+"""
+```
+
+The `f` before the string allows the `review` variable to be inserted dynamically.
+
+If:
+
+```python
+review = "The product arrived quickly and works perfectly."
+```
+
+the AI receives a prompt containing that review.
+
+This makes the classifier reusable for different customer reviews.
+
+---
+
+## 9. Sending the Request
+
+The Gemini model request is made with:
+
+```python
+response = client.models.generate_content(
+    model="gemini-3.8-flash",
+    contents=prompt,
+)
+```
+
+Important parameters:
+
+### `model`
+
+```text
+gemini-3.8-flash
+```
+
+This specifies the Gemini model used for the classification task.
+
+The model name can change over time. If the API reports that a model is unavailable, the currently available Gemini model should be checked.
+
+### `contents`
+
+```python
+contents=prompt
+```
+
+The parameterized prompt is sent to the Gemini model.
+
+### `response`
+
+The generated AI response is stored in:
+
+```python
+response
+```
+
+The generated text can then be accessed using:
+
+```python
+response.text
+```
+
+---
+
+## 10. Returning the AI Response
+
+The function returns the generated response:
+
+```python
+return response.text.strip()
+```
+
+The `strip()` method removes unnecessary whitespace from the beginning and end of the response.
+
+The function therefore returns the AI-generated sentiment and explanation as a string.
+
+---
+
+## 11. Calling the Function
+
+The first test review is:
+
+```python
+review = "The product arrived quickly and works perfectly."
+```
+
+The classifier is called with:
+
+```python
+response = classify_sentiment(review)
+```
+
+The result is then printed:
+
+```python
+print(response)
+```
+
+A successful result was:
+
+```text
+Sentiment: Positive
+Explanation: The customer expresses complete satisfaction with both the fast shipping and the flawless performance of the product.
+```
+
+The exact explanation can vary because it is generated by the AI model.
+
+---
+
+## 12. Complete Program
+
+```python
+import os
+
+from google import genai
+
+
+client = genai.Client(
+    api_key=os.environ.get("GEMINI_API_KEY")
+)
+
+
+def classify_sentiment(review: str) -> str:
+    prompt = f"""
+Classify the following customer review as exactly one of:
+Positive, Neutral, or Negative.
+
+Also provide a short explanation.
+
+Review:
+{review}
+
+Return the result in this format:
+
+Sentiment: <Positive|Neutral|Negative>
+Explanation: <short explanation>
+"""
+
+    response = client.models.generate_content(
+        model="gemini-3.8-flash",
+        contents=prompt,
+    )
+
+    return response.text.strip()
+
+
+if __name__ == "__main__":
+    review = "The product arrived quickly and works perfectly."
+
+    response = classify_sentiment(review)
+
+    print(response)
+```
+
+---
+
+## 13. Running the Program
+
+From the project root:
+
+```bash
+cd /d/AI-KodeKloud
+```
+
+Activate the virtual environment:
+
+```bash
+source venv/Scripts/activate
+```
+
+Set the API key if it is not already available:
+
+```bash
+export GEMINI_API_KEY="your-api-key"
+```
+
+Run the Day 11 application:
+
+```bash
+python Practice-Lab/Day-11/sentiment_classifier.py
+```
+
+Alternatively, enter the Day 11 directory:
+
+```bash
+cd Practice-Lab/Day-11
+```
+
+and run:
+
+```bash
+python sentiment_classifier.py
+```
+
+---
+
+## 14. Testing
+
+I tested the application with the following customer reviews.
+
+### Test 1 — Positive
+
+Input:
+
+```text
+The product arrived quickly and works perfectly.
+```
+
+Result:
+
+```text
+Sentiment: Positive
+Explanation: The customer expresses complete satisfaction with both the fast shipping and the flawless performance of the product.
+```
+
+---
+
+### Test 2 — Positive
+
+Input:
+
+```text
+I absolutely love this product. It works perfectly!
+```
+
+Expected sentiment:
+
+```text
+Positive
+```
+
+---
+
+### Test 3 — Neutral
+
+Input:
+
+```text
+The product works as expected.
+```
+
+Expected sentiment:
+
+```text
+Neutral
+```
+
+---
+
+### Test 4 — Negative
+
+Input:
+
+```text
+The application crashes every time I open it.
+```
+
+Expected sentiment:
+
+```text
+Negative
+```
+
+---
+
+### Test 5 — Mixed Sentiment
+
+Input:
+
+```text
+The product is good, but delivery was very late.
+```
+
+This test is useful because the review contains both positive and negative information.
+
+The result demonstrates how the AI handles a more ambiguous customer review.
+
+---
+
+## 15. Problem Encountered
+
+Initially, the program used:
+
+```python
+model="gemini-2.5-flash"
+```
+
+The API returned:
+
+```text
+404 NOT_FOUND
+```
+
+with a message indicating that the model was no longer available to new users and recommending a newer model.
+
+The model was changed to:
+
+```python
+model="gemini-3.8-flash"
+```
+
+After making this change, the program successfully generated the sentiment classification.
+
+---
+
+## 16. Understanding the Error
+
+The error was:
+
+```text
+google.genai.errors.ClientError: 404 NOT_FOUND
+```
+
+This was not caused by an incorrect Python function or a missing API key.
+
+The API request reached the Gemini service, but the requested model was not available for the account.
+
+The important troubleshooting process was:
+
+```text
+API Request
+     ↓
+404 NOT_FOUND
+     ↓
+Check error message
+     ↓
+Identify unavailable model
+     ↓
+Change model
+     ↓
+Run again
+     ↓
+Successful response
+```
+
+This demonstrated the importance of reading API error messages instead of immediately rewriting the application.
+
+---
+
+## 17. AFC Warning
+
+When the application was first executed, the SDK displayed a warning similar to:
+
+```text
+Direct use of automatic function calling (AFC) in Models.generate_content is not recommended.
+```
+
+This was a warning rather than the cause of the failed request.
+
+The actual failure was the `404 NOT_FOUND` model availability error.
+
+After changing the model, the application successfully completed the request.
+
+For this basic sentiment classification exercise, no explicit function-calling tools were being used.
+
+---
+
+## 18. Important Concepts Learned
+
+### AI Classification
+
+The model can classify natural-language input into predefined categories.
+
+In this lab:
+
+```text
+Positive
+Neutral
+Negative
+```
+
+are the allowed sentiment categories.
+
+---
+
+### Parameterized Prompts
+
+The review is inserted dynamically into the prompt:
+
+```python
+{review}
+```
+
+This allows the same function to process different customer reviews.
+
+---
+
+### Environment Variables
+
+The API key is retrieved with:
+
+```python
+os.environ.get("GEMINI_API_KEY")
+```
+
+This keeps the credential outside the Python source code.
+
+---
+
+### AI Client
+
+The Gemini client is created with:
+
+```python
+client = genai.Client(
+    api_key=os.environ.get("GEMINI_API_KEY")
+)
+```
+
+The client handles communication with the Gemini API.
+
+---
+
+### Model Request
+
+The model is called using:
+
+```python
+client.models.generate_content(...)
+```
+
+The prompt is passed using:
+
+```python
+contents=prompt
+```
+
+---
+
+### Response Handling
+
+The generated text is obtained from:
+
+```python
+response.text
+```
+
+and returned using:
+
+```python
+return response.text.strip()
+```
+
+---
+
+## 19. Stretch Challenge
+
+The next step is to process multiple customer reviews.
+
+For example:
+
+```text
+Review 1: Great product and excellent service.
+Review 2: The product works as expected.
+Review 3: The application keeps crashing.
+```
+
+The program could classify each review and produce a summary such as:
+
+```text
+Positive: X
+Neutral: X
+Negative: X
+```
+
+where `X` represents the number of reviews assigned to each category.
+
+---
+
+## 20. Further Challenge
+
+Add a model-generated confidence description.
+
+For example:
+
+```text
+Sentiment: Positive
+Confidence: High
+Explanation: The customer clearly expresses satisfaction.
+```
+
+The confidence value should be treated as a model-generated signal rather than a statistically calibrated probability.
+
+---
+
+## 21. Security
+
+The API key must not be stored in the Python source code.
+
+Avoid:
+
+```python
+client = genai.Client(
+    api_key="actual-api-key"
+)
+```
+
+Instead use:
+
+```python
+client = genai.Client(
+    api_key=os.environ.get("GEMINI_API_KEY")
+)
+```
+
+The API key should also not be added to GitHub.
+
+The `.gitignore` file should contain:
+
+```gitignore
+venv/
+__pycache__/
+.env
+```
+
+Before committing the project, check:
+
+```bash
+git status
+```
+
+and make sure no credential files or virtual-environment files are being committed.
+
+---
+
+## 22. Final Flow
+
+The complete application flow is:
+
+```text
+Customer Review
+      ↓
+classify_sentiment(review)
+      ↓
+Parameterized Prompt
+      ↓
+Gemini Client
+      ↓
+Gemini Flash Model
+      ↓
+AI Classification
+      ↓
+Sentiment + Explanation
+      ↓
+Print Result
+```
+
+---
+
+## 23. Key Takeaway
+
+The main lesson from Day 11 is how to build a simple **AI-powered classification application** using Python and a Gemini API.
+
+I learned how to:
+
+- Create a Python virtual environment.
+- Install an AI SDK.
+- Configure an API key using an environment variable.
+- Create a Gemini client.
+- Build a parameterized prompt.
+- Pass dynamic user input to an AI model.
+- Ask an AI model to classify text.
+- Process the model response.
+- Troubleshoot a model availability error.
+- Test the application with different types of customer reviews.
+- Keep API credentials out of source control.
+
+The overall AI application pattern is:
+
+```text
+Input
+  ↓
+Python Function
+  ↓
+Parameterized Prompt
+  ↓
+AI Model
+  ↓
+AI Response
+  ↓
+Application Output
+```
+
+This pattern will be reused and expanded in future AI Engineering labs.
+
