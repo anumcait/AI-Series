@@ -315,3 +315,13 @@ You should gain experience with:
 - JSON output
 - AI-powered data analysis
 - Basic troubleshooting
+
+### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/49492318-fe79-4d95-83e3-16f2e0047a9a" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/39898c76-8921-4558-89a7-3451406ee2a5" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/f45e7730-5f13-42ef-ab49-5b60d0a42008" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/1717a79e-0d2c-4f85-96dd-cb3f953e9e4d" />
+
+
+
+
