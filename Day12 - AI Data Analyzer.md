@@ -267,7 +267,7 @@ If you get a `404 NOT_FOUND` error, check whether the selected Gemini model is c
 ## Run the Application
 
 ```bash
-cd /d/AI-KodeKloud/Practice-Lab/Day-12
+cd Day-12
 source ../../venv/Scripts/activate
 python data_analyzer.py
 ```
