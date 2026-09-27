@@ -64,3 +64,254 @@ The application must contain:
 
 ```python
 def analyze_data(data: str) -> str:
+    ...
+
+```
+
+The function must accept the employee dataset dynamically.
+
+---
+
+## Input
+
+Use this dataset for the first test:
+
+```text
+Employee, Department, Salary, Experience
+Rahul, IT, 85000, 5
+Priya, HR, 65000, 4
+Arun, IT, 95000, 7
+Sneha, Finance, 72000, 6
+```
+
+---
+
+## Expected Output
+
+Return valid JSON with exactly these fields:
+
+```json
+{
+  "total_employees": 4,
+  "highest_salary_employee": "Arun",
+  "average_salary": 79250,
+  "departments": ["IT", "HR", "Finance"],
+  "average_experience": 5.5
+}
+```
+
+---
+
+## Requirements
+
+- Use Python.
+- Use the Gemini API.
+- Use `GEMINI_API_KEY` for the API key.
+- Do not hardcode the API key.
+- Create a Gemini client.
+- Create `analyze_data(data)`.
+- Pass the dataset dynamically into the prompt.
+- Return only valid JSON.
+- Print the final result.
+
+---
+
+## Environment Setup
+
+If your existing `venv` is outside the `Practice-Lab` directory, activate it from `Day-12`.
+
+```bash
+source ../../venv/Scripts/activate
+```
+
+Install the Gemini SDK:
+
+```bash
+python -m pip install -U google-genai
+```
+
+Verify:
+
+```bash
+python -c "from google import genai; print('google-genai works')"
+```
+
+Set the API key:
+
+```bash
+export GEMINI_API_KEY="your-api-key"
+```
+
+---
+
+## Python Structure
+
+```python
+import os
+
+from google import genai
+
+
+client = genai.Client(
+    api_key=os.environ.get("GEMINI_API_KEY")
+)
+
+
+def analyze_data(data: str) -> str:
+    prompt = f"""
+Analyze the following employee dataset.
+
+Calculate:
+1. Total number of employees.
+2. Employee with the highest salary.
+3. Average salary.
+4. Unique departments.
+5. Average experience.
+
+Return only valid JSON using exactly these fields:
+
+{{
+    "total_employees": number,
+    "highest_salary_employee": "name",
+    "average_salary": number,
+    "departments": ["department"],
+    "average_experience": number
+}}
+
+Employee dataset:
+
+{data}
+"""
+
+    response = client.models.generate_content(
+        model="YOUR_AVAILABLE_GEMINI_MODEL",
+        contents=prompt,
+    )
+
+    return response.text.strip()
+
+
+if __name__ == "__main__":
+    data = """Employee, Department, Salary, Experience
+Rahul, IT, 85000, 5
+Priya, HR, 65000, 4
+Arun, IT, 95000, 7
+Sneha, Finance, 72000, 6"""
+
+    print(analyze_data(data))
+```
+
+Replace `YOUR_AVAILABLE_GEMINI_MODEL` with a currently available Gemini model.
+
+---
+
+## Test Cases
+
+### Test Case 1
+
+Use the provided dataset and verify:
+
+```text
+Employees: 4
+Highest Salary: Arun
+Average Salary: 79250
+Departments: IT, HR, Finance
+Average Experience: 5.5
+```
+
+### Test Case 2
+
+Try another dataset:
+
+```text
+Employee, Department, Salary, Experience
+Amit, IT, 70000, 3
+Ravi, HR, 60000, 4
+Neha, Finance, 90000, 6
+```
+
+Check whether the AI calculates the values correctly.
+
+---
+
+## Troubleshooting
+
+If you get:
+
+```text
+ImportError: cannot import name 'genai' from 'google'
+```
+
+Activate the correct virtual environment:
+
+```bash
+source ../../venv/Scripts/activate
+```
+
+Then install:
+
+```bash
+python -m pip install -U google-genai
+```
+
+Check Python:
+
+```bash
+python -c "import sys; print(sys.executable)"
+```
+
+If you get a `404 NOT_FOUND` error, check whether the selected Gemini model is currently available.
+
+---
+
+## Run the Application
+
+```bash
+cd /d/AI-KodeKloud/Practice-Lab/Day-12
+source ../../venv/Scripts/activate
+python data_analyzer.py
+```
+
+---
+
+## Git
+
+```bash
+git add Practice-Lab/Day-12/
+git commit -m "Day 12: Add AI employee data analyzer"
+git push
+```
+
+Make sure `venv/` and API keys are not committed.
+
+---
+
+## Expected Learning
+
+By completing this lab, you should understand:
+
+```text
+Employee Dataset
+      ↓
+Python Function
+      ↓
+Dynamic Prompt
+      ↓
+Gemini AI
+      ↓
+JSON Response
+      ↓
+Console Output
+```
+
+You should gain experience with:
+
+- Python functions
+- Virtual environments
+- Environment variables
+- Gemini API
+- Prompt engineering
+- Dynamic data
+- JSON output
+- AI-powered data analysis
+- Basic troubleshooting
