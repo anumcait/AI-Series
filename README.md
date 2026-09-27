@@ -36,6 +36,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 9 | AI Text Summarizer | Python, OpenAI API, GPT-4.1-mini, Prompt Engineering |
 | Day 10 | AI Translator | Python, OpenAI API, GPT-4.1-mini, Prompt Engineering |
 | Day 11 | AI Sentiment Classifier | Python, Gemini API, Gemini Flash, Prompt Engineering, Environment Variables |
+| Day 12 | AI Data Analyzer | Python, Gemini API, Gemini Flash, Structured JSON, Prompt Engineering, Environment Variables |
 
 ---
 
@@ -2179,3 +2180,141 @@ This project demonstrates how to:
 The Day 11 project successfully demonstrates an **AI-powered sentiment classification application** using Python, the Gemini API, and a parameterized prompt.
 
 The project establishes the foundation for future AI Engineering labs involving structured outputs, embeddings, RAG, agents, MCP, evaluation, and deployment.
+
+# Day 12 - AI Data Analyzer
+
+## Overview
+
+In this task, we built a Python-based **AI Data Analyzer** using the Gemini API.
+
+The application accepts an employee dataset and uses a parameterized prompt to analyze the data and return structured JSON containing employee count, highest salary employee, average salary, departments, and average experience.
+
+## Technologies Used
+
+- Python
+- Google Gemini API
+- Google GenAI Python SDK
+- Gemini Flash
+- Prompt Engineering
+- JSON
+- Environment Variables
+
+## Project Structure
+
+```text
+Practice-Lab/
+└── Day-12/
+    ├── data_analyzer.py
+    └── README.md
+```
+
+## Setup
+
+Navigate to the project root:
+
+```bash
+cd /d/AI-KodeKloud
+```
+
+Activate the virtual environment:
+
+```bash
+source venv/Scripts/activate
+```
+
+Install the Gemini package if required:
+
+```bash
+pip install google-genai
+```
+
+Set the API key:
+
+```bash
+export GEMINI_API_KEY="your-api-key"
+```
+
+## API Configuration
+
+The application reads the Gemini API key from:
+
+```python
+os.environ.get("GEMINI_API_KEY")
+```
+
+This keeps the API credential outside the Python source code.
+
+## Data Analyzer Function
+
+The main function is:
+
+```python
+def analyze_data(data: str) -> str:
+```
+
+It accepts the employee dataset as a parameter.
+
+The prompt is dynamically created using the supplied dataset.
+
+## Input
+
+```text
+Employee, Department, Salary, Experience
+Rahul, IT, 85000, 5
+Priya, HR, 65000, 4
+Arun, IT, 95000, 7
+Sneha, Finance, 72000, 6
+```
+
+## Expected Output
+
+```json
+{
+  "total_employees": 4,
+  "highest_salary_employee": "Arun",
+  "average_salary": 79250,
+  "departments": ["IT", "HR", "Finance"],
+  "average_experience": 5.5
+}
+```
+
+The exact JSON formatting may vary, but the required fields should remain the same.
+
+## Running the Application
+
+From the project root:
+
+```bash
+cd /d/AI-KodeKloud
+source venv/Scripts/activate
+export GEMINI_API_KEY="your-api-key"
+```
+
+Run:
+
+```bash
+python Practice-Lab/Day-12/data_analyzer.py
+```
+
+Alternatively:
+
+```bash
+cd Practice-Lab/Day-12
+python data_analyzer.py
+```
+
+## Key Learning
+
+This project demonstrates how to:
+
+- Send structured data to an AI model.
+- Build parameterized prompts.
+- Request structured JSON output.
+- Use AI for basic data analysis.
+- Parse JSON responses in Python.
+- Work with environment variables.
+- Separate AI-generated data from application logic.
+
+## Result
+
+The Day 12 project demonstrates how a Python application can send structured employee data to an AI model and receive structured analytical information that can be processed by the application.

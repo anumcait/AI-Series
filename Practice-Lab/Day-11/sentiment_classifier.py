@@ -32,8 +32,8 @@ Explanation: <short explanation>
 
 
 if __name__ == "__main__":
-    review = "The product arrived quickly and works perfectly."
-
+    # review = "The product arrived quickly and works perfectly."
+    review = "The application crashes every time I open it."
     response = classify_sentiment(review)
 
     print(response)

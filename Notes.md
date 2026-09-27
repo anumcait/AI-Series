@@ -5022,3 +5022,349 @@ Application Output
 
 This pattern will be reused and expanded in future AI Engineering labs.
 
+---
+# Day 12 Notes — AI Data Analyzer with Gemini API
+
+## 1. What We Are Building
+
+In this task, we build a Python-based **AI Data Analyzer** using the Gemini API.
+
+The application accepts a small employee dataset and asks an AI model to analyze the data and return structured JSON.
+
+The dataset contains:
+
+```text
+Employee, Department, Salary, Experience
+Rahul, IT, 85000, 5
+Priya, HR, 65000, 4
+Arun, IT, 95000, 7
+Sneha, Finance, 72000, 6
+```
+
+The analysis includes:
+
+- Total employees
+- Highest salary employee
+- Average salary
+- Departments
+- Average experience
+
+---
+
+## 2. Project Directory
+
+The Day 12 implementation is located at:
+
+```text
+Practice-Lab/
+└── Day-12/
+    ├── data_analyzer.py
+    └── README.md
+```
+
+---
+
+## 3. Virtual Environment
+
+The project uses the virtual environment created for the AI-KodeKloud repository.
+
+Activate it using Git Bash:
+
+```bash
+cd /d/AI-KodeKloud
+source venv/Scripts/activate
+```
+
+---
+
+## 4. Gemini SDK
+
+The Gemini Python SDK is installed using:
+
+```bash
+pip install google-genai
+```
+
+The application uses:
+
+```python
+from google import genai
+```
+
+---
+
+## 5. API Configuration
+
+The Gemini API key is stored in the environment variable:
+
+```text
+GEMINI_API_KEY
+```
+
+It is accessed from Python using:
+
+```python
+os.environ.get("GEMINI_API_KEY")
+```
+
+The API key is not stored directly in the source code.
+
+---
+
+## 6. Creating the Gemini Client
+
+The client is created using:
+
+```python
+client = genai.Client(
+    api_key=os.environ.get("GEMINI_API_KEY")
+)
+```
+
+The client is used to send the dataset and prompt to the Gemini model.
+
+---
+
+## 7. Data Analyzer Function
+
+The main function is:
+
+```python
+def analyze_data(data: str) -> str:
+```
+
+The function accepts the dataset dynamically.
+
+This makes it possible to analyze different datasets without changing the function itself.
+
+---
+
+## 8. Parameterized Prompt
+
+The dataset is inserted dynamically into the prompt:
+
+```python
+prompt = f"""
+Analyze the following employee dataset.
+
+...
+
+Employee dataset:
+
+{data}
+"""
+```
+
+The `data` parameter contains the employee information.
+
+This creates a reusable AI data-analysis function.
+
+---
+
+## 9. Structured Output
+
+The AI is instructed to return JSON with exactly these fields:
+
+```json
+{
+  "total_employees": 4,
+  "highest_salary_employee": "Arun",
+  "average_salary": 79250,
+  "departments": ["IT", "HR", "Finance"],
+  "average_experience": 5.5
+}
+```
+
+This is different from the previous sentiment classification lab because the application now expects structured information from the model.
+
+---
+
+## 10. Sending the Request
+
+The Gemini request is made using:
+
+```python
+response = client.models.generate_content(
+    model="gemini-3.8-flash",
+    contents=prompt,
+)
+```
+
+The generated response is stored in:
+
+```python
+response
+```
+
+The generated text is accessed using:
+
+```python
+response.text
+```
+
+---
+
+## 11. JSON Parsing
+
+Python provides the `json` module for working with JSON data.
+
+It can be imported using:
+
+```python
+import json
+```
+
+A JSON response can be converted into a Python object using:
+
+```python
+result = json.loads(response)
+```
+
+Individual fields can then be accessed:
+
+```python
+result["total_employees"]
+```
+
+For example:
+
+```python
+print(result["average_salary"])
+```
+
+---
+
+## 12. Expected Analysis
+
+For the provided dataset:
+
+```text
+Employee, Department, Salary, Experience
+Rahul, IT, 85000, 5
+Priya, HR, 65000, 4
+Arun, IT, 95000, 7
+Sneha, Finance, 72000, 6
+```
+
+The expected values are:
+
+```text
+Total employees: 4
+Highest salary employee: Arun
+Average salary: 79250
+Departments: IT, HR, Finance
+Average experience: 5.5
+```
+
+---
+
+## 13. Running the Application
+
+From the project root:
+
+```bash
+cd /d/AI-KodeKloud
+source venv/Scripts/activate
+```
+
+Set the API key:
+
+```bash
+export GEMINI_API_KEY="your-api-key"
+```
+
+Run:
+
+```bash
+python Practice-Lab/Day-12/data_analyzer.py
+```
+
+---
+
+## 14. Important Concepts Learned
+
+### Structured AI Output
+
+The AI is instructed to return a predictable JSON structure instead of free-form text.
+
+### Parameterized Prompts
+
+The dataset is passed into the prompt dynamically.
+
+### JSON
+
+JSON allows the AI response to be consumed as structured data by Python.
+
+### Environment Variables
+
+The API key is kept outside the source code.
+
+### AI + Python
+
+The AI generates the analysis while Python can process the resulting structured information.
+
+---
+
+## 15. AI Analysis vs Python Analysis
+
+This lab also introduces an important engineering consideration.
+
+AI can be asked to perform numerical calculations:
+
+```text
+Dataset
+   ↓
+AI
+   ↓
+Calculations
+```
+
+However, Python can perform deterministic calculations:
+
+```text
+Dataset
+   ↓
+Python
+   ↓
+Calculations
+```
+
+A production application may use Python for exact numerical calculations and AI for tasks such as summarization or interpretation.
+
+This is an important distinction when building reliable AI applications.
+
+---
+
+## 16. Final Flow
+
+```text
+Employee Dataset
+       ↓
+Parameterized Prompt
+       ↓
+Gemini API
+       ↓
+Gemini Flash
+       ↓
+Structured JSON
+       ↓
+Python JSON Processing
+       ↓
+Application Output
+```
+
+## Key Takeaway
+
+Day 12 introduced **structured AI output** and demonstrated how an AI model can analyze a small dataset and return information that can be consumed by a Python application.
+
+The main progression is:
+
+```text
+Day 11:
+Text → AI → Classification
+
+Day 12:
+Dataset → AI → Structured JSON → Python
+```
+
+This provides the foundation for more advanced topics such as data extraction, embeddings, semantic search, RAG, and AI agents.
