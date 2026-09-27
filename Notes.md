@@ -5356,15 +5356,3 @@ Application Output
 ## Key Takeaway
 
 Day 12 introduced **structured AI output** and demonstrated how an AI model can analyze a small dataset and return information that can be consumed by a Python application.
-
-The main progression is:
-
-```text
-Day 11:
-Text → AI → Classification
-
-Day 12:
-Dataset → AI → Structured JSON → Python
-```
-
-This provides the foundation for more advanced topics such as data extraction, embeddings, semantic search, RAG, and AI agents.
