@@ -118,8 +118,6 @@ Return valid JSON with exactly these fields:
 
 ## Environment Setup
 
-If your existing `venv` is outside the `Practice-Lab` directory, activate it from `Day-12`.
-
 ```bash
 source ../../venv/Scripts/activate
 ```
