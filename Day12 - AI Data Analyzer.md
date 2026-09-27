@@ -274,36 +274,6 @@ python data_analyzer.py
 
 ---
 
-## Git
-
-```bash
-git add Practice-Lab/Day-12/
-git commit -m "Day 12: Add AI employee data analyzer"
-git push
-```
-
-Make sure `venv/` and API keys are not committed.
-
----
-
-## Expected Learning
-
-By completing this lab, you should understand:
-
-```text
-Employee Dataset
-      ↓
-Python Function
-      ↓
-Dynamic Prompt
-      ↓
-Gemini AI
-      ↓
-JSON Response
-      ↓
-Console Output
-```
-
 You should gain experience with:
 
 - Python functions
