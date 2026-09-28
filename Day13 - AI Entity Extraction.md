@@ -356,3 +356,11 @@ Python JSON Validation
 - AI-powered DevOps incident processing
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/b9ce9e28-c63a-4fa1-a67a-3fbeb13390dc" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/146ce73b-0819-4299-ad78-999766722f83" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/469a9a3a-e0bd-437c-bc98-b00f90ddc6c8" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/727afacf-08f5-47ff-8bb9-55e0fff29d0f" />
+
+
+
+
