@@ -5353,6 +5353,637 @@ Python JSON Processing
 Application Output
 ```
 
-## Key Takeaway
+---
 
-Day 12 introduced **structured AI output** and demonstrated how an AI model can analyze a small dataset and return information that can be consumed by a Python application.
+# Day 13 - AI Incident Entity Extractor
+
+## 1. Introduction
+
+The application takes an unstructured IT incident description and asks Gemini to extract important operational information into structured JSON.
+
+For example:
+
+```text
+The production payment API started returning 503 errors
+in the AWS Mumbai region at 10:30 AM. The issue affected
+the ECS payment service and approximately 200 users.
+The incident was classified as high severity.
+```
+
+Instead of manually reading this text, our AI application extracts:
+
+```json
+{
+  "environment": "Production",
+  "service": "Payment API",
+  "cloud": "AWS",
+  "region": "Mumbai",
+  "platform": "ECS",
+  "error": "503",
+  "start_time": "10:30 AM",
+  "affected_users": 200,
+  "severity": "High"
+}
+```
+
+The main idea is:
+
+```text
+Unstructured Text
+       ↓
+      Gemini
+       ↓
+Entity Extraction
+       ↓
+Structured JSON
+```
+
+---
+
+# 2. What Is Entity Extraction?
+
+Entity extraction means identifying specific pieces of information from unstructured text.
+
+For example:
+
+```text
+The production API in AWS Mumbai is returning 503 errors.
+```
+
+We can extract:
+
+```text
+Environment → Production
+Service     → API
+Cloud       → AWS
+Region      → Mumbai
+Error       → 503
+```
+
+The input is normal human-readable text.
+
+The output is structured information that a program can use.
+
+---
+
+# 3. Why Do We Need a Schema?
+
+We do not want the AI to return random information.
+
+We define exactly what we want:
+
+```text
+environment
+service
+cloud
+region
+platform
+component
+error
+error_type
+start_time
+affected_users
+severity
+issue
+trigger
+```
+
+This is called a **schema**.
+
+The schema tells the AI:
+
+> These are the fields I want you to extract.
+
+This makes the output predictable and easier for Python to process.
+
+---
+
+# 4. Missing Information
+
+An incident may not contain every entity.
+
+For example:
+
+```text
+The frontend service is returning 502 errors.
+```
+
+We know:
+
+```text
+service → Frontend
+error   → 502
+```
+
+But we do not know:
+
+```text
+cloud
+region
+platform
+severity
+affected_users
+```
+
+Therefore, we use:
+
+```json
+{
+  "service": "Frontend",
+  "error": "502",
+  "cloud": null,
+  "region": null,
+  "severity": null
+}
+```
+
+The important rule is:
+
+> Never invent information that is not present in the incident.
+
+---
+
+# 5. Project Setup
+
+Our project contains:
+
+```text
+Day-13/
+│
+├── incident_entity_extractor.py
+└── notes.md
+```
+
+Activate the virtual environment:
+
+```bash
+source ../../venv/Scripts/activate
+```
+
+Install the Gemini SDK:
+
+```bash
+python -m pip install -U google-genai
+```
+
+Verify:
+
+```bash
+python -c "from google import genai; print('google-genai works')"
+```
+
+Set the API key:
+
+```bash
+export GEMINI_API_KEY="your-api-key"
+```
+
+We never hardcode the API key inside the Python program.
+
+---
+
+# 6. Import Required Libraries
+
+Our Python program starts with:
+
+```python
+import json
+import os
+
+from google import genai
+```
+
+`os` is used to read the API key from the environment.
+
+`json` is used to validate the AI response.
+
+`genai` is the Gemini SDK.
+
+---
+
+# 7. Create the Gemini Client
+
+We create the client:
+
+```python
+client = genai.Client(
+    api_key=os.environ.get("GEMINI_API_KEY")
+)
+```
+
+The API key comes from:
+
+```text
+GEMINI_API_KEY
+```
+
+This is better than putting the key directly in the source code.
+
+---
+
+# 8. Create the Function
+
+Our application needs a reusable function:
+
+```python
+def extract_incident_entities(incident: str) -> str:
+    ...
+```
+
+The function accepts the incident description.
+
+For example:
+
+```python
+incident = """
+The production payment API started returning 503 errors
+in the AWS Mumbai region at 10:30 AM.
+"""
+```
+
+The function sends this text to Gemini and returns the extracted JSON.
+
+---
+
+# 9. Build the Prompt
+
+The prompt tells Gemini exactly what to do.
+
+Important instructions include:
+
+```text
+Extract the following entities:
+
+environment
+service
+cloud
+region
+platform
+component
+error
+error_type
+start_time
+affected_users
+severity
+issue
+trigger
+```
+
+We also tell the model:
+
+```text
+Do not invent information.
+Use null for missing entities.
+Return only valid JSON.
+```
+
+These instructions are important because LLMs normally generate natural language.
+
+We need predictable output for our Python application.
+
+---
+
+# 10. Dynamic Prompt
+
+The incident is passed into the prompt using an f-string:
+
+```python
+prompt = f"""
+Extract incident entities.
+
+Incident:
+
+{incident}
+"""
+```
+
+This means the function can process different incident descriptions.
+
+We do not need to change the Python code every time.
+
+---
+
+# 11. Send the Request to Gemini
+
+We call:
+
+```python
+response = client.models.generate_content(
+    model="YOUR_AVAILABLE_GEMINI_MODEL",
+    contents=prompt,
+)
+```
+
+The model receives our prompt and incident description.
+
+Replace:
+
+```text
+YOUR_AVAILABLE_GEMINI_MODEL
+```
+
+with a Gemini model currently available to your API account.
+
+---
+
+# 12. Get the AI Response
+
+The generated text is available through:
+
+```python
+result = response.text.strip()
+```
+
+At this point, `result` should contain our JSON.
+
+For example:
+
+```json
+{
+  "environment": "Production",
+  "service": "Payment API",
+  "error": "503",
+  "severity": "High"
+}
+```
+
+---
+
+# 13. Validate the JSON
+
+AI output should always be treated as external data.
+
+We validate it using:
+
+```python
+json.loads(result)
+```
+
+If the response is valid JSON, Python accepts it.
+
+If the response is invalid, Python raises a JSON parsing error.
+
+This is important because downstream applications may depend on the JSON.
+
+---
+
+# 14. Handling Markdown Code Fences
+
+Sometimes an AI model may return:
+
+```text
+```json
+{
+  "service": "Payment API"
+}
+```
+```
+
+Although the content is JSON, the Markdown code fence makes the entire response unsuitable for direct JSON parsing.
+
+We can remove the fences:
+
+```python
+if result.startswith("```json"):
+    result = result[7:]
+
+if result.startswith("```"):
+    result = result[3:]
+
+if result.endswith("```"):
+    result = result[:-3]
+
+result = result.strip()
+```
+
+Then we validate:
+
+```python
+json.loads(result)
+```
+
+---
+
+# 15. Complete Program Flow
+
+The application works like this:
+
+```text
+Incident Description
+        ↓
+Python Function
+        ↓
+Create Prompt
+        ↓
+Gemini API
+        ↓
+Extract Entities
+        ↓
+JSON Response
+        ↓
+Clean Response
+        ↓
+Validate JSON
+        ↓
+Return Result
+```
+
+---
+
+# 16. Example
+
+Input:
+
+```text
+The production order service running on Kubernetes
+started returning HTTP 500 errors at 11:45 AM.
+The incident affected approximately 75 customers.
+Severity was classified as Critical.
+```
+
+The AI should extract information such as:
+
+```json
+{
+  "environment": "Production",
+  "service": "Order Service",
+  "platform": "Kubernetes",
+  "error": "500",
+  "start_time": "11:45 AM",
+  "affected_users": 75,
+  "severity": "Critical"
+}
+```
+
+Other fields should be `null` if they are not present.
+
+---
+
+# 17. Why This Is Useful in DevOps
+
+Real incident information can come from:
+
+- Monitoring alerts
+- Incident tickets
+- Support tickets
+- Emails
+- Chat messages
+- Postmortems
+- Application alerts
+
+These sources often contain unstructured text.
+
+Our application can convert that text into structured information.
+
+For example:
+
+```text
+Incident Message
+       ↓
+AI Extractor
+       ↓
+Service
+Environment
+Error
+Region
+Severity
+Impact
+       ↓
+Database / Automation
+```
+
+This structured information could later be used for dashboards, incident routing, reporting, or automation.
+
+---
+
+# 18. Important Prompt Engineering Rules
+
+There are four important instructions in this project.
+
+### Define the fields
+
+Tell the AI exactly what to extract.
+
+### Do not invent
+
+Tell the AI to use only information available in the incident.
+
+### Handle missing values
+
+Tell the AI to return `null`.
+
+### Control the format
+
+Tell the AI to return only valid JSON.
+
+Together, these instructions make the output more reliable.
+
+---
+
+# 19. Lab Exercise
+
+Create several different incident descriptions.
+
+For example:
+
+```text
+The production authentication service is returning
+401 errors on ECS. Approximately 50 users are affected.
+The incident started at 2:30 PM and is classified as High.
+```
+
+Run the extractor.
+
+Then create another incident with missing information:
+
+```text
+The frontend application is slow.
+```
+
+Check that the AI does not invent:
+
+```text
+AWS
+ECS
+Region
+Users
+Severity
+```
+
+Instead, missing fields should contain:
+
+```text
+null
+```
+
+---
+
+# 20. Troubleshooting
+
+### Gemini Import Error
+
+If you see:
+
+```text
+ImportError: cannot import name 'genai' from 'google'
+```
+
+Run:
+
+```bash
+python -m pip install -U google-genai
+```
+
+### API Key Problem
+
+Check:
+
+```bash
+echo $GEMINI_API_KEY
+```
+
+If empty:
+
+```bash
+export GEMINI_API_KEY="your-api-key"
+```
+
+### Model Not Found
+
+If you receive:
+
+```text
+404 NOT_FOUND
+```
+
+check that the configured Gemini model is currently available.
+
+---
+
+# 21. Key Takeaways
+
+By the end of this project, you should understand:
+
+- What information extraction is.
+- How entity extraction works.
+- How to define an extraction schema.
+- How to create dynamic prompts.
+- How to request structured JSON from Gemini.
+- Why missing entities should use `null`.
+- Why AI output must be validated.
+- How Python can consume structured AI output.
+- How AI can be applied to DevOps incident processing.
+
+The core pattern to remember is:
+
+```text
+Unstructured Incident
+        ↓
+        AI
+        ↓
+Predefined Schema
+        ↓
+Structured JSON
+        ↓
+Python Validation
+```
