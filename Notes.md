@@ -5987,3 +5987,812 @@ Structured JSON
         ↓
 Python Validation
 ```
+---
+
+# Day 14 - AI Knowledge Assistant
+
+## Notes
+
+Building an **AI Knowledge Assistant** using Python and the Gemini API.
+
+The application will receive:
+
+1. A knowledge base
+2. A user question
+
+It will then answer the question **only using the provided knowledge base**.
+
+The main idea is:
+
+```text
+Knowledge Base
+      +
+User Question
+      ↓
+Parameterized Prompt
+      ↓
+Gemini API
+      ↓
+Context-Based Answer
+      ↓
+JSON Validation
+```
+
+This is different from a generic chatbot because we are controlling the information that the AI is allowed to use.
+
+---
+
+## 1. What Is a Knowledge Base?
+
+A knowledge base is simply information that we provide to the AI.
+
+For this project, we use a small company IT policy containing:
+
+- Leave Policy
+- Password Policy
+- VPN Policy
+- Working Hours
+- IT Support Process
+- Laptop and Security Policy
+
+For example:
+
+```text
+LEAVE POLICY
+
+Employees are entitled to 18 casual leaves per calendar year.
+
+Leave requests must be submitted through the HR portal.
+
+Sick leave requires manager approval when the sick leave
+exceeds 2 consecutive working days.
+```
+
+This information becomes the **context** for Gemini.
+
+---
+
+## 2. What Is Context?
+
+Context is the information supplied to the AI before asking the question.
+
+For example:
+
+```text
+Context:
+
+Employees are entitled to 18 casual leaves per calendar year.
+
+Question:
+
+How many casual leaves can an employee take?
+```
+
+Gemini uses the context to produce the answer.
+
+The important instruction is:
+
+> Answer using only the provided context.
+
+---
+
+## 3. Why Not Build Another Chatbot?
+
+A normal chatbot can answer using the model's general knowledge.
+
+For example:
+
+```text
+User Question
+      ↓
+Gemini
+      ↓
+General Answer
+```
+
+Our application is different:
+
+```text
+Knowledge Base
+      +
+User Question
+      ↓
+Gemini
+      ↓
+Answer from Knowledge Base
+```
+
+This is called **grounded question answering**.
+
+It is useful when answers must come from specific business information.
+
+Examples include:
+
+- HR policies
+- IT documentation
+- ERP procedures
+- Company SOPs
+- Product documentation
+- Customer support documentation
+
+---
+
+## 4. Direct Question
+
+Suppose the user asks:
+
+```text
+How many casual leaves can an employee take?
+```
+
+The knowledge base says:
+
+```text
+Employees are entitled to 18 casual leaves per calendar year.
+```
+
+Therefore Gemini should answer:
+
+```text
+Employees are entitled to 18 casual leaves per calendar year.
+```
+
+This is a direct question because the answer is explicitly present in the context.
+
+---
+
+## 5. Interpretation Question
+
+Now consider:
+
+```text
+Does one day of sick leave require manager approval?
+```
+
+The knowledge base says:
+
+```text
+Sick leave requires manager approval when the sick leave
+exceeds 2 consecutive working days.
+```
+
+The answer is not written exactly as the question.
+
+The model needs to interpret the condition:
+
+```text
+Approval required → More than 2 consecutive days
+
+One day → Does not exceed 2 days
+```
+
+Therefore:
+
+```text
+According to the provided information, manager approval
+is not required for one day of sick leave.
+```
+
+This teaches us that context-based Q&A can involve simple reasoning over the supplied information.
+
+---
+
+## 6. Missing Information
+
+This is the most important test.
+
+Ask:
+
+```text
+What is the company's work-from-home internet reimbursement?
+```
+
+Suppose the knowledge base contains no information about internet reimbursement.
+
+The AI must not guess.
+
+Incorrect:
+
+```text
+The company provides ₹1,500 per month.
+```
+
+There is no information supporting that answer.
+
+Correct:
+
+```text
+The provided information does not contain the answer to this question.
+```
+
+This is how we begin reducing **AI hallucinations**.
+
+---
+
+## 7. What Is Hallucination?
+
+An AI hallucination occurs when the model generates information that is not supported by the available information.
+
+For example:
+
+```text
+Knowledge Base:
+
+Employees receive 18 casual leaves per year.
+
+Question:
+
+What is the company's internet reimbursement?
+```
+
+If the AI responds:
+
+```text
+Employees receive ₹1,500 per month.
+```
+
+that is an unsupported answer.
+
+Our application instead instructs Gemini:
+
+```text
+Do not invent information.
+If the answer is not available, say so.
+```
+
+This does not mathematically guarantee that hallucinations can never happen, so we also validate and test the output.
+
+---
+
+## 8. Structured JSON Output
+
+Instead of asking Gemini for plain text, we ask it to return a fixed JSON structure.
+
+Our schema is:
+
+```json
+{
+  "answer": null,
+  "source": null,
+  "found_in_context": false
+}
+```
+
+The fields have clear meanings.
+
+### `answer`
+
+The answer to the user's question.
+
+### `source`
+
+The policy section containing the relevant information.
+
+### `found_in_context`
+
+Indicates whether the answer was found in the supplied knowledge base.
+
+---
+
+## 9. Successful JSON Response
+
+For:
+
+```text
+How many casual leaves can an employee take?
+```
+
+the response should look like:
+
+```json
+{
+  "answer": "Employees are entitled to 18 casual leaves per calendar year.",
+  "source": "Leave Policy",
+  "found_in_context": true
+}
+```
+
+The application now knows:
+
+```text
+Answer → Available
+Source → Leave Policy
+Found  → true
+```
+
+---
+
+## 10. Missing Answer JSON
+
+For:
+
+```text
+What is the company's internet reimbursement?
+```
+
+the response should be:
+
+```json
+{
+  "answer": "The provided information does not contain the answer to this question.",
+  "source": null,
+  "found_in_context": false
+}
+```
+
+Notice that:
+
+```text
+source = null
+found_in_context = false
+```
+
+This gives our Python application a clear signal that the information was not available.
+
+---
+
+## 11. Why JSON?
+
+AI normally generates text.
+
+For example:
+
+```text
+Employees receive 18 casual leaves per year.
+```
+
+A human can understand this easily.
+
+But software applications benefit from structured data.
+
+With JSON:
+
+```json
+{
+  "answer": "Employees receive 18 casual leaves per year.",
+  "source": "Leave Policy",
+  "found_in_context": true
+}
+```
+
+Python can access individual fields:
+
+```python
+data["answer"]
+data["source"]
+data["found_in_context"]
+```
+
+This makes the response easier to use in:
+
+- APIs
+- Web applications
+- Databases
+- Automation
+- ERP systems
+- IT support applications
+
+---
+
+## 12. Prompt Engineering
+
+The prompt is responsible for telling Gemini how to behave.
+
+Important rules include:
+
+```text
+Use only the provided knowledge base.
+
+Do not use outside knowledge.
+
+Do not make assumptions.
+
+Do not invent missing information.
+
+If the answer is not available, say so.
+
+Return only valid JSON.
+
+Use the specified JSON structure.
+```
+
+These instructions are an example of **prompt engineering**.
+
+The goal is not just to ask a question, but to clearly define the AI's task and constraints.
+
+---
+
+## 13. Parameterized Prompt
+
+Our Python function receives the context and question dynamically:
+
+```python
+def answer_question(context: str, question: str) -> str:
+```
+
+We then insert them into the prompt:
+
+```python
+prompt = f"""
+You are an AI Knowledge Assistant.
+
+Use ONLY the provided knowledge base.
+
+Do not use outside knowledge.
+Do not make assumptions.
+Do not invent missing information.
+
+Knowledge Base:
+{context}
+
+Question:
+{question}
+
+Return only valid JSON using this structure:
+
+{{
+    "answer": null,
+    "source": null,
+    "found_in_context": false
+}}
+"""
+```
+
+The same function can now handle different questions.
+
+---
+
+## 14. Calling Gemini
+
+We send the prompt to Gemini:
+
+```python
+response = client.models.generate_content(
+    model="YOUR_AVAILABLE_GEMINI_MODEL",
+    contents=prompt,
+)
+```
+
+The model receives:
+
+```text
+Instructions
+     +
+Knowledge Base
+     +
+Question
+```
+
+and generates the requested response.
+
+The API key is read from the environment:
+
+```python
+client = genai.Client(
+    api_key=os.environ.get("GEMINI_API_KEY")
+)
+```
+
+The API key should never be hardcoded.
+
+---
+
+## 15. Reading the Response
+
+Gemini returns text.
+
+We retrieve it using:
+
+```python
+result = response.text.strip()
+```
+
+The result should contain JSON such as:
+
+```json
+{
+  "answer": "Employees are entitled to 18 casual leaves per calendar year.",
+  "source": "Leave Policy",
+  "found_in_context": true
+}
+```
+
+At this point, it is still a Python string.
+
+---
+
+## 16. JSON Validation
+
+We must validate the AI output before using it.
+
+Use:
+
+```python
+json.loads(result)
+```
+
+If the JSON is valid:
+
+```text
+Gemini Response
+      ↓
+json.loads()
+      ↓
+Python Dictionary
+```
+
+If it is invalid:
+
+```text
+Gemini Response
+      ↓
+json.loads()
+      ↓
+JSONDecodeError
+```
+
+This is an important software engineering practice.
+
+> Never assume that AI-generated output is automatically valid application data.
+
+---
+
+## 17. Handling Markdown Code Fences
+
+Sometimes a model may return:
+
+```text
+```json
+{
+  "answer": "...",
+  "source": "Leave Policy",
+  "found_in_context": true
+}
+```
+```
+
+If that happens, remove the Markdown fences before calling `json.loads()`:
+
+```python
+if result.startswith("```json"):
+    result = result[7:]
+
+if result.startswith("```"):
+    result = result[3:]
+
+if result.endswith("```"):
+    result = result[:-3]
+
+result = result.strip()
+```
+
+Then validate:
+
+```python
+json.loads(result)
+```
+
+---
+
+## 18. Error Handling
+
+AI applications should handle errors like normal Python applications.
+
+For JSON errors:
+
+```python
+try:
+    json.loads(result)
+except json.JSONDecodeError:
+    print("Gemini returned invalid JSON.")
+```
+
+For API or runtime errors:
+
+```python
+try:
+    response = client.models.generate_content(
+        model="YOUR_AVAILABLE_GEMINI_MODEL",
+        contents=prompt,
+    )
+except Exception as error:
+    print(error)
+```
+
+The important lesson is:
+
+> Gemini is one component inside our application. Python still controls validation and error handling.
+
+---
+
+## 19. API Key Security
+
+Do not write:
+
+```python
+client = genai.Client(
+    api_key="my-secret-key"
+)
+```
+
+Instead:
+
+```python
+client = genai.Client(
+    api_key=os.environ.get("GEMINI_API_KEY")
+)
+```
+
+Set the environment variable:
+
+```bash
+export GEMINI_API_KEY="your-api-key"
+```
+
+Never commit the API key to GitHub.
+
+---
+
+## 20. Testing the Application
+
+We should test different types of questions.
+
+### Direct Questions
+
+```text
+How many casual leaves can employees take?
+
+What is the minimum password length?
+
+When must remote employees use the VPN?
+
+What are the standard working hours?
+
+Where should IT problems be reported?
+```
+
+### Interpretation Questions
+
+```text
+Does one day of sick leave require manager approval?
+
+Can a remote employee access internal systems without VPN?
+
+What should an employee do after losing their company laptop?
+```
+
+### Missing Information
+
+```text
+How much internet reimbursement does the company provide?
+
+How many annual vacation days does an employee receive?
+```
+
+The last two should demonstrate that the AI does not invent information.
+
+---
+
+## 21. What Should We Verify?
+
+For each question, check four things.
+
+### 1. Answer
+
+Is the answer supported by the knowledge base?
+
+### 2. Source
+
+Does the source identify the correct policy?
+
+### 3. Found Status
+
+For available information:
+
+```json
+"found_in_context": true
+```
+
+For unavailable information:
+
+```json
+"found_in_context": false
+```
+
+### 4. JSON
+
+Does this work successfully?
+
+```python
+json.loads(result)
+```
+
+Also check that the model did not introduce information that is absent from the knowledge base.
+
+---
+
+## 22. Complete Application Flow
+
+The complete flow is:
+
+```text
+Company IT Knowledge Base
+          ↓
+      User Question
+          ↓
+   Python Application
+          ↓
+   Parameterized Prompt
+          ↓
+      Gemini API
+          ↓
+ Context-Based Reasoning
+          ↓
+     JSON Response
+          ↓
+     json.loads()
+          ↓
+   Validated JSON
+          ↓
+ Answer + Source + Status
+```
+
+---
+
+## 23. Key Concepts Learned
+
+### Context
+
+Information supplied to the AI along with the question.
+
+### Grounding
+
+Keeping the AI answer connected to trusted information.
+
+### Prompt Engineering
+
+Writing instructions that control how the model should perform the task.
+
+### Structured Output
+
+Requesting predictable JSON instead of unrestricted text.
+
+### JSON Validation
+
+Using Python to verify that the generated response is valid JSON.
+
+### Hallucination Reduction
+
+Preventing the AI from inventing information that does not exist in the supplied context.
+
+### Knowledge-Based Q&A
+
+Answering questions from a provided knowledge base instead of relying only on the model's general knowledge.
+
+---
+
+## 24. Final Takeaway
+
+The main concept of Day 14 is:
+
+```text
+Knowledge Base
+      +
+Question
+      ↓
+Gemini
+      ↓
+Grounded Answer
+```
+
+The most important rule is:
+
+```text
+If the information exists:
+    Answer from the context.
+
+If the information does not exist:
+    Do not invent it.
+```
+
+---

@@ -38,6 +38,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 11 | AI Sentiment Classifier | Python, Gemini API, Gemini Flash, Prompt Engineering, Environment Variables |
 | Day 12 | AI Data Analyzer | Python, Gemini API, Gemini Flash, Structured JSON, Prompt Engineering, Environment Variables |
 | Day 13 | AI Entity Extraction | Python, Gemini API, Gemini Flash, Entity Extraction, Structured JSON, Prompt Engineering, Environment Variables |
+| Day 14 | AI Knowledge Assistant | Python, Gemini API, Gemini Flash, Context-Based Q&A, Grounded Responses, Structured JSON, Prompt Engineering, JSON Validation |
 
 ---
 
@@ -79,3 +80,6 @@ Accepts an employee dataset and uses a parameterized prompt to analyze the data 
 
 # 🚀 Day 13 — AI Incident Entity Extractor
 Using AI to extract important operational information from unstructured IT incident descriptions and convert it into structured JSON.
+
+# 🚀 Day 14 — AI Knowledge Assistant
+Using AI to answer user questions from a provided knowledge base, ensuring responses are grounded in the supplied information and returning structured JSON.
