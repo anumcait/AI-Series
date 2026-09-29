@@ -752,7 +752,7 @@ This makes the output usable by:
 
 ## AI Grounding Concept
 
-Day 14 introduces an important concept:
+Introduces an important concept:
 
     General AI Question
             ↓
@@ -766,7 +766,7 @@ versus:
 
 The second approach is particularly useful for enterprise applications where answers should be based on controlled business information.
 
-## Day 14 Architecture
+## Architecture
 
                      ┌──────────────────────┐
                      │   Company Policies   │
@@ -813,142 +813,14 @@ The second approach is particularly useful for enterprise applications where ans
                      │      json.loads()    │
                      └──────────────────────┘
 
-## Day 13 → Day 14 Progression
-
-### Day 13
-
-    Unstructured Incident
-            ↓
-          Gemini
-            ↓
-    Entity Extraction
-            ↓
-     Structured JSON
-
-The AI extracts information **from the input text**.
-
-### Day 14
-
-    Knowledge Base
-            +
-        Question
-            ↓
-          Gemini
-            ↓
-    Context-Based Reasoning
-            ↓
-     Structured Answer
-
-The AI answers a question **using the supplied information**.
-
-This is the next important step toward Retrieval-Augmented Generation.
-
-## Day 14 → Day 15
-
-Today:
-
-    Knowledge Base
-          ↓
-        Prompt
-          ↓
-        Gemini
-          ↓
-        Answer
-
-But the knowledge base is manually included in the Python program.
-
-Tomorrow:
-
-    Document
-       ↓
-    Read Document
-       ↓
-    Extract Text
-       ↓
-    Relevant Context
-       ↓
-    Gemini
-       ↓
-    Answer
-
-That becomes **Document Q&A**.
-
-## Future AI Engineering Progression
-
-    Day 11
-    Text → Sentiment
-            ↓
-       Classification
-
-    Day 12
-    Dataset
-       ↓
-    Analysis
-       ↓
-    Insights
-
-    Day 13
-    Incident
-       ↓
-    Entity Extraction
-       ↓
-    Structured JSON
-
-    Day 14
-    Knowledge Base + Question
-       ↓
-    Context-Aware Q&A
-       ↓
-    Grounded Answer
-
-    Day 15
-    Documents
-       ↓
-    Document Q&A
-
-    Day 16
-    Documents
-       ↓
-    Embeddings
-
-    Day 17
-    Question
-       ↓
-    Semantic Search
-
-    Day 18
-    Embeddings
-       ↓
-    Vector Database
-
-    Day 19
-    Search + LLM
-       ↓
-    RAG
-
-    Day 20
-    RAG
-     +
-    Conversation
-       ↓
-    RAG Chatbot
-
-## What You Will Learn
-
-- Context-aware Question Answering
-- Knowledge-grounded AI
-- Prompt engineering
-- Context injection
-- Grounding LLM responses
-- Hallucination reduction
-- Structured JSON output
-- JSON schema design
-- JSON validation
-- `json.loads()`
-- Gemini API
-- `google-genai`
-- Python environment variables
-- Knowledge-base-driven AI applications
 
 ### Screenshots
+
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/9450f6c1-3cbf-44f8-a899-951213e793cc" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/f5d44283-2964-4886-aba0-97d62855e008" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/8fd2ae39-bd9d-4db8-b75a-fb3e81522fdb" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7e12adca-3194-4a14-91ec-1bda5c40887a" />
+
+
+
 
