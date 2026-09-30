@@ -1,0 +1,100 @@
+ERP PURCHASE PROCESS
+
+Purpose
+
+The ERP purchase process defines how employees request and purchase
+goods or services for the organization.
+
+PROCESS FLOW
+
+Purchase Request
+    ↓
+Manager Approval
+    ↓
+Purchase Order
+    ↓
+Goods Receipt
+    ↓
+Invoice Verification
+
+
+1. PURCHASE REQUEST
+
+Employees must create a purchase request in the ERP system.
+
+The request must contain:
+
+- Item or service description
+- Quantity
+- Estimated price
+- Required delivery date
+- Business justification
+- Cost center
+
+The employee who creates the request is responsible for providing
+accurate information.
+
+
+2. MANAGER APPROVAL
+
+The purchase request must be reviewed and approved by the employee's
+manager.
+
+Managers must verify the business justification, requested quantity,
+and estimated cost.
+
+Requests above $10,000 require approval from both the department
+manager and the finance department.
+
+
+3. PURCHASE ORDER
+
+After approval, the procurement team creates a purchase order.
+
+A purchase order must not be created before the required approvals
+are completed.
+
+The purchase order is sent to the supplier.
+
+
+4. GOODS RECEIPT
+
+When the goods are delivered, the receiving team must record a goods
+receipt in the ERP system.
+
+The receiving team must verify the delivered quantity and condition.
+
+If the delivered quantity differs from the purchase order, the
+difference must be recorded and reported to procurement.
+
+Damaged goods must be reported to procurement immediately.
+
+
+5. INVOICE VERIFICATION
+
+The accounts payable team verifies supplier invoices.
+
+The invoice must be matched against the purchase order and goods
+receipt.
+
+Payment must not be released if the invoice cannot be matched with
+the purchase order and goods receipt.
+
+
+EXCEPTIONS
+
+Urgent purchases may bypass the normal process only when authorized
+by the department manager and finance department.
+
+Emergency purchases must be documented after the purchase is completed.
+
+
+RISKS
+
+Incorrect purchase requests can result in incorrect orders.
+
+Missing approvals can create unauthorized purchases.
+
+Incorrect goods receipts can result in incorrect supplier payments.
+
+Failure to match invoices can result in payment errors or fraud.

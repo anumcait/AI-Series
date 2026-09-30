@@ -6794,5 +6794,866 @@ If the information exists:
 If the information does not exist:
     Do not invent it.
 ```
+---
+
+# 📚 Day 15 — AI Document Analyzer
+
+## 1. What Are We Building?
+
+Today we are building an **AI Document Analyzer**.
+
+The application takes an unstructured document such as:
+
+- ERP process
+- SOP
+- Technical specification
+- Project requirements
+- Incident runbook
+
+and asks Gemini to extract useful information into structured JSON.
+
+The basic idea is:
+
+    Document
+       ↓
+    Gemini
+       ↓
+    Structured Information
+       ↓
+    JSON
+
+This is different from a normal summarizer.
+
+A summarizer answers:
+
+    "What is this document about?"
+
+Our application answers:
+
+    "What requirements, roles, actions, rules, dependencies,
+     exceptions, and risks are present in this document?"
+
+---
+
+# 2. Why Is This Useful?
+
+Business documents usually contain important information in natural language.
+
+For example:
+
+    Requests above $10,000 require approval from the finance department.
+
+A human can understand this easily.
+
+But an application needs structured information:
+
+    {
+      "rule": "Requests above $10,000 require finance approval"
+    }
+
+Once information is structured, it can be used by:
+
+- APIs
+- Databases
+- ERP systems
+- Workflow automation
+- Dashboards
+- Reporting systems
+- Other AI applications
+
+This is one of the important patterns in enterprise AI:
+
+    Unstructured Data
+          ↓
+          AI
+          ↓
+    Structured Data
+
+---
+
+# 3. Flow
+
+The flow is:
+
+    Business Document
+          ↓
+    Gemini
+          ↓
+    Document Analysis
+          ↓
+    Structured JSON
+
+We are asking the AI to analyze the complete document.
+
+---
+
+# 4. What Information Are We Extracting?
+
+Our JSON contains eight main categories.
+
+## Document Type
+
+Identifies what kind of document was provided.
+
+Example:
+
+    "document_type": "ERP Purchase Process"
+
+---
+
+## Requirements
+
+Requirements describe things that must be provided or satisfied.
+
+Example:
+
+    "Purchase requests must contain an estimated price."
+
+Requirements are useful when analyzing:
+
+- Software requirements
+- Policies
+- SOPs
+- Technical specifications
+
+---
+
+## Roles
+
+Roles identify people, teams, or departments involved.
+
+Example:
+
+    Employee
+    Manager
+    Procurement Team
+    Finance Department
+
+This helps us understand **who is responsible for what**.
+
+---
+
+## Actions
+
+Actions describe activities that must be performed.
+
+Example:
+
+    Create a purchase request.
+    Approve the request.
+    Create a purchase order.
+    Record a goods receipt.
+
+Actions are especially useful for workflow automation.
+
+---
+
+## Dependencies
+
+A dependency describes something that must happen before another action.
+
+Example:
+
+    Purchase order creation depends on approval.
+
+The process is:
+
+    Purchase Request
+          ↓
+    Approval
+          ↓
+    Purchase Order
+
+Therefore, the purchase order depends on approval.
+
+---
+
+## Rules
+
+Rules describe conditions, restrictions, thresholds, or mandatory behavior.
+
+Example:
+
+    Requests above $10,000 require finance approval.
+
+Another example:
+
+    Payment must not be released if invoice matching fails.
+
+---
+
+## Exceptions
+
+Exceptions describe situations where the normal process changes.
+
+Example:
+
+    Urgent purchases may bypass the normal process
+    with proper authorization.
+
+Normal process:
+
+    Request
+      ↓
+    Approval
+      ↓
+    Purchase Order
+
+Exception:
+
+    Urgent Purchase
+          ↓
+    Authorized Bypass
+
+---
+
+## Risks
+
+Risks describe possible problems or consequences explicitly mentioned in the document.
+
+Example:
+
+    Missing approvals can create unauthorized purchases.
+
+Another example:
+
+    Invoice matching failures can result in payment errors.
+
+The AI should extract risks from the document rather than inventing possible risks.
+
+---
+
+# 5. The JSON Schema
+
+Our fixed output structure is:
+
+    {
+      "document_type": "",
+      "requirements": [],
+      "roles": [],
+      "actions": [],
+      "dependencies": [],
+      "rules": [],
+      "exceptions": [],
+      "risks": []
+    }
+
+Why use a fixed structure?
+
+Because applications need predictable data.
+
+For example:
+
+    data["roles"]
+
+will always refer to the roles extracted from the document.
+
+If the document contains no exceptions, we return:
+
+    "exceptions": []
+
+rather than inventing an exception.
+
+---
+
+# 6. The Most Important AI Rule
+
+The analyzer must use:
+
+**ONLY the information contained in the supplied document.**
+
+The model must not:
+
+- Use outside knowledge
+- Guess missing information
+- Invent business rules
+- Invent responsibilities
+- Invent risks
+- Add unsupported facts
+
+For example, if the document says:
+
+    Employees must submit purchase requests through the ERP.
+
+But does not mention:
+
+    How long approval takes
+
+The AI must not invent:
+
+    "Approval takes 2 business days."
+
+Instead:
+
+    "dependencies": []
+
+or another appropriate category should simply omit unsupported information.
+
+---
+
+# 7. Parameterized Prompt
+
+The document is inserted into the prompt dynamically.
+
+Conceptually:
+
+    prompt = f"""
+    Analyze this document.
+
+    DOCUMENT:
+    {document}
+    """
+
+This is called a **parameterized prompt**.
+
+The Python program can therefore analyze different documents without changing the prompt logic.
+
+For example:
+
+    purchase_process.txt
+
+can later become:
+
+    software_requirements.txt
+
+or:
+
+    incident_runbook.txt
+
+The analyzer stays the same.
+
+---
+
+# 8. Reading the Document
+
+Python reads the document using:
+
+    with open(
+        "purchase_process.txt",
+        "r",
+        encoding="utf-8"
+    ) as file:
+
+        document = file.read()
+
+Now:
+
+    document
+
+contains the complete text.
+
+We then pass it to:
+
+    analyze_document(document)
+
+This separates two responsibilities:
+
+    File Reading
+         ↓
+    AI Analysis
+
+This separation is important because later we can replace the file reader with:
+
+- PDF extraction
+- DOCX extraction
+- Database content
+- API content
+- Uploaded files
+
+without changing the core AI analyzer.
+
+---
+
+# 9. Gemini API
+
+We use the `google-genai` Python SDK.
+
+The application creates a client using:
+
+    GEMINI_API_KEY
+
+The API key should come from an environment variable.
+
+Never write:
+
+    api_key = "my-secret-key"
+
+inside the Python source code.
+
+Instead use:
+
+    GEMINI_API_KEY
+
+This prevents accidentally committing credentials to GitHub.
+
+---
+
+# 10. Why Use `.env`?
+
+We can store the key in:
+
+    .env
+
+Example:
+
+    GEMINI_API_KEY=your-api-key
+
+Python can load it using:
+
+    from dotenv import load_dotenv
+
+    load_dotenv()
+
+Then:
+
+    os.environ.get("GEMINI_API_KEY")
+
+reads the key.
+
+The `.env` file should be included in:
+
+    .gitignore
+
+---
+
+# 11. AI Output Is Not Automatically Trustworthy
+
+One important lesson today is:
+
+**AI output must be validated before application code uses it.**
+
+Gemini might return valid JSON:
+
+    {
+      "document_type": "ERP Purchase Process"
+    }
+
+But it could also accidentally return:
+
+    Here is the analysis:
+
+    ```json
+    {
+      ...
+    }
+    ```
+
+That is not directly usable as JSON because of the Markdown wrapper.
+
+The application can remove accidental code fences and then validate the result.
+
+---
+
+# 12. JSON Validation
+
+Python provides:
+
+    json.loads()
+
+Example:
+
+    data = json.loads(result)
+
+If the response is valid JSON:
+
+    Gemini Response
+          ↓
+    json.loads()
+          ↓
+    Python Dictionary
+
+If it is invalid:
+
+    Gemini Response
+          ↓
+    json.loads()
+          ↓
+    JSONDecodeError
+
+This allows the application to detect invalid AI output.
+
+---
+
+# 13. Validate the Schema Too
+
+Valid JSON does not necessarily mean correct application data.
+
+For example, this is valid JSON:
+
+    {
+      "hello": "world"
+    }
+
+But it does not follow our analyzer schema.
+
+Therefore we should check that these fields exist:
+
+    document_type
+    requirements
+    roles
+    actions
+    dependencies
+    rules
+    exceptions
+    risks
+
+This gives us two levels of validation:
+
+    JSON Syntax Validation
+              ↓
+    Schema / Field Validation
+
+---
+
+# 14. Example ERP Document
+
+Our lab uses an ERP purchase process.
+
+The process is:
+
+    Purchase Request
+          ↓
+    Manager Approval
+          ↓
+    Purchase Order
+          ↓
+    Goods Receipt
+          ↓
+    Invoice Verification
+
+The AI should understand that these are related process steps.
+
+For example:
+
+    Purchase Order
+    depends on
+    Manager Approval
+
+And:
+
+    Invoice Verification
+    depends on
+    Purchase Order + Goods Receipt
+
+This demonstrates why document analysis is more useful than simple summarization.
+
+---
+
+# 15. Important Business Rules
+
+From our ERP document, examples include:
+
+    Requests above $10,000 require additional approval.
+
+    Purchase orders must not be created before
+    required approvals.
+
+    Payment must not be released when invoice
+    matching fails.
+
+These should be extracted under:
+
+    "rules"
+
+The AI should preserve important conditions such as:
+
+    $10,000
+
+It should not change the meaning.
+
+---
+
+# 16. Important Exceptions
+
+The ERP document contains an exception:
+
+    Urgent purchases may bypass the normal process
+    with authorization.
+
+This belongs under:
+
+    "exceptions"
+
+An exception is different from a normal rule.
+
+A rule says:
+
+    What normally must happen.
+
+An exception says:
+
+    When the normal process can change.
+
+---
+
+# 17. Important Risks
+
+The document explicitly mentions risks such as:
+
+    Missing approvals can create unauthorized purchases.
+
+    Incorrect goods receipts can result in incorrect
+    supplier payments.
+
+    Invoice matching failures can result in payment
+    errors or fraud.
+
+These belong under:
+
+    "risks"
+
+The key point is that the AI extracts documented risks.
+
+It should not create unrelated risks based on general knowledge.
+
+---
+
+# 18. Why Structured JSON Matters
+
+Imagine the AI returned:
+
+    The ERP process starts with a purchase request,
+    followed by approval and purchase order creation...
+
+A human can read it.
+
+But an application has difficulty reliably extracting individual items.
+
+Structured JSON gives us:
+
+    {
+      "roles": [
+        "Employee",
+        "Manager",
+        "Procurement Team"
+      ],
+      "actions": [
+        "Create purchase request",
+        "Approve purchase request",
+        "Create purchase order"
+      ]
+    }
+
+Python can now process these values directly.
+
+For example:
+
+    data["roles"]
+
+or:
+
+    data["actions"]
+
+This makes the AI response application-friendly.
+
+---
+
+# 19. Reusable Analyzer
+
+One of the most important design ideas is that the analyzer should not be tied to one document.
+
+Today:
+
+    purchase_process.txt
+          ↓
+    analyze_document()
+
+Tomorrow:
+
+    software_requirements.txt
+          ↓
+    analyze_document()
+
+Another day:
+
+    incident_runbook.txt
+          ↓
+    analyze_document()
+
+The AI analysis function remains the same.
+
+Only the input document changes.
+
+This is what makes the application reusable.
+
+---
+
+# 20. Testing
+
+Test the application with at least two different documents.
+
+### Test 1 — ERP Purchase Process
+
+Check whether the AI identifies:
+
+- Employees
+- Managers
+- Procurement
+- Finance
+- Purchase actions
+- Approval dependencies
+- Approval rules
+- Urgent purchase exception
+- Business risks
+
+### Test 2 — Software Requirements
+
+Use requirements such as:
+
+    Users must be able to register.
+
+    Users must be able to log in.
+
+    The account must be locked after five failed attempts.
+
+    Administrators can unlock accounts.
+
+    The system must respond within two seconds.
+
+Check whether the analyzer extracts these correctly.
+
+---
+
+# 21. Common Mistakes
+
+## Hardcoding the document
+
+Avoid putting the entire document inside the Python function.
+
+Instead:
+
+    document = file.read()
+
+    analyze_document(document)
+
+---
+
+## Hardcoding the API key
+
+Never do:
+
+    genai.Client(api_key="secret")
+
+Use:
+
+    GEMINI_API_KEY
+
+---
+
+## Trusting AI output blindly
+
+Do not directly assume:
+
+    response.text
+
+is valid JSON.
+
+Always validate it.
+
+---
+
+## Allowing hallucination
+
+The prompt should clearly say:
+
+    Use ONLY the provided document.
+
+---
+
+## Returning inconsistent fields
+
+Always return the same schema:
+
+    document_type
+    requirements
+    roles
+    actions
+    dependencies
+    rules
+    exceptions
+    risks
+
+---
+
+# 22. Day 15 Architecture
+
+The complete architecture is:
+
+    ┌──────────────────────┐
+    │ Business Document    │
+    │ .txt / .md           │
+    └──────────┬───────────┘
+               ↓
+    ┌──────────────────────┐
+    │ Python File Reader   │
+    └──────────┬───────────┘
+               ↓
+    ┌──────────────────────┐
+    │ Parameterized Prompt │
+    └──────────┬───────────┘
+               ↓
+    ┌──────────────────────┐
+    │ Gemini API           │
+    └──────────┬───────────┘
+               ↓
+    ┌──────────────────────┐
+    │ Structured JSON      │
+    └──────────┬───────────┘
+               ↓
+    ┌──────────────────────┐
+    │ json.loads()         │
+    │ Validation            │
+    └──────────┬───────────┘
+               ↓
+    ┌──────────────────────┐
+    │ JSON File / App      │
+    └──────────────────────┘
+
+---
+
+# 23. Key Terms
+
+### Document Intelligence
+
+Using AI to understand and extract information from documents.
+
+### Structured Data
+
+Data organized into predictable fields such as JSON.
+
+### Unstructured Data
+
+Natural-language information such as documents, policies, and reports.
+
+### Prompt Grounding
+
+Restricting the AI to information supplied in the prompt.
+
+### JSON Validation
+
+Checking whether the AI response is valid JSON before using it.
+
+### Information Extraction
+
+Finding specific useful information inside unstructured text.
+
+### Parameterized Prompt
+
+A prompt where application data is inserted dynamically.
+
+---
+
+# 24. What We Learned Today
+
+The main lessons from Day 15 are:
+
+1. AI can analyze complete business documents.
+2. Natural language can be converted into structured JSON.
+3. A fixed schema makes AI output easier to consume.
+4. AI should be grounded in the supplied document.
+5. AI output must be validated before application use.
+6. Documents should be loaded dynamically.
+7. The analyzer should be reusable across different documents.
+8. Structured extraction is useful for enterprise automation.
 
 ---
