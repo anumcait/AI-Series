@@ -330,4 +330,12 @@ The exact wording may differ because Gemini generates the response.
 **Using AI to convert unstructured business documents into structured, machine-readable information.**
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/47f5253c-0d2d-4abd-9013-8847414e916a" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/68b71da2-4890-4365-b9f7-6dfd75d0b92e" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7b7b8ac6-90ab-4c2f-9e10-5259d2937e49" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/73c3d849-efa0-4480-a91a-51509f4527d5" />
+
+
+
+
 
