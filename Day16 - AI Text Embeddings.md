@@ -783,3 +783,19 @@ That is the basic idea behind a modern **RAG pipeline**.
 ---
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/552a41c5-cdaf-4888-a2f3-a818f950503c" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/4862cbd9-edc2-46cc-b8c7-5b85f42c312a" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/d03f17ea-a142-45a3-ab0a-90d3edd73588" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/e8e1a59c-ce08-4e38-92eb-c73aa696cf60" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/8b2dad4c-2fe0-4476-be61-1c5f0d85c2ed" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/a8b85502-4121-4169-b3e0-37b84a6372b1" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/6907a8e6-8f4c-4657-9a0a-44c160433560" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/535f009b-1934-4877-ae47-dd8367f90875" />
+
+
+
+
+
+
+
+
