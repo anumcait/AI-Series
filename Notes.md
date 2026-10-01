@@ -7657,3 +7657,799 @@ The main lessons from Day 15 are:
 8. Structured extraction is useful for enterprise automation.
 
 ---
+
+# 📚 Day 16 — AI Text Embeddings Notes
+
+## 1. What Are Text Embeddings?
+
+A text embedding is a numerical representation of text that captures aspects of its meaning.
+
+Instead of representing a sentence only as characters or words, an embedding model converts it into a vector of numbers.
+
+Example:
+
+```text
+"I love working with Python."
+            ↓
+      Embedding Model
+            ↓
+[0.023, -0.184, 0.421, ...]
+```
+
+The individual numbers are not normally interpreted one by one.
+
+The important idea is that sentences with related meanings tend to have vectors that are closer together in the embedding space.
+
+```text
+Similar meaning
+      ↓
+Similar vectors
+      ↓
+Higher similarity
+```
+
+---
+
+## 2. Why Are Embeddings Useful?
+
+Embeddings allow text to be compared mathematically based on meaning rather than exact word matching.
+
+For example:
+
+```text
+"Python is a programming language."
+
+"I enjoy writing Python applications."
+```
+
+These sentences use different words but discuss related concepts.
+
+An embedding model can represent their meanings as vectors and allow their similarity to be calculated.
+
+Common applications include:
+
+- Semantic search
+- Recommendation systems
+- Document retrieval
+- Similarity matching
+- Vector databases
+- RAG systems
+- AI knowledge bases
+- Duplicate or related-content detection
+
+---
+
+## 3. Embedding Model
+
+An embedding model takes text as input and produces a vector as output.
+
+The basic process is:
+
+```text
+Text
+ ↓
+Embedding Model
+ ↓
+Numerical Vector
+```
+
+For this project, the model is:
+
+```text
+all-MiniLM-L6-v2
+```
+
+It is available through the `sentence-transformers` Python library.
+
+The model produces a fixed-size embedding for each input sentence.
+
+For this model, the embedding contains:
+
+```text
+384 dimensions
+```
+
+Therefore, one sentence becomes a vector containing 384 numerical values.
+
+---
+
+## 4. Vector Representation
+
+Consider:
+
+```text
+Python is a programming language.
+```
+
+The embedding model converts it into something conceptually like:
+
+```text
+[0.0123, -0.0842, 0.0317, 0.0921, ...]
+```
+
+The complete vector represents the sentence in a high-dimensional mathematical space.
+
+The values do not have simple meanings such as:
+
+```text
+Dimension 1 = Python
+Dimension 2 = programming
+```
+
+Instead, the information is distributed across the vector.
+
+Therefore, the complete vector should be considered as the representation.
+
+---
+
+## 5. Embedding Dimensions
+
+A dimension is one numerical position in an embedding vector.
+
+For `all-MiniLM-L6-v2`:
+
+```text
+1 sentence
+    ↓
+384 numerical values
+    ↓
+384-dimensional vector
+```
+
+The number of dimensions is determined by the embedding model.
+
+Different embedding models can produce vectors with different dimensions.
+
+---
+
+## 6. Sentence Transformers
+
+`sentence-transformers` is a Python library designed for generating useful embeddings for sentences and other text.
+
+Installation:
+
+```bash
+python -m pip install sentence-transformers
+```
+
+Import:
+
+```python
+from sentence_transformers import SentenceTransformer
+```
+
+Load the model:
+
+```python
+model = SentenceTransformer("all-MiniLM-L6-v2")
+```
+
+Generate an embedding:
+
+```python
+embedding = model.encode(
+    "Python is a programming language."
+)
+```
+
+The result is a numerical vector.
+
+---
+
+## 7. Generating Multiple Embeddings
+
+Multiple sentences can be encoded together.
+
+Example:
+
+```python
+sentences = [
+    "Python is a programming language.",
+    "I enjoy writing Python applications.",
+    "I like eating pizza."
+]
+
+embeddings = model.encode(
+    sentences,
+    convert_to_numpy=True
+)
+```
+
+The result contains one embedding vector for each sentence.
+
+Conceptually:
+
+```text
+Sentence 1 → Vector 1
+Sentence 2 → Vector 2
+Sentence 3 → Vector 3
+```
+
+---
+
+## 8. NumPy
+
+NumPy is used for numerical operations on vectors and arrays.
+
+Installation:
+
+```bash
+python -m pip install numpy
+```
+
+Import:
+
+```python
+import numpy as np
+```
+
+NumPy provides operations required for similarity calculations, including:
+
+- Dot product
+- Vector magnitude
+- Array operations
+- Numerical calculations
+
+---
+
+## 9. Similarity Between Vectors
+
+After converting sentences into embeddings, the vectors can be compared.
+
+Example:
+
+```text
+Sentence A
+    ↓
+Vector A
+
+Sentence B
+    ↓
+Vector B
+
+Vector A + Vector B
+        ↓
+Similarity calculation
+        ↓
+Similarity score
+```
+
+A commonly used method for text embeddings is **cosine similarity**.
+
+---
+
+# 10. Cosine Similarity
+
+Cosine similarity measures the angle between two vectors.
+
+The basic formula is:
+
+```text
+cosine similarity =
+(A · B)
+───────────────
+||A|| × ||B||
+```
+
+Where:
+
+- `A · B` is the dot product
+- `||A||` is the magnitude of vector A
+- `||B||` is the magnitude of vector B
+
+The calculation focuses on the direction of the vectors.
+
+Conceptually:
+
+```text
+Similar direction
+       ↘
+        ↘
+         ↘
+```
+
+means the vectors are more similar.
+
+---
+
+## 11. Cosine Similarity in Python
+
+A simple implementation:
+
+```python
+def cosine_similarity(vector_a, vector_b):
+    dot_product = np.dot(vector_a, vector_b)
+
+    magnitude_a = np.linalg.norm(vector_a)
+    magnitude_b = np.linalg.norm(vector_b)
+
+    if magnitude_a == 0 or magnitude_b == 0:
+        return 0.0
+
+    return dot_product / (
+        magnitude_a * magnitude_b
+    )
+```
+
+The important NumPy operations are:
+
+```python
+np.dot()
+```
+
+Calculates the dot product.
+
+```python
+np.linalg.norm()
+```
+
+Calculates the magnitude of a vector.
+
+---
+
+## 12. Understanding Similarity Scores
+
+Cosine similarity is often used to determine how closely two vectors point in the same direction.
+
+For many normalized embedding use cases, scores can be interpreted approximately as:
+
+```text
+Higher similarity
+       ↓
+More semantically related
+
+Lower similarity
+       ↓
+Less semantically related
+```
+
+Exact score interpretation depends on the embedding model and the type of text.
+
+A score should therefore be interpreted in context rather than treated as a universal threshold.
+
+---
+
+## 13. Example Comparison
+
+Consider:
+
+```text
+Sentence A:
+Python is a programming language.
+
+Sentence B:
+I enjoy writing Python applications.
+```
+
+Both sentences are related to Python and programming.
+
+Their embeddings should generally have relatively high similarity.
+
+Now compare:
+
+```text
+Sentence A:
+Python is a programming language.
+
+Sentence C:
+I like eating pizza.
+```
+
+These sentences discuss different topics.
+
+Their similarity should generally be lower.
+
+The important concept is:
+
+```text
+Related meaning
+      ↓
+Closer vectors
+      ↓
+Higher similarity
+```
+
+---
+
+# 14. Semantic Search
+
+Semantic search finds information based on meaning rather than simply matching keywords.
+
+Suppose the stored sentences are:
+
+```text
+Python is a programming language.
+I enjoy writing Python applications.
+AWS provides cloud computing services.
+Cloud infrastructure can be deployed on AWS.
+I like eating pizza.
+```
+
+The query is:
+
+```text
+I want to learn Python programming.
+```
+
+The query is converted into an embedding.
+
+Then the query embedding is compared with every stored sentence embedding.
+
+```text
+Query
+ ↓
+Query Embedding
+ ↓
+Compare with stored vectors
+ ↓
+Calculate similarity scores
+ ↓
+Sort by similarity
+ ↓
+Return closest sentence
+```
+
+---
+
+## 15. Semantic Search Example
+
+Conceptually:
+
+```text
+Query:
+"I want to learn Python programming."
+                ↓
+          Query Vector
+                ↓
+       ┌────────┼────────┐
+       ↓        ↓        ↓
+    Vector 1  Vector 2  Vector 3
+       ↓        ↓        ↓
+     Score    Score    Score
+       └────────┼────────┘
+                ↓
+        Highest similarity
+                ↓
+        Most similar sentence
+```
+
+The search is based on the relationship between embeddings.
+
+The query does not have to exactly match the words in the stored sentence.
+
+---
+
+# 16. Reading Sentences from a File
+
+Keeping the sentences in a separate file makes the application reusable.
+
+Example:
+
+```python
+def load_sentences(filename):
+    with open(filename, "r", encoding="utf-8") as file:
+        sentences = [
+            line.strip()
+            for line in file
+            if line.strip()
+        ]
+
+    return sentences
+```
+
+Then:
+
+```python
+sentences = load_sentences("sentences.txt")
+```
+
+Each non-empty line becomes one sentence.
+
+---
+
+# 17. Complete Embedding Flow
+
+The complete application follows this process:
+
+```text
+sentences.txt
+      ↓
+Read sentences
+      ↓
+Load embedding model
+      ↓
+Generate embeddings
+      ↓
+Store vectors
+      ↓
+Compare vectors
+      ↓
+Calculate cosine similarity
+      ↓
+Perform semantic search
+      ↓
+Save results
+```
+
+---
+
+# 18. Why Embeddings Are Different from Generated Text
+
+An embedding model does not normally produce a natural-language answer.
+
+Input:
+
+```text
+Python is a programming language.
+```
+
+Output:
+
+```text
+[0.0123, -0.0842, 0.0317, ...]
+```
+
+The output is a numerical representation.
+
+Therefore:
+
+```text
+Generative AI
+    ↓
+Generates text
+
+Embedding model
+    ↓
+Generates vectors
+```
+
+Embeddings are primarily useful for comparing, retrieving, organizing, and searching information.
+
+---
+
+# 19. Vector Database Concept
+
+When only a few sentences are stored, vectors can remain in memory.
+
+For a large application, embeddings can be stored in a vector database.
+
+Conceptually:
+
+```text
+Documents
+    ↓
+Embedding Model
+    ↓
+Vectors
+    ↓
+Vector Database
+```
+
+When a user searches:
+
+```text
+User Query
+    ↓
+Query Embedding
+    ↓
+Vector Search
+    ↓
+Relevant Documents
+```
+
+This allows large collections of information to be searched semantically.
+
+---
+
+# 20. Connection to RAG
+
+Embeddings are an important component of Retrieval-Augmented Generation (RAG).
+
+A simplified RAG architecture is:
+
+```text
+Documents
+    ↓
+Create embeddings
+    ↓
+Store vectors
+    ↓
+       Vector Database
+              ↑
+              │
+User Question
+      ↓
+Question Embedding
+      ↓
+Similarity Search
+      ↓
+Relevant Documents
+      ↓
+LLM
+      ↓
+Generated Answer
+```
+
+The embedding system helps retrieve relevant information.
+
+The language model can then use the retrieved information to generate an answer.
+
+---
+
+# 21. Important Concepts
+
+### Embedding
+
+A numerical representation of text.
+
+### Vector
+
+An ordered collection of numerical values.
+
+Example:
+
+```text
+[0.12, -0.08, 0.31, ...]
+```
+
+### Dimension
+
+One numerical position in a vector.
+
+### Embedding Model
+
+A model that converts text into embeddings.
+
+### Cosine Similarity
+
+A mathematical method for comparing the direction of two vectors.
+
+### Semantic Similarity
+
+Similarity based on meaning rather than exact word matching.
+
+### Semantic Search
+
+Search that retrieves information based on meaning.
+
+### Vector Database
+
+A database designed to store and search vector representations efficiently.
+
+---
+
+# 22. Key Python Components
+
+Load the model:
+
+```python
+model = SentenceTransformer(
+    "all-MiniLM-L6-v2"
+)
+```
+
+Generate embeddings:
+
+```python
+embeddings = model.encode(
+    sentences,
+    convert_to_numpy=True
+)
+```
+
+Calculate dot product:
+
+```python
+np.dot(vector_a, vector_b)
+```
+
+Calculate vector magnitude:
+
+```python
+np.linalg.norm(vector_a)
+```
+
+Calculate similarity:
+
+```python
+similarity = cosine_similarity(
+    vector_a,
+    vector_b
+)
+```
+
+Sort search results:
+
+```python
+results.sort(
+    key=lambda item: item["similarity"],
+    reverse=True
+)
+```
+
+---
+
+# 23. Practical Mental Model
+
+The easiest way to understand embeddings is:
+
+```text
+Text
+ ↓
+Meaning representation
+ ↓
+Numbers
+ ↓
+Vector
+ ↓
+Compare vectors
+ ↓
+Measure semantic similarity
+```
+
+The vector itself is not the final answer.
+
+It is a mathematical representation that makes operations such as similarity search possible.
+
+---
+
+# 24. Common Applications
+
+Embeddings can be used for:
+
+- Searching documents by meaning
+- Finding similar documents
+- Finding similar questions
+- Recommendation systems
+- FAQ matching
+- Duplicate detection
+- Clustering related content
+- Document retrieval
+- RAG
+- Knowledge-base search
+- Matching users with relevant content
+
+---
+
+# 25. Key Takeaways
+
+- Text can be converted into numerical vectors called embeddings.
+- An embedding represents information about the meaning of text.
+- The complete vector is more important than any individual number.
+- Different embedding models can produce different vector sizes.
+- `sentence-transformers` provides convenient tools for generating sentence embeddings.
+- `all-MiniLM-L6-v2` produces 384-dimensional sentence embeddings.
+- NumPy provides the numerical operations required for vector calculations.
+- Cosine similarity can be used to compare embedding vectors.
+- Semantically related sentences generally have higher similarity than unrelated sentences.
+- Semantic search uses embeddings to find information based on meaning.
+- Embeddings are a fundamental building block for vector databases and RAG systems.
+
+---
+
+# 🎯 Core Idea
+
+```text
+             TEXT
+               │
+               ▼
+       EMBEDDING MODEL
+               │
+               ▼
+            VECTOR
+               │
+               ▼
+      VECTOR COMPARISON
+               │
+               ▼
+     SEMANTIC SIMILARITY
+               │
+               ▼
+       SEARCH / RETRIEVAL
+```
+
+**Text → Vector → Similarity → Meaning-based Retrieval**
+
+This is the fundamental idea behind AI text embeddings.
+
+---

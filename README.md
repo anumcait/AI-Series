@@ -40,6 +40,8 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 13 | AI Entity Extraction | Python, Gemini API, Gemini Flash, Entity Extraction, Structured JSON, Prompt Engineering, Environment Variables |
 | Day 14 | AI Knowledge Assistant | Python, Gemini API, Gemini Flash, Context-Based Q&A, Grounded Responses, Structured JSON, Prompt Engineering, JSON Validation |
 | Day 15 | AI Document Analyzer | Python, Gemini API, Gemini Flash, Document Analysis, Information Extraction, Structured JSON, Prompt Engineering, JSON Validation, Business Process Analysis |
+| Day 16 | AI Text Embedding Explorer | Python, Sentence Transformers, all-MiniLM-L6-v2, Text Embeddings, Vector Representations, NumPy, Cosine Similarity, Semantic Similarity, Semantic Search, Vector Retrieval |
+
 ---
 
 # 🚀 Day 1 — AI Bug Description Clarifier
@@ -86,3 +88,6 @@ Using AI to answer user questions from a provided knowledge base, ensuring respo
 
 # 🚀 Day 15 — AI Document Analyzer
 Analyze unstructured business documents, extract actionable information such as requirements, roles, actions, rules, dependencies, exceptions, and risks, and return the results as structured JSON.
+
+# 🚀 Day 16 — AI Text Embedding Explorer
+Convert text into numerical embeddings, measure semantic similarity between sentences using cosine similarity, and perform meaning-based semantic search.

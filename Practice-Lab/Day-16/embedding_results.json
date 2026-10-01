@@ -1,0 +1,89 @@
+{
+  "model": "all-MiniLM-L6-v2",
+  "sentences": [
+    {
+      "sentence": "Python is a programming language.",
+      "dimensions": 384,
+      "embedding_preview": [
+        -0.0350983552634716,
+        0.020554926246404648,
+        -0.029055049642920494,
+        0.01256534643471241,
+        -0.04018990695476532
+      ]
+    },
+    {
+      "sentence": "I enjoy writing Python applications.",
+      "dimensions": 384,
+      "embedding_preview": [
+        -0.07381967455148697,
+        -0.040576085448265076,
+        0.011662164703011513,
+        0.017145531252026558,
+        -0.011986262165009975
+      ]
+    },
+    {
+      "sentence": "AWS provides cloud computing services.",
+      "dimensions": 384,
+      "embedding_preview": [
+        -0.0243605375289917,
+        0.02130165696144104,
+        0.006492081098258495,
+        -0.03780420497059822,
+        0.04036455228924751
+      ]
+    },
+    {
+      "sentence": "Cloud infrastructure can be deployed on AWS.",
+      "dimensions": 384,
+      "embedding_preview": [
+        0.006990252994000912,
+        -0.04771116375923157,
+        -0.013063346967101097,
+        -0.061068207025527954,
+        0.029543422162532806
+      ]
+    },
+    {
+      "sentence": "I like eating pizza.",
+      "dimensions": 384,
+      "embedding_preview": [
+        -0.05035940557718277,
+        0.007091296371072531,
+        0.011263854801654816,
+        0.11440809071063995,
+        -0.09352584928274155
+      ]
+    }
+  ],
+  "comparisons": {
+    "sentence_1_vs_sentence_2": 0.735672652721405,
+    "sentence_1_vs_sentence_5": 0.10751552134752274
+  },
+  "semantic_search": {
+    "query": "I want to learn Python programming.",
+    "results": [
+      {
+        "sentence": "Python is a programming language.",
+        "similarity": 0.7814069986343384
+      },
+      {
+        "sentence": "I enjoy writing Python applications.",
+        "similarity": 0.6960264444351196
+      },
+      {
+        "sentence": "I like eating pizza.",
+        "similarity": 0.18985377252101898
+      },
+      {
+        "sentence": "AWS provides cloud computing services.",
+        "similarity": 0.12326469272375107
+      },
+      {
+        "sentence": "Cloud infrastructure can be deployed on AWS.",
+        "similarity": 0.060545243322849274
+      }
+    ]
+  }
+}

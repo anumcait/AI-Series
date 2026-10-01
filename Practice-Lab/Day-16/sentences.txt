@@ -1,0 +1,5 @@
+Python is a programming language.
+I enjoy writing Python applications.
+AWS provides cloud computing services.
+Cloud infrastructure can be deployed on AWS.
+I like eating pizza.
