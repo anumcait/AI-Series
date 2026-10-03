@@ -8453,3 +8453,1068 @@ Embeddings can be used for:
 This is the fundamental idea behind AI text embeddings.
 
 ---
+
+
+# 🚀 Day 17 — AI Semantic Search 🔎
+
+## 1. What Is Semantic Search?
+
+Semantic search is a search technique that finds information based on **meaning**, rather than only matching exact keywords.
+
+Traditional keyword search might process:
+
+    Query:
+    How can I automate AWS infrastructure?
+
+and look for words such as:
+
+    AWS
+    automate
+    infrastructure
+
+Semantic search works differently:
+
+```text
+User Query
+    ↓
+Embedding Model
+    ↓
+Query Vector
+    ↓
+Compare with Document Vectors
+    ↓
+Cosine Similarity
+    ↓
+Rank Results
+    ↓
+Top Matching Documents
+```
+
+The important idea is:
+
+```text
+Search by meaning
+       ↓
+Not only by exact words
+```
+
+A query does not necessarily need to contain the exact name of the technology mentioned in the relevant document.
+
+For example:
+
+```text
+Query:
+How can I automate infrastructure?
+
+Document:
+Terraform allows infrastructure to be defined as code.
+```
+
+The query does not contain the word `Terraform`, but the two texts are semantically related.
+
+---
+
+# 2. Why Semantic Search Is Useful
+
+Keyword search can fail when two pieces of text express the same idea using different words.
+
+Example:
+
+```text
+Query:
+How can I run applications in containers?
+```
+
+A relevant document might say:
+
+```text
+Docker packages applications into portable containers.
+```
+
+The wording is not identical, but the meaning is closely related.
+
+Semantic search is useful for:
+
+- Knowledge bases
+- Documentation search
+- Customer support
+- Enterprise search
+- Recommendation systems
+- Document retrieval
+- Question answering
+- RAG applications
+
+---
+
+# 3. What Is an Embedding?
+
+An embedding is a numerical representation of text.
+
+A sentence is passed into an embedding model:
+
+```text
+Text
+ ↓
+Embedding Model
+ ↓
+Numerical Vector
+```
+
+For example:
+
+```text
+"Terraform manages infrastructure."
+            ↓
+      Embedding Model
+            ↓
+[0.12, -0.43, 0.27, ...]
+```
+
+The vector contains many numerical dimensions.
+
+The individual numbers are generally not meaningful to a human.
+
+The important property is the relationship between vectors.
+
+Conceptually:
+
+```text
+Similar meaning
+      ↓
+Nearby / similar representations
+
+Different meaning
+      ↓
+Less similar representations
+```
+
+This allows mathematical techniques to compare pieces of text.
+
+---
+
+# 4. Sentence Transformers
+
+The project uses the `sentence-transformers` Python library.
+
+A Sentence Transformer provides models that can convert sentences and other text into embeddings suitable for similarity comparison.
+
+The model used in this project is:
+
+```text
+all-MiniLM-L6-v2
+```
+
+The basic process is:
+
+```text
+Sentence
+   ↓
+all-MiniLM-L6-v2
+   ↓
+Embedding Vector
+```
+
+The same model must be used for both:
+
+- Stored documents
+- User queries
+
+This allows their embeddings to exist in the same vector space and be compared meaningfully.
+
+---
+
+# 5. The Semantic Search Pipeline
+
+The complete pipeline is:
+
+```text
+Documents
+    ↓
+Generate Embeddings
+    ↓
+Store Document Vectors
+    ↓
+User Query
+    ↓
+Generate Query Embedding
+    ↓
+Compare Query Vector
+with Document Vectors
+    ↓
+Cosine Similarity
+    ↓
+Sort by Similarity
+    ↓
+Top-K Results
+```
+
+In this project:
+
+```text
+K = 3
+```
+
+Therefore, the application returns the three highest-scoring documents.
+
+---
+
+# 6. Knowledge Collection
+
+A semantic search system needs information to search.
+
+For the project, the collection contains Cloud and DevOps knowledge such as:
+
+```text
+AWS EC2 provides resizable compute capacity.
+
+Amazon S3 is an object storage service.
+
+Docker packages applications into portable containers.
+
+Kubernetes orchestrates containerized applications.
+
+Terraform allows infrastructure to be defined as code.
+
+GitLab CI/CD automates software build and deployment pipelines.
+
+AWS Lambda runs code without managing servers.
+
+Amazon RDS provides managed relational databases.
+
+AWS VPC provides networking capabilities for cloud resources.
+
+Prometheus collects metrics and monitors applications and infrastructure.
+
+Grafana provides dashboards for monitoring metrics and system performance.
+
+Ansible automates configuration management and application deployment.
+
+Jenkins automates continuous integration and continuous delivery.
+
+Amazon CloudWatch monitors AWS resources and applications.
+
+Docker Compose defines and runs multi-container applications.
+```
+
+Each sentence is treated as a separate document.
+
+---
+
+# 7. Document Embeddings
+
+Before searching, every document is converted into an embedding.
+
+For example:
+
+```text
+Terraform allows infrastructure to be defined as code.
+                         ↓
+                 Embedding Model
+                         ↓
+                  Document Vector
+```
+
+This happens for every document.
+
+Conceptually:
+
+```text
+Document 1 → Vector 1
+Document 2 → Vector 2
+Document 3 → Vector 3
+Document 4 → Vector 4
+...
+Document 15 → Vector 15
+```
+
+These vectors are kept in memory for the search operation.
+
+---
+
+# 8. Query Embedding
+
+When a user enters a query such as:
+
+```text
+How can I automate infrastructure?
+```
+
+the query is also converted into an embedding:
+
+```text
+User Query
+    ↓
+Embedding Model
+    ↓
+Query Vector
+```
+
+The query vector is then compared with every stored document vector.
+
+---
+
+# 9. Cosine Similarity
+
+Cosine similarity measures how similar two vectors are based on their direction.
+
+The formula is:
+
+```text
+cosine similarity =
+    (A · B)
+    ─────────────
+    ||A|| × ||B||
+```
+
+Where:
+
+- `A` is the first vector
+- `B` is the second vector
+- `A · B` is the dot product
+- `||A||` is the magnitude of vector A
+- `||B||` is the magnitude of vector B
+
+The important concept is not memorizing the formula, but understanding the purpose:
+
+```text
+Two embeddings
+      ↓
+Compare their directions
+      ↓
+Produce similarity score
+```
+
+For this project, a higher score generally means greater semantic similarity.
+
+---
+
+# 10. Why Vector Direction Matters
+
+Imagine two vectors:
+
+```text
+Vector A ────────→
+Vector B ────────→
+```
+
+If they point in similar directions, their cosine similarity is high.
+
+If they point in very different directions, the similarity is lower.
+
+This gives a mathematical way to compare semantic representations.
+
+The exact score should not be treated as a universal measure of how similar two sentences are.
+
+Scores depend on:
+
+- Embedding model
+- Query
+- Document
+- Domain
+- Text length
+- Model version
+
+The most useful operation here is **ranking**.
+
+---
+
+# 11. Ranking Documents
+
+Suppose a query is compared with five documents:
+
+```text
+Document A → 0.87
+Document B → 0.81
+Document C → 0.74
+Document D → 0.42
+Document E → 0.29
+```
+
+After sorting:
+
+```text
+1. Document A → 0.87
+2. Document B → 0.81
+3. Document C → 0.74
+4. Document D → 0.42
+5. Document E → 0.29
+```
+
+If `TOP_K = 3`, only these are returned:
+
+```text
+1. Document A
+2. Document B
+3. Document C
+```
+
+This is called **Top-K retrieval**.
+
+---
+
+# 12. Example Search
+
+Query:
+
+```text
+How can I automate infrastructure?
+```
+
+Possible relevant results:
+
+```text
+1. Terraform allows infrastructure to be defined as code.
+
+2. Ansible automates configuration management and application deployment.
+
+3. GitLab CI/CD automates software build and deployment pipelines.
+```
+
+The exact similarity scores and ordering depend on the embedding model and input text.
+
+The important result is that the system retrieves documents related to the meaning of the query.
+
+---
+
+# 13. Another Example
+
+Query:
+
+```text
+Which AWS service provides object storage?
+```
+
+A highly relevant result is:
+
+```text
+Amazon S3 is an object storage service.
+```
+
+The system does not need to perform a complicated rule such as:
+
+```text
+AWS + object + storage
+```
+
+Instead:
+
+```text
+Query
+ ↓
+Embedding
+ ↓
+Similarity Search
+ ↓
+S3 Document
+```
+
+---
+
+# 14. Container Search Example
+
+Query:
+
+```text
+How can applications be run in containers?
+```
+
+Relevant results can include:
+
+```text
+Docker packages applications into portable containers.
+
+Kubernetes orchestrates containerized applications.
+
+Docker Compose defines and runs multi-container applications.
+```
+
+The results are obtained by comparing semantic representations.
+
+---
+
+# 15. Managed Database Search
+
+Query:
+
+```text
+What can be used for managed relational databases?
+```
+
+Relevant result:
+
+```text
+Amazon RDS provides managed relational databases.
+```
+
+Again, the purpose is not exact phrase matching.
+
+The embedding model helps represent the relationship between the concepts.
+
+---
+
+# 16. Important Difference Between Documents and Queries
+
+Documents are embedded before or during indexing.
+
+The query is embedded when the user searches.
+
+Conceptually:
+
+```text
+             DOCUMENT SIDE
+
+Documents
+   ↓
+Embedding Model
+   ↓
+Document Embeddings
+   ↓
+Stored for Search
+
+              QUERY SIDE
+
+User Query
+   ↓
+Embedding Model
+   ↓
+Query Embedding
+   ↓
+Similarity Search
+```
+
+Both sides use the same embedding model.
+
+---
+
+# 17. NumPy's Role
+
+NumPy is used for numerical operations on vectors.
+
+For example:
+
+```python
+np.dot(vector_a, vector_b)
+```
+
+calculates the dot product.
+
+And:
+
+```python
+np.linalg.norm(vector_a)
+```
+
+calculates the magnitude of a vector.
+
+These operations are used to calculate cosine similarity.
+
+Therefore:
+
+```text
+Sentence Transformers
+        ↓
+Creates vectors
+
+NumPy
+        ↓
+Performs vector mathematics
+```
+
+---
+
+# 18. The Core Search Function
+
+The semantic search function performs several steps.
+
+```text
+Query
+ ↓
+Encode query
+ ↓
+Calculate similarity with every document
+ ↓
+Create result list
+ ↓
+Sort results
+ ↓
+Return Top-K
+```
+
+Conceptually:
+
+```python
+query_embedding = model.encode(query)
+
+for document_embedding in document_embeddings:
+    similarity = cosine_similarity(
+        query_embedding,
+        document_embedding
+    )
+
+results.sort(
+    key=lambda result: result["similarity"],
+    reverse=True
+)
+```
+
+The `reverse=True` argument ensures the highest similarity appears first.
+
+---
+
+# 19. Why `encode()` Is Important
+
+The Sentence Transformer model provides the `encode()` method.
+
+For documents:
+
+```python
+document_embeddings = model.encode(
+    documents,
+    convert_to_numpy=True
+)
+```
+
+For a query:
+
+```python
+query_embedding = model.encode(
+    query,
+    convert_to_numpy=True
+)
+```
+
+Therefore:
+
+```text
+encode(document)
+       ↓
+document vector
+
+encode(query)
+       ↓
+query vector
+```
+
+`convert_to_numpy=True` makes the result available as NumPy arrays, which are convenient for mathematical operations.
+
+---
+
+# 20. Interactive Search
+
+The application uses an interactive loop.
+
+Conceptually:
+
+```text
+Start Application
+       ↓
+Load Model
+       ↓
+Create Document Embeddings
+       ↓
+Wait for Query
+       ↓
+Search
+       ↓
+Display Top 3
+       ↓
+Wait for Another Query
+       ↓
+Exit?
+  ↓       ↓
+ Yes      No
+  ↓       ↓
+Stop     Search Again
+```
+
+The user can enter multiple queries without restarting the program.
+
+Entering:
+
+```text
+exit
+```
+
+stops the application.
+
+---
+
+# 21. Why the Model Is Loaded Once
+
+Loading the embedding model can take time.
+
+Therefore, the model should be loaded once when the application starts:
+
+```python
+model = SentenceTransformer(
+    "all-MiniLM-L6-v2"
+)
+```
+
+It should not be loaded again for every query.
+
+The better flow is:
+
+```text
+Application Starts
+       ↓
+Load Model Once
+       ↓
+Create Document Embeddings
+       ↓
+Process Many Queries
+```
+
+This makes repeated searches much more efficient.
+
+---
+
+# 22. Why Document Embeddings Are Created Once
+
+The documents do not change during a normal search session.
+
+Therefore, their embeddings can be generated once:
+
+```text
+Documents
+   ↓
+Embeddings
+   ↓
+Keep in Memory
+```
+
+For every new query, only the query needs to be embedded again.
+
+```text
+New Query
+   ↓
+Query Embedding
+   ↓
+Compare with Existing Document Embeddings
+```
+
+This avoids unnecessary computation.
+
+---
+
+# 23. In-Memory Retrieval
+
+The Day 17 application keeps the vectors in memory.
+
+For a small collection:
+
+```text
+15 Documents
+    ↓
+15 Embeddings
+    ↓
+Stored in Python memory
+```
+
+This is simple and useful for learning.
+
+For large systems, storing and searching thousands or millions of vectors requires specialized vector search infrastructure.
+
+That is where technologies such as vector databases and approximate nearest-neighbor indexes become useful.
+
+---
+
+# 24. Top-K Retrieval
+
+`TOP_K` controls the number of results returned.
+
+Example:
+
+```python
+TOP_K = 3
+```
+
+If there are 15 documents:
+
+```text
+15 Documents
+     ↓
+Similarity Calculation
+     ↓
+Sort
+     ↓
+Top 3
+```
+
+This prevents the application from displaying every document when only the most relevant results are needed.
+
+---
+
+# 25. Similarity Is Not the Same as Truth
+
+A high similarity score does not mean that a document is factually correct.
+
+It only means that the document's embedding is close to the query embedding according to the model.
+
+For example:
+
+```text
+High similarity
+       ≠
+Guaranteed factual accuracy
+```
+
+Semantic search is a retrieval mechanism, not a fact-checking mechanism.
+
+---
+
+# 26. Limitations of This Simple Search Engine
+
+The Day 17 implementation is intentionally small.
+
+It has some limitations:
+
+- Documents are stored directly in Python.
+- Embeddings are stored only in memory.
+- Every query compares against every document.
+- There is no persistent vector database.
+- There is no metadata filtering.
+- There is no document chunking.
+- There is no keyword + semantic hybrid search.
+- There is no LLM-generated answer.
+
+These are appropriate improvements for more advanced retrieval systems.
+
+---
+
+# 27. What Happens With More Documents?
+
+Suppose there are:
+
+```text
+15 documents
+```
+
+A simple search can compare the query against all 15.
+
+With:
+
+```text
+1,000 documents
+```
+
+it compares against 1,000 vectors.
+
+With:
+
+```text
+1,000,000 documents
+```
+
+comparing against every vector for every query becomes increasingly expensive.
+
+Large-scale systems therefore use optimized vector indexes and vector databases.
+
+Examples include:
+
+- FAISS
+- Chroma
+- Qdrant
+- Weaviate
+- Pinecone
+
+The Day 17 project does not require these technologies.
+
+The focus is understanding the basic retrieval mechanism first.
+
+---
+
+# 28. Semantic Search and RAG
+
+Semantic search is a fundamental component of Retrieval-Augmented Generation, commonly called **RAG**.
+
+A simple semantic search system:
+
+```text
+Documents
+    ↓
+Embeddings
+    ↓
+Query
+    ↓
+Similarity Search
+    ↓
+Relevant Documents
+```
+
+A RAG system extends this:
+
+```text
+Documents
+    ↓
+Chunking
+    ↓
+Embeddings
+    ↓
+Vector Store
+    ↓
+User Query
+    ↓
+Query Embedding
+    ↓
+Similarity Search
+    ↓
+Relevant Context
+    ↓
+LLM
+    ↓
+Generated Answer
+```
+
+The retrieval stage provides the information that can be supplied to the language model.
+
+---
+
+# 29. Why Day 17 Is Important
+
+Semantic search introduces the basic idea behind modern retrieval systems:
+
+```text
+Text
+ ↓
+Vector Representation
+ ↓
+Similarity
+ ↓
+Ranking
+ ↓
+Retrieval
+```
+
+This changes search from:
+
+```text
+"What words are present?"
+```
+
+to:
+
+```text
+"What information is semantically related?"
+```
+
+That distinction is fundamental to many modern AI applications.
+
+---
+
+# 30. Key Concepts
+
+### Embedding
+
+A numerical representation of text.
+
+### Sentence Transformer
+
+A model architecture/library used to generate useful sentence embeddings.
+
+### Vector
+
+An ordered collection of numerical values.
+
+### Cosine Similarity
+
+A mathematical measure used to compare vector directions.
+
+### Query Embedding
+
+The vector representation of the user's search query.
+
+### Document Embedding
+
+The vector representation of a stored document.
+
+### Top-K Retrieval
+
+Returning the K highest-ranked results.
+
+### Semantic Search
+
+Searching based primarily on semantic similarity rather than exact keyword matching.
+
+---
+
+# 31. Complete Mental Model
+
+The entire concept can be remembered as:
+
+```text
+             DOCUMENTS
+                 ↓
+          Embedding Model
+                 ↓
+        Document Embeddings
+                 ↓
+          Store in Memory
+                 │
+                 │
+                 │
+             USER QUERY
+                 ↓
+          Embedding Model
+                 ↓
+           Query Embedding
+                 ↓
+        Compare with Documents
+                 ↓
+        Cosine Similarity
+                 ↓
+              Ranking
+                 ↓
+             Top 3
+                 ↓
+             Results
+```
+
+The core idea is:
+
+```text
+Documents → Vectors
+Query → Vector
+Vectors → Similarity
+Similarity → Ranking
+Ranking → Search Results
+```
+
+---
+
+# 32. Final Takeaway
+
+Semantic search allows an application to retrieve information based on **meaning**.
+
+The fundamental process is:
+
+```text
+Documents
+    ↓
+Embeddings
+    ↓
+Store Vectors
+
+User Query
+    ↓
+Query Embedding
+    ↓
+Similarity Calculation
+    ↓
+Ranking
+    ↓
+Top Results
+```
+
+The Day 17 project demonstrates the first practical retrieval system using:
+
+- Python
+- Sentence Transformers
+- `all-MiniLM-L6-v2`
+- NumPy
+- Cosine Similarity
+- Top-K retrieval
+
+The central concept is:
+
+> **Search by meaning, not just keywords.**
