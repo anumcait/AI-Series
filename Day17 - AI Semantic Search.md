@@ -1055,3 +1055,20 @@ The main concept is:
 > Search by meaning, not just keywords.
 
 ### Screenshots
+
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/dd1c08ce-d3ed-4dc3-a22c-2b748a7b53db" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/33ce90aa-3da5-494f-b0d5-22426b34aa22" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/ac3b0ac8-4cf2-49ef-8fa5-69f291edd352" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/ddd10d64-c45d-4ef2-83fd-30a89376cc22" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/43318c69-ad2d-4111-8f69-839583cf0912" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/49172209-eb8b-4604-805a-927f83bf81ac" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/3516c0a7-026c-4101-9799-2194a346dd97" />
+
+---
+
+
+
+
+
+
+
