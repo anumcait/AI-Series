@@ -994,3 +994,16 @@ The vector database stores those numbers and retrieves the vectors that are most
 ```
 
 ---
+### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/b6b8da9e-378f-4bd6-a10c-4de0b047a95d" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/d325bfae-5401-43aa-a699-45defaaadb07" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/eb24a00f-8ad1-4bb6-97a3-64a6f9a4d008" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7d15ce15-5066-42e1-a91d-f30d9f9c515e" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/21b2c8c5-cf11-4e38-ae7f-9d346530ac48" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/2fbe7b31-dae4-4c30-91d0-374f505735bf" />
+
+
+
+
+
+
