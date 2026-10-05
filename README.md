@@ -42,6 +42,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 15 | AI Document Analyzer | Python, Gemini API, Gemini Flash, Document Analysis, Information Extraction, Structured JSON, Prompt Engineering, JSON Validation, Business Process Analysis |
 | Day 16 | AI Text Embedding Explorer | Python, Sentence Transformers, all-MiniLM-L6-v2, Text Embeddings, Vector Representations, NumPy, Cosine Similarity, Semantic Similarity, Semantic Search, Vector Retrieval |
 | Day 17 | AI Semantic Search | Python, Sentence Transformers, all-MiniLM-L6-v2, Semantic Search, Embeddings, Vector Retrieval, Cosine Similarity, Query Embeddings, Document Embeddings, Top-K Retrieval |
+| Day 18 | AI Vector Database Search | Python, ChromaDB, Sentence Transformers, all-MiniLM-L6-v2, Vector Database, Embeddings, Collections, Metadata, Similarity Search, Query Embeddings, Top-K Retrieval, Cosine Distance, Persistent Storage |
 ---
 
 # 🚀 Day 1 — AI Bug Description Clarifier
@@ -95,3 +96,6 @@ Convert text into numerical embeddings, measure semantic similarity between sent
 # 🚀 Day 17 — AI Semantic Search
 Search a collection of documents by meaning using text embeddings, cosine similarity, and Top-K retrieval instead of relying only on 
 exact keyword matching.
+
+# 🚀 Day 18 — AI Vector Database Search
+Store and retrieve knowledge by meaning using embeddings, ChromaDB, metadata, similarity search, and Top-K retrieval instead of keeping vectors only in application memory.

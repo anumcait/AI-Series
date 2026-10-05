@@ -9518,3 +9518,892 @@ The Day 17 project demonstrates the first practical retrieval system using:
 The central concept is:
 
 > **Search by meaning, not just keywords.**
+
+---
+
+# 📝 Day 18 — AI Vector Database Search
+
+### 1. What Is a Vector Database?
+
+A **vector database** is a database designed to store, organize, and search numerical vectors.
+
+Text itself cannot be directly compared for meaning. An embedding model converts text into a vector, which is a list of numbers representing the semantic meaning of that text.
+
+For example:
+
+```text
+"Terraform manages infrastructure"
+            ↓
+     Embedding Model
+            ↓
+[0.12, -0.42, 0.73, 0.18, ...]
+```
+
+The vector database stores these vectors and provides efficient similarity search.
+
+The basic idea is:
+
+```text
+Text
+ ↓
+Embedding
+ ↓
+Vector
+ ↓
+Vector Database
+ ↓
+Similarity Search
+ ↓
+Relevant Documents
+```
+
+---
+
+## 2. Why a Vector Database Is Useful
+
+Normal keyword search mainly looks for matching words.
+
+Suppose the query is:
+
+```text
+How can cloud infrastructure be automated?
+```
+
+A keyword search looks for words such as:
+
+```text
+cloud
+infrastructure
+automated
+```
+
+Semantic search works differently.
+
+A document such as:
+
+```text
+Terraform allows infrastructure to be managed as code.
+```
+
+can be considered highly relevant even though it does not contain the exact words from the question.
+
+This is possible because both the stored document and the query are represented as vectors.
+
+The database searches for vectors that are close in meaning.
+
+---
+
+## 3. Main Components
+
+A vector search system has several important components.
+
+```text
+Knowledge Documents
+        ↓
+Embedding Model
+        ↓
+Vector Embeddings
+        ↓
+Vector Database
+        ↓
+Similarity Search
+        ↓
+Top-K Results
+```
+
+### Embedding Model
+
+The embedding model converts text into vectors.
+
+```text
+Text
+ ↓
+Embedding Model
+ ↓
+Vector
+```
+
+### Vector Database
+
+The vector database stores and retrieves those vectors.
+
+```text
+Vector
+ ↓
+Vector Database
+ ↓
+Similarity Search
+ ↓
+Relevant Results
+```
+
+These are separate responsibilities.
+
+The embedding model **creates the vector**.
+
+The vector database **stores and searches the vector**.
+
+---
+
+# 4. ChromaDB
+
+**ChromaDB** is a vector database that can run locally.
+
+It is useful for learning and developing AI retrieval applications because a cloud database is not required.
+
+ChromaDB can store:
+
+- Documents
+- Embeddings
+- Metadata
+- IDs
+
+It can also perform similarity searches and persist the database to disk.
+
+---
+
+# 5. Collection
+
+A **collection** is a logical container for related data inside ChromaDB.
+
+For a DevOps knowledge system, a collection can be named:
+
+```text
+devops_knowledge
+```
+
+Conceptually:
+
+```text
+ChromaDB
+   │
+   └── devops_knowledge
+          │
+          ├── Document 1
+          ├── Document 2
+          ├── Document 3
+          └── ...
+```
+
+A collection keeps related documents, embeddings, and metadata together.
+
+A collection can be created or retrieved using:
+
+```python
+collection = client.get_or_create_collection(
+    name="devops_knowledge"
+)
+```
+
+`get_or_create_collection()` is useful because the collection is created if it does not already exist and reused if it already exists.
+
+---
+
+# 6. Knowledge Documents
+
+A small knowledge base can contain documents such as:
+
+```text
+AWS EC2 provides scalable virtual servers.
+
+Amazon S3 provides object storage.
+
+Docker packages applications into containers.
+
+Kubernetes manages containerized workloads.
+
+Terraform allows infrastructure to be managed as code.
+
+GitLab CI/CD automates software delivery pipelines.
+
+Amazon RDS provides managed relational databases.
+```
+
+Each document can also contain metadata.
+
+Example:
+
+```python
+{
+    "text": "Terraform allows infrastructure to be managed as code.",
+    "category": "DevOps",
+    "technology": "Terraform"
+}
+```
+
+Here:
+
+- `text` contains the actual knowledge.
+- `category` identifies the type of technology.
+- `technology` identifies the specific technology.
+
+---
+
+# 7. Metadata
+
+**Metadata** means additional information stored about a document.
+
+For example:
+
+```python
+{
+    "category": "DevOps",
+    "technology": "Terraform"
+}
+```
+
+The document's embedding is used for semantic similarity.
+
+Metadata can be used for additional filtering or organization.
+
+Conceptually:
+
+```text
+Document
+   │
+   ├── Text
+   │
+   ├── Embedding
+   │
+   └── Metadata
+        ├── Category
+        └── Technology
+```
+
+Metadata becomes especially useful when a system needs both:
+
+```text
+Semantic Search
+       +
+Structured Filtering
+```
+
+For example, a search can later be restricted to documents where:
+
+```text
+category = DevOps
+```
+
+---
+
+# 8. Sentence Transformers
+
+Sentence Transformers provides models that convert text into meaningful numerical vectors.
+
+A commonly used model is:
+
+```python
+from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer("all-MiniLM-L6-v2")
+```
+
+A document can then be converted into an embedding:
+
+```python
+text = "Terraform manages infrastructure"
+
+embedding = model.encode(text)
+
+print(embedding)
+```
+
+The output is a numerical vector.
+
+The exact numbers are not important individually. Together, they represent the semantic information captured by the model.
+
+---
+
+# 9. Creating the ChromaDB Client
+
+A persistent ChromaDB client can be created using:
+
+```python
+import chromadb
+
+client = chromadb.PersistentClient(
+    path="./chroma_db"
+)
+```
+
+The path:
+
+```text
+./chroma_db
+```
+
+specifies where the local database is stored.
+
+This means the database can remain available after the Python program exits.
+
+The project can therefore contain:
+
+```text
+Day-18/
+│
+├── documents.py
+├── semantic_search.py
+├── requirements.txt
+└── chroma_db/
+```
+
+---
+
+# 10. Choosing Cosine Distance
+
+A collection can be configured to use cosine distance:
+
+```python
+collection = client.get_or_create_collection(
+    name="devops_knowledge",
+    metadata={
+        "hnsw:space": "cosine"
+    }
+)
+```
+
+Cosine distance measures how different two vectors are based on their direction.
+
+For semantic search, vectors representing similar meanings tend to be closer together.
+
+The important idea is:
+
+```text
+Smaller Distance
+       ↓
+More Similar
+
+Larger Distance
+       ↓
+Less Similar
+```
+
+---
+
+# 11. Generating Document Embeddings
+
+First, extract the document text:
+
+```python
+texts = [
+    document["text"]
+    for document in documents
+]
+```
+
+Then generate embeddings:
+
+```python
+embeddings = model.encode(
+    texts,
+    normalize_embeddings=True
+).tolist()
+```
+
+The result is a list of vectors.
+
+Conceptually:
+
+```text
+Document 1 → Vector 1
+Document 2 → Vector 2
+Document 3 → Vector 3
+Document 4 → Vector 4
+```
+
+These vectors can then be stored in ChromaDB.
+
+---
+
+# 12. Storing Documents
+
+ChromaDB can store documents, embeddings, IDs, and metadata together.
+
+Example:
+
+```python
+collection.upsert(
+    ids=["doc1", "doc2"],
+    documents=texts,
+    embeddings=embeddings,
+    metadatas=[
+        {
+            "category": "Cloud",
+            "technology": "AWS EC2"
+        },
+        {
+            "category": "DevOps",
+            "technology": "Terraform"
+        }
+    ]
+)
+```
+
+`upsert()` means:
+
+- Add the data if the ID does not exist.
+- Update the data if the ID already exists.
+
+This is useful when the knowledge base may be updated.
+
+---
+
+# 13. What Is an ID?
+
+Every stored record should have an identifier.
+
+For example:
+
+```text
+doc1
+doc2
+doc3
+doc4
+```
+
+IDs allow individual records to be uniquely identified.
+
+A typical record contains:
+
+```text
+ID
+Document
+Embedding
+Metadata
+```
+
+---
+
+# 14. Querying the Vector Database
+
+When a user enters a question:
+
+```text
+How can cloud infrastructure be automated?
+```
+
+the query must also be converted into an embedding.
+
+```python
+query_embedding = model.encode(
+    query,
+    normalize_embeddings=True
+).tolist()
+```
+
+Now the query is represented as a vector.
+
+The query vector can be sent to ChromaDB:
+
+```python
+results = collection.query(
+    query_embeddings=[query_embedding],
+    n_results=3
+)
+```
+
+The database searches for the closest stored vectors.
+
+---
+
+# 15. Top-K Retrieval
+
+`n_results=3` means that the three most relevant results should be returned.
+
+This is called **Top-K retrieval**.
+
+```text
+Query
+ ↓
+Similarity Search
+ ↓
+Top 3 Results
+```
+
+For example:
+
+```text
+Rank 1 → Terraform
+Rank 2 → GitLab CI/CD
+Rank 3 → AWS EC2
+```
+
+The value of K can be changed:
+
+```python
+n_results=5
+```
+
+would return the top five results.
+
+---
+
+# 16. Query Flow
+
+The complete search process is:
+
+```text
+User Question
+      ↓
+Sentence Transformer
+      ↓
+Query Embedding
+      ↓
+ChromaDB
+      ↓
+Compare With Stored Vectors
+      ↓
+Rank Similar Results
+      ↓
+Top-K Documents
+```
+
+The stored documents have already been converted into vectors.
+
+Only the new query needs to be converted before performing the search.
+
+---
+
+# 17. Search Results
+
+ChromaDB can return:
+
+- Matching documents
+- Metadata
+- Distances
+- IDs
+
+Example result information:
+
+```text
+Rank 1
+Technology: Terraform
+Category: DevOps
+Similarity: 0.xx
+Content: Terraform allows infrastructure to be managed as code.
+```
+
+The metadata makes the result easier to understand.
+
+Instead of returning only text, the application can show which technology and category produced the result.
+
+---
+
+# 18. Distance and Similarity
+
+ChromaDB returns a distance value.
+
+When cosine distance is being used, a simple presentation value can be calculated as:
+
+```python
+similarity = 1 - distance
+```
+
+For example:
+
+```text
+Distance = 0.12
+
+Similarity = 1 - 0.12
+           = 0.88
+```
+
+A lower distance means the vectors are closer.
+
+A higher similarity value means the documents are more semantically similar.
+
+The similarity value should be treated as a ranking signal, not as a guaranteed percentage of correctness.
+
+---
+
+# 19. Why Normalize Embeddings?
+
+The code uses:
+
+```python
+normalize_embeddings=True
+```
+
+Normalization makes the vectors have unit length.
+
+This is useful when working with cosine-based similarity because the comparison focuses on the direction of the vectors rather than their magnitude.
+
+The important point is that the document embeddings and query embeddings should be generated consistently.
+
+---
+
+# 20. Persistence
+
+A persistent client stores the database locally:
+
+```python
+client = chromadb.PersistentClient(
+    path="./chroma_db"
+)
+```
+
+Without persistence, application data may exist only for the current process.
+
+With persistence, the vector database can be loaded again when the application starts.
+
+This is important for a knowledge-search application because documents should not need to be embedded and inserted every time the application starts.
+
+Using `upsert()` also makes repeated application runs safer because existing IDs can be updated instead of blindly creating duplicate records.
+
+---
+
+# 21. Complete Mental Model
+
+The complete system can be understood as four major stages.
+
+### Stage 1 — Prepare Knowledge
+
+```text
+Documents
+   ↓
+Text + Metadata
+```
+
+### Stage 2 — Create Embeddings
+
+```text
+Text
+ ↓
+Sentence Transformer
+ ↓
+Vector
+```
+
+### Stage 3 — Store
+
+```text
+Vector
+   +
+Document
+   +
+Metadata
+   ↓
+ChromaDB
+```
+
+### Stage 4 — Search
+
+```text
+User Question
+      ↓
+Query Embedding
+      ↓
+ChromaDB Similarity Search
+      ↓
+Top-K Results
+```
+
+---
+
+# 22. Important Terms
+
+### Vector
+
+A numerical representation of information.
+
+```text
+[0.12, -0.42, 0.73, ...]
+```
+
+### Embedding
+
+A vector generated by an embedding model to represent the meaning of data.
+
+### Embedding Model
+
+A machine-learning model that converts text into embeddings.
+
+### Vector Database
+
+A database designed to store and retrieve vectors based on similarity.
+
+### Collection
+
+A logical group of related records in ChromaDB.
+
+### Metadata
+
+Additional structured information attached to a document.
+
+### Similarity Search
+
+Searching for vectors that are closest to a query vector.
+
+### Top-K
+
+The K most relevant results returned from a search.
+
+### Persistence
+
+Saving the vector database so it can be reused later.
+
+---
+
+# 23. Common Questions
+
+### Is ChromaDB the embedding model?
+
+No.
+
+ChromaDB is the vector database.
+
+The embedding model creates the vectors.
+
+```text
+Sentence Transformer
+        ↓
+Creates Embedding
+
+ChromaDB
+        ↓
+Stores + Searches Embedding
+```
+
+### Does ChromaDB understand the meaning of text by itself?
+
+The semantic representation comes from the embedding model.
+
+ChromaDB receives vectors and performs vector storage and retrieval.
+
+### Does the database store only the vector?
+
+No.
+
+It can store the document, embedding, metadata, and ID together.
+
+### Why store metadata?
+
+Metadata provides additional information and can support filtering and organization.
+
+### Why use Top-K?
+
+Returning every document is usually unnecessary.
+
+Top-K retrieval returns only the most relevant results.
+
+---
+
+# 24. Day 18 Challenge
+
+Extend the knowledge base with technologies such as:
+
+```text
+Prometheus
+Grafana
+Jenkins
+Ansible
+Azure
+Google Cloud
+Redis
+PostgreSQL
+```
+
+Each record should contain:
+
+```python
+{
+    "text": "...",
+    "category": "...",
+    "technology": "..."
+}
+```
+
+Then add:
+
+1. A configurable Top-K value.
+2. Metadata filtering.
+3. More natural-language questions.
+4. Additional categories such as `Cloud`, `DevOps`, and `Database`.
+
+A useful challenge query is:
+
+```text
+How can infrastructure deployment be automated?
+```
+
+Another useful query is:
+
+```text
+Which technology manages containerized applications?
+```
+
+The goal is to observe whether the returned documents are semantically relevant rather than simply matching exact words.
+
+---
+
+# 25. Final Architecture
+
+```text
+                  KNOWLEDGE DOCUMENTS
+                          │
+                          ▼
+                 ┌─────────────────┐
+                 │ Embedding Model │
+                 └─────────────────┘
+                          │
+                          ▼
+                     Embeddings
+                          │
+                          ▼
+                 ┌─────────────────┐
+                 │     ChromaDB    │
+                 │                 │
+                 │ Documents       │
+                 │ Embeddings      │
+                 │ Metadata        │
+                 │ IDs             │
+                 └─────────────────┘
+                          ▲
+                          │
+                   Query Embedding
+                          ▲
+                          │
+                    User Question
+                          │
+                          ▼
+                 Similarity Search
+                          │
+                          ▼
+                     Top-K Results
+```
+
+## 🎯 Core Takeaway
+
+A vector database provides the storage and retrieval layer for semantic search.
+
+The essential flow is:
+
+```text
+Document
+   ↓
+Embedding Model
+   ↓
+Vector
+   ↓
+ChromaDB
+   ↓
+Stored Knowledge
+
+User Question
+   ↓
+Embedding Model
+   ↓
+Query Vector
+   ↓
+ChromaDB
+   ↓
+Similarity Search
+   ↓
+Top-K Relevant Documents
+```
+
+The most important distinction is:
+
+> **The embedding model creates the vector. The vector database stores and retrieves the vector.**
+
+That separation is the foundation of a practical AI retrieval system.
