@@ -10407,3 +10407,684 @@ The most important distinction is:
 > **The embedding model creates the vector. The vector database stores and retrieves the vector.**
 
 That separation is the foundation of a practical AI retrieval system.
+
+# 📚 Day 19 — Build a RAG System
+
+## 1. What is RAG?
+
+**RAG** stands for **Retrieval-Augmented Generation**.
+
+RAG combines two processes:
+
+- **Retrieval** → find relevant information from a knowledge base.
+- **Generation** → use an LLM to generate an answer from that information.
+
+The basic idea is:
+
+```text
+Retrieval + Generation = RAG
+```
+
+A normal LLM application:
+
+```text
+User Question
+      ↓
+     LLM
+      ↓
+   Answer
+```
+
+A RAG application:
+
+```text
+User Question
+      ↓
+Query Embedding
+      ↓
+Vector Database
+      ↓
+Relevant Documents
+      ↓
+Context
+      ↓
+LLM
+      ↓
+Grounded Answer
+```
+
+The important difference is that the LLM receives relevant information retrieved from a knowledge base instead of receiving the entire knowledge base.
+
+---
+
+## 2. Day 19 Objective
+
+The goal is to build a **DevOps Knowledge Assistant**.
+
+The knowledge base contains internal documents such as:
+
+```text
+AWS EC2 provides virtual compute capacity.
+
+Amazon S3 is an object storage service.
+
+Amazon RDS provides managed relational databases.
+
+AWS Lambda runs code without provisioning servers.
+
+Docker packages applications into portable containers.
+
+Kubernetes orchestrates containerized workloads.
+
+Terraform allows infrastructure to be defined as code.
+
+GitLab CI/CD automates software build and deployment pipelines.
+```
+
+The application should answer questions using these documents.
+
+The knowledge source is **internal ChromaDB only**.
+
+There is no web search or external document retrieval.
+
+---
+
+## 3. Complete Architecture
+
+```text
+                Internal Knowledge Base
+                         ↓
+                    Documents
+                         ↓
+                    Embeddings
+                         ↓
+                      ChromaDB
+                         ↑
+                         │
+User Question → Query Embedding
+                         ↓
+                  Similarity Search
+                         ↓
+                  Relevant Documents
+                         ↓
+                      Context
+                         ↓
+                      Gemini
+                         ↓
+                  Grounded Answer
+                         ↓
+                      Sources
+```
+
+Each component has a specific responsibility:
+
+| Component | Responsibility |
+|---|---|
+| Documents | Store internal knowledge |
+| Sentence Transformers | Create embeddings |
+| ChromaDB | Store and retrieve vectors |
+| Query embedding | Represent the user's question |
+| Similarity search | Find relevant documents |
+| Context | Retrieved information given to Gemini |
+| Gemini | Generate the final answer |
+| Sources | Show which documents supported the answer |
+
+---
+
+# 4. Internal Knowledge Base
+
+The knowledge base is the source of truth.
+
+Example:
+
+```python
+documents = [
+    "AWS EC2 provides virtual compute capacity.",
+    "Amazon S3 is an object storage service.",
+    "Amazon RDS provides managed relational databases.",
+    "AWS Lambda runs code without provisioning servers.",
+    "Docker packages applications into portable containers.",
+    "Kubernetes orchestrates containerized workloads.",
+    "Terraform allows infrastructure to be defined as code.",
+    "GitLab CI/CD automates software build and deployment pipelines."
+]
+```
+
+These documents are converted into embeddings and stored in ChromaDB.
+
+---
+
+# 5. Document Embeddings
+
+An embedding represents text as a numerical vector.
+
+For example:
+
+```text
+"Terraform allows infrastructure to be defined as code."
+                         ↓
+                    Embedding Model
+                         ↓
+                 [0.21, -0.13, 0.82, ...]
+```
+
+The vector captures the semantic meaning of the document.
+
+The same embedding model must be used when creating document embeddings and query embeddings.
+
+Example:
+
+```python
+from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer(
+    "all-MiniLM-L6-v2"
+)
+
+embedding = model.encode(
+    "Terraform allows infrastructure to be defined as code."
+)
+```
+
+---
+
+# 6. ChromaDB
+
+ChromaDB is used as the vector database.
+
+Documents and their embeddings are stored together.
+
+Example:
+
+```python
+import chromadb
+
+client = chromadb.PersistentClient(
+    path="./chroma_db"
+)
+
+collection = client.create_collection(
+    name="day19_devops_knowledge"
+)
+```
+
+Documents can then be stored:
+
+```python
+collection.add(
+    ids=["doc_1"],
+    documents=[
+        "Terraform allows infrastructure to be defined as code."
+    ],
+    embeddings=[embedding.tolist()]
+)
+```
+
+The database allows semantic similarity searches.
+
+---
+
+# 7. Query Embedding
+
+When a user asks:
+
+```text
+How can infrastructure be automated?
+```
+
+The question is also converted into an embedding.
+
+```python
+query_embedding = model.encode(
+    question
+).tolist()
+```
+
+The query vector is compared with the document vectors stored in ChromaDB.
+
+This allows semantic matching rather than simple keyword matching.
+
+For example:
+
+```text
+Question:
+How can infrastructure be automated?
+
+Relevant document:
+Terraform allows infrastructure to be defined as code.
+```
+
+The words are different, but their meaning is related.
+
+---
+
+# 8. Similarity Search
+
+The query embedding is sent to ChromaDB:
+
+```python
+results = collection.query(
+    query_embeddings=[query_embedding],
+    n_results=3
+)
+```
+
+`n_results=3` means that up to three relevant documents are requested.
+
+The result contains documents and their distances.
+
+Example:
+
+```text
+1. Terraform allows infrastructure to be defined as code.
+2. GitLab CI/CD automates software build and deployment pipelines.
+3. Docker packages applications into portable containers.
+```
+
+The retrieved documents become the context for the LLM.
+
+---
+
+# 9. Why Top-K Retrieval is Used
+
+Sending the entire knowledge base to Gemini is unnecessary.
+
+Instead of:
+
+```text
+8 documents
+   ↓
+Gemini
+```
+
+the application retrieves only the most relevant documents:
+
+```text
+8 documents
+   ↓
+Similarity Search
+   ↓
+Top 3 relevant documents
+   ↓
+Gemini
+```
+
+This reduces unnecessary context and focuses the model on relevant information.
+
+---
+
+# 10. Relevance Threshold
+
+Similarity search always returns the closest available documents.
+
+Even an unrelated question may return something.
+
+For example:
+
+```text
+Question:
+What is AWS CloudFront?
+
+Possible results:
+S3
+EC2
+Lambda
+```
+
+These documents may simply be the closest available vectors.
+
+Therefore a distance threshold can be used:
+
+```python
+MAX_DISTANCE = 0.8
+```
+
+Only documents satisfying the configured threshold are accepted.
+
+Conceptually:
+
+```text
+Query
+  ↓
+Top-K Candidates
+  ↓
+Distance Check
+  ↓
+Relevant?
+ ┌───────────┴───────────┐
+Yes                       No
+ ↓                         ↓
+Context              No Context
+ ↓                         ↓
+Gemini              "Not found"
+```
+
+The exact threshold depends on the embedding model and data and may require tuning.
+
+---
+
+# 11. Building the Context
+
+After retrieval, the documents are combined:
+
+```python
+context = "\n\n".join(
+    retrieved_documents
+)
+```
+
+For example:
+
+```text
+Terraform allows infrastructure to be defined as code.
+
+GitLab CI/CD automates software build and deployment pipelines.
+```
+
+This becomes the context sent to Gemini.
+
+---
+
+# 12. Grounded Generation
+
+The LLM prompt must clearly restrict the answer to the retrieved context.
+
+Example:
+
+```text
+You are an internal DevOps knowledge assistant.
+
+Answer the question using ONLY the provided
+internal knowledge.
+
+Do not use general knowledge.
+Do not invent information.
+Do not use information outside the context.
+
+Internal Knowledge:
+-------------------------
+Terraform allows infrastructure to be defined as code.
+-------------------------
+
+Question:
+How can infrastructure be automated?
+
+Give a concise answer.
+```
+
+The model should generate:
+
+```text
+Terraform can be used to automate infrastructure
+by defining infrastructure as code.
+```
+
+The important concept is:
+
+> **The retrieved context becomes the evidence used for generation.**
+
+---
+
+# 13. Gemini's Role
+
+Gemini is the **generation component**, not the knowledge database.
+
+The responsibilities are separated:
+
+```text
+ChromaDB
+    ↓
+Retrieval
+
+Gemini
+    ↓
+Generation
+```
+
+ChromaDB answers:
+
+> Which internal documents are relevant?
+
+Gemini answers:
+
+> How can the retrieved information be expressed as a useful response?
+
+---
+
+# 14. Source Attribution
+
+A RAG system should return the documents used to generate the answer.
+
+Example:
+
+```json
+{
+  "answer": "Terraform can be used to automate infrastructure by defining infrastructure as code.",
+  "sources": [
+    "Terraform allows infrastructure to be defined as code."
+  ]
+}
+```
+
+This provides basic traceability:
+
+```text
+Answer
+  ↓
+Retrieved Context
+  ↓
+Source Document
+```
+
+The sources should come from the retrieved internal documents, not from Gemini's general knowledge.
+
+---
+
+# 15. Hallucination Protection
+
+Consider:
+
+```text
+Question:
+What is AWS CloudFront?
+```
+
+The internal knowledge base contains no CloudFront information.
+
+The expected response is:
+
+```text
+I couldn't find relevant information about this
+in the provided knowledge base.
+```
+
+Sources:
+
+```json
+[]
+```
+
+The application should not allow Gemini to answer:
+
+```text
+AWS CloudFront is a content delivery network...
+```
+
+because that information is outside the provided knowledge base.
+
+This demonstrates **grounded generation**.
+
+---
+
+# 16. Complete RAG Flow
+
+For:
+
+```text
+How can I automate infrastructure?
+```
+
+the complete process is:
+
+```text
+1. User asks a question
+            ↓
+2. Create query embedding
+            ↓
+3. Search ChromaDB
+            ↓
+4. Retrieve relevant documents
+            ↓
+5. Apply relevance threshold
+            ↓
+6. Build context
+            ↓
+7. Send context + question to Gemini
+            ↓
+8. Generate grounded answer
+            ↓
+9. Return answer + sources
+```
+
+---
+
+# 17. Important Code Pattern
+
+The central retrieval logic is:
+
+```python
+query_embedding = embedding_model.encode(
+    question
+).tolist()
+
+results = collection.query(
+    query_embeddings=[query_embedding],
+    n_results=3
+)
+
+retrieved_documents = results["documents"][0]
+```
+
+The central generation logic is:
+
+```python
+context = "\n\n".join(
+    retrieved_documents
+)
+
+response = client.models.generate_content(
+    model=GEMINI_MODEL,
+    contents=prompt
+)
+
+answer = response.text
+```
+
+The two operations together form the basic RAG pipeline.
+
+---
+
+# 18. Example End-to-End Execution
+
+### Question
+
+```text
+Which AWS service should be used for storing files?
+```
+
+### Query Embedding
+
+```text
+Question
+   ↓
+Embedding Model
+   ↓
+Query Vector
+```
+
+### Retrieval
+
+ChromaDB finds:
+
+```text
+Amazon S3 is an object storage service.
+```
+
+### Context
+
+```text
+Amazon S3 is an object storage service.
+```
+
+### Generation
+
+Gemini receives the context and question.
+
+### Answer
+
+```text
+Amazon S3 is suitable for storing files because
+it is an object storage service.
+```
+
+### Source
+
+```text
+Amazon S3 is an object storage service.
+```
+
+---
+
+# 19. Key Principles
+
+### Retrieval before generation
+
+The LLM should receive relevant information before generating the answer.
+
+### Context controls the answer
+
+The retrieved documents should define what information the model can use.
+
+### Internal knowledge is the source of truth
+
+ChromaDB contains the application's knowledge.
+
+### The LLM is not the database
+
+Gemini generates language; ChromaDB retrieves knowledge.
+
+### Sources improve traceability
+
+Returning retrieved documents makes it possible to understand what supported an answer.
+
+### Relevance matters
+
+Poor retrieval produces poor context, which can produce poor answers.
+
+---
+
+# 20. Final Concept
+
+The complete idea of Day 19 can be summarized as:
+
+```text
+Internal Knowledge
+       ↓
+    Embeddings
+       ↓
+    ChromaDB
+       ↓
+    Retrieval
+       ↓
+Relevant Context
+       ↓
+     Gemini
+       ↓
+Grounded Answer
+       +
+    Sources
+```
+
+**RAG = Retrieval + Generation**
+
+The retrieval stage finds the relevant internal knowledge, and the generation stage uses that knowledge to produce a natural-language answer.
