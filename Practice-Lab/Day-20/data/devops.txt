@@ -1,0 +1,47 @@
+Terraform
+
+Terraform is an Infrastructure as Code tool used to define,
+provision, and manage infrastructure using configuration files.
+
+Terraform allows infrastructure to be managed consistently
+and can be used with cloud providers such as AWS, Azure,
+and Google Cloud.
+
+Terraform configurations can be stored in version control.
+
+
+AWS
+
+Amazon Web Services is a cloud computing platform.
+
+AWS provides services such as EC2, S3, RDS, Lambda,
+and VPC.
+
+Terraform can be used to manage AWS infrastructure.
+
+
+Docker
+
+Docker is a containerization platform used to package
+applications and their dependencies into containers.
+
+Containers provide consistent environments across
+development, testing, and production.
+
+
+Kubernetes
+
+Kubernetes is a container orchestration platform.
+
+Kubernetes can deploy, scale, and manage containerized
+applications.
+
+
+CI/CD
+
+Continuous Integration and Continuous Deployment are
+software development practices used to automate building,
+testing, and deploying software.
+
+CI/CD pipelines can automatically test and deploy
+applications.

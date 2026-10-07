@@ -11088,3 +11088,562 @@ Grounded Answer
 **RAG = Retrieval + Generation**
 
 The retrieval stage finds the relevant internal knowledge, and the generation stage uses that knowledge to produce a natural-language answer.
+
+# 📚 Day 20 — AI RAG Chatbot
+
+## 1. What is a Conversational RAG Chatbot?
+
+A conversational RAG chatbot combines:
+
+- Retrieval
+- Vector search
+- Conversation history
+- LLM generation
+- Grounded responses
+- Source attribution
+
+Basic RAG answers a single question.
+
+Conversational RAG also remembers previous messages so follow-up questions can be understood.
+
+Example:
+
+User:
+> What can I use to automate infrastructure?
+
+AI:
+> Terraform can be used to automate infrastructure using Infrastructure as Code.
+
+User:
+> Why would I use it?
+
+Here, `it` refers to Terraform.
+
+The chatbot must use conversation history to understand that reference.
+
+---
+
+## 2. Main Architecture
+
+```text
+User Question
+      ↓
+Conversation History
+      ↓
+Query Rewriting
+      ↓
+Query Embedding
+      ↓
+ChromaDB
+      ↓
+Relevant Documents
+      ↓
+Context + History
+      ↓
+Ollama / Llama
+      ↓
+Grounded Answer
+      ↓
+Sources
+```
+
+Each component has a specific responsibility.
+
+### Sentence Transformers
+
+Converts text into numerical vectors.
+
+### ChromaDB
+
+Stores document embeddings and performs similarity search.
+
+### Ollama
+
+Runs the local language model.
+
+### Llama 3.2
+
+Understands the question and retrieved context and generates the final answer.
+
+### Streamlit
+
+Provides the interactive browser interface.
+
+---
+
+## 3. Why Ollama?
+
+An RAG system needs an LLM for answer generation.
+
+Ollama provides a way to run an LLM locally.
+
+```text
+ChromaDB
+   ↓
+Retrieved Context
+   ↓
+Ollama
+   ↓
+Llama 3.2
+   ↓
+Answer
+```
+
+ChromaDB retrieves information.
+
+Ollama runs the language model that generates the response.
+
+Ollama itself is not the language model; it is the runtime used to run models such as Llama.
+
+---
+
+## 4. Why Conversation History?
+
+A normal RAG system may receive:
+
+```text
+Why would I use it?
+```
+
+Without previous messages, the system does not know what `it` means.
+
+Conversation history provides the missing context.
+
+```text
+User: What can I use to automate infrastructure?
+AI: Terraform can automate infrastructure.
+
+User: Why would I use it?
+```
+
+The history allows the system to understand:
+
+```text
+it → Terraform
+```
+
+---
+
+## 5. Query Rewriting
+
+Follow-up questions are not always suitable for direct vector search.
+
+Example:
+
+```text
+Why would I use it?
+```
+
+A query-rewriting step converts it into:
+
+```text
+Why would I use Terraform?
+```
+
+The rewritten query is then converted into an embedding and searched in ChromaDB.
+
+```text
+Follow-up Question
+        ↓
+Conversation History
+        ↓
+Query Rewriting
+        ↓
+Standalone Query
+        ↓
+Embedding
+        ↓
+ChromaDB
+```
+
+This improves retrieval for conversational questions.
+
+---
+
+## 6. Retrieval
+
+The rewritten question is converted into an embedding.
+
+Example:
+
+```text
+How can Terraform automate AWS infrastructure?
+```
+
+becomes a vector:
+
+```text
+[0.21, -0.42, 0.73, ...]
+```
+
+ChromaDB compares this vector with stored document vectors.
+
+The most semantically similar documents are returned.
+
+Example:
+
+```text
+Question
+   ↓
+Embedding
+   ↓
+ChromaDB
+   ↓
+Top 3 relevant documents
+```
+
+---
+
+## 7. Context
+
+Retrieved documents are added to the prompt sent to the LLM.
+
+Example:
+
+```text
+Knowledge Base:
+Terraform is an Infrastructure as Code tool...
+
+AWS provides services such as EC2, S3, RDS...
+
+Question:
+Does it work with AWS?
+```
+
+The model receives the relevant information instead of the entire knowledge base.
+
+This helps keep the answer focused and grounded.
+
+---
+
+## 8. Grounded Generation
+
+The LLM should answer using the retrieved knowledge.
+
+The prompt should clearly instruct the model:
+
+```text
+Answer using ONLY the knowledge-base context.
+
+Do not invent information.
+
+If the answer is not present,
+say that enough information was not found.
+```
+
+This reduces unsupported answers.
+
+The basic principle is:
+
+```text
+Retrieve first
+     ↓
+Provide context
+     ↓
+Generate answer
+```
+
+---
+
+## 9. Unknown Question Handling
+
+A RAG chatbot should not pretend to know information that is missing from the knowledge base.
+
+Example question:
+
+```text
+What is the population of India?
+```
+
+If the knowledge base contains no information about population, the response should be:
+
+```text
+I couldn't find enough information in the knowledge base
+to answer this question.
+```
+
+This is an important part of grounded AI.
+
+---
+
+## 10. Source Attribution
+
+The retrieved documents can be shown below the answer.
+
+Example:
+
+```text
+Answer:
+Terraform can be used to manage AWS infrastructure.
+
+Sources:
+- Terraform document
+- AWS document
+```
+
+Sources make the response easier to verify and demonstrate which knowledge was retrieved.
+
+---
+
+## 11. Conversation Memory in Streamlit
+
+Streamlit provides session state for storing conversation messages.
+
+Example structure:
+
+```python
+st.session_state.messages = [
+    {
+        "role": "user",
+        "content": "What is Terraform?"
+    },
+    {
+        "role": "assistant",
+        "content": "Terraform is an Infrastructure as Code tool."
+    }
+]
+```
+
+The history can then be passed to the RAG pipeline.
+
+Only a limited number of recent messages should normally be included to keep prompts manageable.
+
+---
+
+## 12. Complete Processing Flow
+
+When a user submits a question:
+
+```text
+1. Receive question
+        ↓
+2. Read conversation history
+        ↓
+3. Rewrite follow-up question
+        ↓
+4. Generate query embedding
+        ↓
+5. Search ChromaDB
+        ↓
+6. Retrieve relevant documents
+        ↓
+7. Combine history + context + question
+        ↓
+8. Send prompt to Ollama
+        ↓
+9. Generate grounded answer
+        ↓
+10. Display answer
+        ↓
+11. Display sources
+        ↓
+12. Save conversation
+```
+
+---
+
+## 13. Important Files
+
+### `setup.py`
+
+Responsible for:
+
+- Loading the knowledge base
+- Creating embeddings
+- Creating ChromaDB
+- Storing documents and embeddings
+
+### `test_search.py`
+
+Used to verify:
+
+- Embeddings work
+- ChromaDB works
+- Semantic retrieval works
+
+### `test_ollama.py`
+
+Used to verify:
+
+- Python can communicate with Ollama
+- The selected model is working
+
+### `rag.py`
+
+Contains the main RAG logic:
+
+- Query rewriting
+- Retrieval
+- Prompt creation
+- Answer generation
+
+### `app.py`
+
+Contains the Streamlit application:
+
+- Chat interface
+- Conversation history
+- Clear conversation
+- Answer display
+- Source display
+
+---
+
+## 14. Why Test Components Separately?
+
+Testing everything at once makes errors difficult to identify.
+
+A better development order is:
+
+```text
+Ollama
+   ↓
+Embedding Model
+   ↓
+ChromaDB
+   ↓
+Semantic Search
+   ↓
+Python → Ollama
+   ↓
+RAG Pipeline
+   ↓
+Streamlit
+```
+
+Each successful test confirms one layer before the next layer is added.
+
+---
+
+## 15. Important Commands
+
+Check Ollama:
+
+```bash
+ollama --version
+```
+
+List models:
+
+```bash
+ollama list
+```
+
+Download model:
+
+```bash
+ollama pull llama3.2:3b
+```
+
+Run model:
+
+```bash
+ollama run llama3.2:3b
+```
+
+Create virtual environment:
+
+```bash
+python -m venv venv
+```
+
+Activate in Git Bash:
+
+```bash
+source venv/Scripts/activate
+```
+
+Install dependencies:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+Run Streamlit:
+
+```bash
+python -m streamlit run app.py
+```
+
+---
+
+## 16. Key Concepts to Remember
+
+### Embedding
+
+Text → numerical vector.
+
+### Vector Database
+
+Stores and searches embeddings.
+
+### Retrieval
+
+Finds relevant knowledge.
+
+### Context
+
+Retrieved information supplied to the LLM.
+
+### Generation
+
+LLM creates the final natural-language response.
+
+### Conversation Memory
+
+Previous messages used to understand follow-up questions.
+
+### Query Rewriting
+
+Transforms an incomplete follow-up into a standalone search query.
+
+### Grounding
+
+Restricts the answer to retrieved knowledge.
+
+### Source Attribution
+
+Shows the knowledge used to produce the response.
+
+---
+
+## 17. Final Mental Model
+
+```text
+              CONVERSATION
+                   │
+                   ▼
+            Understand Question
+                   │
+                   ▼
+             Rewrite Query
+                   │
+                   ▼
+              Create Embedding
+                   │
+                   ▼
+                ChromaDB
+                   │
+                   ▼
+             Retrieve Context
+                   │
+          ┌────────┴────────┐
+          │                 │
+     Chat History      Retrieved Docs
+          │                 │
+          └────────┬────────┘
+                   ▼
+              Ollama / Llama
+                   │
+                   ▼
+            Grounded Answer
+                   │
+                   ▼
+                Sources
+```
+
+The central idea is:
+
+**Conversation history provides understanding, ChromaDB provides knowledge, and the LLM provides language generation.**
+
+That combination creates a conversational RAG chatbot.

@@ -44,6 +44,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 17 | AI Semantic Search | Python, Sentence Transformers, all-MiniLM-L6-v2, Semantic Search, Embeddings, Vector Retrieval, Cosine Similarity, Query Embeddings, Document Embeddings, Top-K Retrieval |
 | Day 18 | AI Vector Database Search | Python, ChromaDB, Sentence Transformers, all-MiniLM-L6-v2, Vector Database, Embeddings, Collections, Metadata, Similarity Search, Query Embeddings, Top-K Retrieval, Cosine Distance, Persistent Storage |
 | Day 19 | RAG Knowledge Assistant | Python, Gemini API, Sentence Transformers, all-MiniLM-L6-v2, ChromaDB, RAG, Query Embeddings, Similarity Search, Top-K Retrieval, Context Retrieval, Grounded Generation, Prompt Engineering, Source Attribution, Hallucination Control, Internal Knowledge Base |
+| Day 20 | AI RAG Chatbot | Python, Streamlit, Ollama, Llama 3.2, Sentence Transformers, all-MiniLM-L6-v2, ChromaDB, Conversational RAG, Conversation Memory, Query Rewriting, Query Embeddings, Similarity Search, Top-K Retrieval, Context + History, Grounded Generation, Source Attribution, Hallucination Control, Local LLM, Interactive Chatbot |
 
 ---
 
@@ -104,3 +105,6 @@ Store and retrieve knowledge by meaning using embeddings, ChromaDB, metadata, si
 
 # 🚀 Day 19 — RAG Knowledge Assistant
 Retrieve relevant internal knowledge from ChromaDB and use Gemini to generate grounded answers with source attribution.
+
+# 🚀 Day 20 — AI RAG Chatbot
+Build a conversational RAG chatbot that uses ChromaDB to retrieve relevant knowledge and Ollama to generate grounded answers while maintaining conversation context and source attribution.
