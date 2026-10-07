@@ -660,3 +660,13 @@ GENERATION
 ```
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/f88e984e-9994-4ad6-823d-4cd85d9adccb" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/fdd914df-06fb-4eb6-812f-63be3159a95c" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/5d491d1a-b62d-4a48-a1e0-30bbd7f83282" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/2ed3efa8-803c-48b7-b792-2f2ff3e0b9e8" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/a00bc793-153e-4cc7-8665-7c49e517532e" />
+
+
+
+
+
