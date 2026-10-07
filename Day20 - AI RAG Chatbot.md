@@ -513,3 +513,31 @@ Ollama / Llama 3.2
 Streamlit
 
 This completes Day 20 with a practical, real-time conversational RAG application.
+
+### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/0f61716d-11dd-422a-98c9-77ef88be9ad0" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/d768cab8-9652-4443-a0f3-aea6e9a4e04d" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/9bbc0380-40ae-4c76-b6cf-13bc02da4994" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/af126a29-7e9e-4edf-b68c-d739461630f0" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/d3142498-ce1e-4527-816a-6803ddda9552" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/b3410b3b-a993-4a50-b4d0-2d182ecdcc31" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/a343ebc0-183d-4d7b-a7bd-80d9cdaffff4" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/40cf840b-b468-423a-a992-79690000bcae" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/cca013d7-f28e-4be2-a605-297bec881d14" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/96462ab7-b657-417d-bb2a-14b63e43b121" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/949cfcb3-66df-4be3-bba1-0aa9ed7132ae" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/4f830ad3-3040-4390-b1d0-1f8d3e813612" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/fd4c066e-0a58-40a5-9f5c-e3311442f61f" />
+
+
+
+
+
+
+
+
+
+
+
+
+
