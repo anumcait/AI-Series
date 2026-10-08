@@ -927,3 +927,15 @@ A local AI DevOps Tool-Calling Assistant using:
     Custom Python Tools
 
 The assistant can understand a request, select the correct tool, pass arguments to Python, execute the function, receive the result, and generate a natural-language response.
+
+### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/b0d40fe2-705c-425f-a8af-edebdb8d9ca0" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/79fe7c28-bbbb-4bba-b933-c9c56f6dae88" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/d0b8e7fd-c8b7-4774-b54f-f1b183551771" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/301f22e2-07bb-40ef-ac68-4f0c56db8600" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/482c7581-0c8a-4f58-b336-c8887a23881c" />
+
+
+
+
+
