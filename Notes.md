@@ -11647,3 +11647,870 @@ The central idea is:
 **Conversation history provides understanding, ChromaDB provides knowledge, and the LLM provides language generation.**
 
 That combination creates a conversational RAG chatbot.
+
+# 📚 Day 21 — AI Tool Calling Notes
+
+## 1. What is Tool Calling?
+
+Tool calling is a mechanism that allows an LLM to decide when an external function is required and provide the arguments needed to call that function.
+
+The LLM does not directly execute the Python function.
+
+The application controls the actual execution.
+```
+
+User Request ↓ LLM ↓ Tool Required? ↓ Select Tool ↓ Generate Arguments ↓ Python Application ↓ Execute Function ↓ Tool Result ↓ LLM ↓ Final Answer
+
+```
+
+For example:
+```
+
+User: What is 1250 × 48?
+
+```
+
+The LLM identifies that a calculator is appropriate:
+```
+
+Tool: calculate
+
+Arguments: { "expression": "1250 \* 48" }
+
+```
+
+The Python application executes:
+```
+
+calculate("1250 \* 48")
+
+```
+
+The function returns:
+```
+
+60000
+
+```
+
+The result is sent back to the LLM, which produces:
+```
+
+1250 × 48 = 60,000.
+
+```
+
+---
+
+# 2. Why Does an LLM Need Tools?
+
+An LLM is primarily a language model. It generates responses based on the information available to it.
+
+A tool provides an external capability.
+
+Examples:
+```
+
+Calculator → perform calculations Weather API → retrieve weather Database Tool → query data Server Tool → check infrastructure File Tool → read files Monitoring Tool → retrieve metrics
+
+```
+
+For a DevOps assistant, tools can provide access to infrastructure information without requiring the LLM to directly access the infrastructure.
+
+---
+
+# 3. Tool Calling vs Normal LLM Response
+
+For a normal question:
+```
+
+User ↓ LLM ↓ Answer
+
+```
+
+For a tool-based question:
+```
+
+User ↓ LLM ↓ Tool Call ↓ Python Function ↓ Tool Result ↓ LLM ↓ Answer
+
+```
+
+The important difference is the additional tool-execution step.
+
+---
+
+# 4. What is a Tool?
+
+A tool is normally a Python function that performs a specific operation.
+
+Example:
+```
+
+def get_server_status(server): return { "server": server, "status": "HEALTHY" }
+
+```
+
+The function itself is not enough for the LLM.
+
+The LLM also needs a description explaining:
+
+- What the tool does
+- The tool name
+- Which parameters are required
+- The parameter types
+- What each parameter means
+
+This information is provided through a tool schema.
+
+---
+
+# 5. Tool Definition
+
+A tool can be described using a JSON-style schema:
+```
+
+{ "type": "function", "function": { "name": "get_server_status", "description": "Get the health status of a server.", "parameters": { "type": "object", "properties": { "server": { "type": "string", "description": "Server name" } }, "required": \["server"\] } } }
+
+```
+
+The schema tells the LLM:
+```
+
+Tool name: get_server_status
+
+Purpose: Get server health information
+
+Parameter: server
+
+Type: string
+
+Required: yes
+
+```
+
+The schema is therefore an interface between the LLM and the Python application.
+
+---
+
+# 6. Tool Name
+
+Every tool needs a unique name.
+
+Example:
+```
+
+calculate get_server_status get_disk_usage check\_service
+
+```
+
+The name is used when the model requests a particular function.
+
+For example:
+```
+
+get_disk_usage
+
+```
+
+means that the application should find and execute the corresponding Python function.
+
+---
+
+# 7. Tool Description
+
+The description helps the LLM decide when a tool should be used.
+
+Example:
+```
+
+"description": "Get disk usage percentage of a server."
+
+```
+
+A clear description improves tool selection.
+
+Poor description:
+```
+
+"description": "Server tool"
+
+```
+
+Better description:
+```
+
+"description": "Get the current disk usage percentage of a server."
+
+```
+
+Tool descriptions should clearly explain the purpose of the function.
+
+---
+
+# 8. Tool Parameters
+
+Parameters define the information required by a function.
+
+Example:
+```
+
+"properties": { "server": { "type": "string", "description": "Server name" } }
+
+```
+
+For a service check:
+```
+
+"properties": { "server": { "type": "string", "description": "Server name" }, "service": { "type": "string", "description": "Service name" } }
+
+```
+
+The LLM uses these definitions to generate the arguments.
+
+---
+
+# 9. Required Parameters
+
+Required parameters are specified using:
+```
+
+"required": \[ "server", "service" \]
+
+```
+
+This means both values must be supplied.
+
+For:
+```
+
+check\_service
+
+```
+
+the LLM should produce something similar to:
+```
+
+{ "server": "production", "service": "nginx" }
+
+```
+
+---
+
+# 10. JSON Schema
+
+Tool parameters are commonly represented using JSON Schema concepts.
+
+Important fields include:
+```
+
+type properties description required
+
+```
+
+Example:
+```
+
+{ "type": "object", "properties": { "server": { "type": "string" } }, "required": \["server"\] }
+
+```
+
+This provides a structured contract between the model and application.
+
+---
+
+# 11. The Python Tool
+
+The actual implementation remains ordinary Python.
+
+Example:
+```
+
+def get_disk_usage(server):
+
+disk\_usage = { "production": 78, "test": 91, "development": 45 }
+
+usage = disk\_usage.get(server.lower())
+
+if usage is None: return { "server": server, "error": "Server not found" }
+
+return { "server": server, "disk_usage_percent": usage }
+
+```
+
+The LLM does not execute this code.
+
+The Python application executes it.
+
+---
+
+# 12. Tool Registry
+
+The application needs a mapping between the tool name supplied by the LLM and the actual Python function.
+
+Example:
+```
+
+available_functions = { "calculate": calculate, "get_server_status": get_server_status, "get_disk_usage": get_disk_usage, "check_service": check\_service }
+
+```
+
+If the model requests:
+```
+
+get_server_status
+
+```
+
+the application can find:
+```
+
+available_functions\["get_server\_status"\]
+
+```
+
+which points to:
+```
+
+get_server_status()
+
+```
+
+This registry connects the LLM's requested tool to executable Python code.
+
+---
+
+# 13. Sending Tools to Ollama
+
+The tools are supplied when making the chat request.
+
+Conceptually:
+```
+
+response = chat( model="llama3.2:3b", messages=messages, tools=tools )
+
+```
+
+The model receives:
+```
+
+Conversation + Available Tools + Tool Descriptions + Tool Parameters
+
+```
+
+The model then decides whether a tool is appropriate.
+
+---
+
+# 14. Detecting a Tool Call
+
+The application checks whether the response contains tool calls.
+
+Example:
+```
+
+if response.message.tool\_calls: ...
+
+```
+
+If tool calls exist, the model has requested one or more tools.
+
+The application can inspect:
+```
+
+tool\_call.function.name
+
+```
+
+and:
+```
+
+tool\_call.function.arguments
+
+```
+
+Example:
+```
+
+Tool: get_server_status
+
+Arguments: { "server": "production" }
+
+```
+
+---
+
+# 15. Executing the Tool
+
+The requested function is retrieved from the registry:
+```
+
+function = available_functions.get( tool_name )
+
+```
+
+Then the arguments are passed to the function:
+```
+
+result = function( arguments )
+
+```
+
+For example:
+```
+
+arguments = { "server": "production" }
+
+```
+
+becomes:
+```
+
+get_server_status( server="production" )
+
+```
+
+The Python function then returns the result.
+
+---
+
+# 16. Returning the Tool Result
+
+After executing the function, the result must be added back to the conversation.
+
+Example:
+```
+
+messages.append({ "role": "tool", "tool_name": tool_name, "content": json.dumps(result) })
+
+```
+
+The result becomes part of the conversation context.
+
+Example:
+```
+
+{ "server": "production", "status": "HEALTHY" }
+
+```
+
+The LLM can now use this information to generate the final answer.
+
+---
+
+# 17. Second LLM Call
+
+The first LLM call determines the required tool.
+
+After the Python function finishes, another LLM call is made.
+```
+
+final\_response = chat( model="llama3.2:3b", messages=messages )
+
+```
+
+The LLM now has:
+```
+
+Original User Request + Tool Call + Tool Result
+
+```
+
+It can generate a human-readable response.
+
+Example:
+```
+
+The production server is currently healthy.
+
+```
+
+---
+
+# 18. Complete Example
+
+User request:
+```
+
+Is nginx running on production?
+
+```
+
+The model may select:
+```
+
+check\_service
+
+```
+
+with:
+```
+
+{ "server": "production", "service": "nginx" }
+
+```
+
+The application executes:
+```
+
+check\_service( server="production", service="nginx" )
+
+```
+
+The function returns:
+```
+
+{ "server": "production", "service": "nginx", "status": "RUNNING" }
+
+```
+
+The result is returned to the LLM.
+
+The final response becomes:
+```
+
+Nginx is running on the production server.
+
+```
+
+---
+
+# 19. Multiple Tools
+
+An application can expose multiple tools at the same time.
+
+Example:
+```
+
+calculate get_server_status get_disk_usage check\_service
+
+```
+
+The model chooses the appropriate tool based on:
+```
+
+User Request + Tool Names + Tool Descriptions + Tool Parameters
+
+```
+
+Example:
+```
+
+"What is 25 \* 48?" ↓ calculate
+
+```
+
+```
+
+"Is production healthy?" ↓ get_server_status
+
+```
+
+```
+
+"How much disk is used on test?" ↓ get_disk_usage
+
+```
+
+```
+
+"Is nginx running on production?" ↓ check\_service
+
+```
+
+---
+
+# 20. Tool Calling Does Not Mean Autonomous Execution
+
+A critical security concept is that the model should not receive unrestricted execution privileges.
+
+The application remains in control.
+
+The model can request:
+```
+
+check\_service( production, nginx )
+
+```
+
+but the application decides whether that tool is actually allowed to execute.
+
+The tool registry therefore acts as a controlled boundary.
+
+For real infrastructure, additional controls should include:
+
+- Authentication
+- Authorization
+- Input validation
+- Logging
+- Timeouts
+- Error handling
+- Read-only permissions where possible
+- Approval for destructive operations
+
+---
+
+# 21. Mock Tools
+
+The Day-21 project uses simulated infrastructure data.
+
+Example:
+```
+
+{ "production": "HEALTHY", "test": "WARNING" }
+
+```
+
+This is intentional.
+
+The objective is to learn the tool-calling mechanism without connecting the assistant directly to production infrastructure.
+
+Later, a tool could call:
+```
+
+Linux commands REST APIs Cloud APIs Monitoring systems Databases Kubernetes Jenkins Ansible
+
+```
+
+The tool-calling architecture remains the same.
+
+---
+
+# 22. Error Handling
+
+Tools can fail.
+
+Example:
+```
+
+Unknown server Unknown service Invalid calculation Missing parameter Unexpected exception
+
+```
+
+A tool should return useful error information.
+
+Example:
+```
+
+return { "server": server, "error": "Server not found" }
+
+```
+
+The application should also protect tool execution:
+```
+
+try: result = function(arguments)
+
+except Exception as e: result = { "error": str(e) }
+
+```
+
+This prevents a single tool failure from crashing the entire assistant.
+
+---
+
+# 23. The Most Important Mental Model
+
+Tool calling consists of three responsibilities.
+
+### LLM
+```
+
+Understand request ↓ Choose tool ↓ Generate arguments
+
+```
+
+### Application
+```
+
+Receive tool call ↓ Validate request ↓ Execute Python function ↓ Return result
+
+```
+
+### LLM
+```
+
+Read tool result ↓ Generate final response
+
+```
+
+This separation is fundamental.
+
+---
+
+# 24. Tool Calling as an Interface
+
+A useful way to understand a tool is as an API exposed to the LLM.
+
+For example:
+```
+
+Tool Name: get_server_status
+
+Input: server: string
+
+Output: server + status
+
+```
+
+The LLM does not need to know how the function is implemented.
+
+It only needs to understand:
+```
+
+What the tool does What arguments it accepts When it should be used
+
+```
+
+This is similar to how a developer uses an API without needing to know its internal implementation.
+
+---
+
+# 25. Tool Selection
+
+Tool selection is based primarily on the meaning of the user's request.
+
+Example:
+```
+
+Calculate 100 / 4
+
+```
+
+matches:
+```
+
+calculate
+
+```
+
+while:
+```
+
+Check production health
+
+```
+
+matches:
+```
+
+get_server_status
+
+```
+
+Clear tool descriptions are therefore important.
+
+If several tools have confusing or overlapping descriptions, the model may select an inappropriate tool.
+
+---
+
+# 26. Arguments Are Generated by the Model
+
+For:
+```
+
+Check nginx on production.
+
+```
+
+the model must identify:
+```
+
+server = production service = nginx
+
+```
+
+and generate:
+```
+
+{ "server": "production", "service": "nginx" }
+
+```
+
+The application then passes those arguments to Python.
+
+This is one of the most important parts of function calling.
+
+---
+
+# 27. Tool Calling Loop
+
+The complete mechanism can be represented as:
+```
+
+messages ↓ LLM ↓ tool\_calls? ↓ YES ↓ Read tool name ↓ Read arguments ↓ Find Python function ↓ Execute function ↓ Create tool message ↓ Add result to messages ↓ LLM ↓ Final response
+
+```
+
+If there is no tool call:
+```
+
+LLM ↓ Normal response
+
+```
+
+---
+
+# 28. Key Terms
+
+### Tool
+
+An external function available to the LLM.
+
+### Function
+
+The actual Python implementation.
+
+### Tool Schema
+
+Structured description of the tool and its parameters.
+
+### Tool Call
+
+The model's request to execute a particular tool.
+
+### Arguments
+
+Values generated by the model for the tool parameters.
+
+### Tool Result
+
+The output returned by the Python function.
+
+### Tool Registry
+
+Mapping between tool names and Python functions.
+
+### Function Calling
+
+The overall mechanism allowing an LLM to request execution of external functions.
+
+---
+
+# 29. Key Takeaways
+
+- Tool calling allows an LLM to use external capabilities.
+- The LLM does not directly execute Python.
+- Tool definitions describe available functions.
+- Tool schemas describe parameters and their types.
+- The LLM selects the appropriate tool.
+- The LLM generates the tool arguments.
+- The application executes the Python function.
+- The function result is returned to the LLM.
+- The LLM generates the final natural-language response.
+- Multiple tools can be exposed simultaneously.
+- The application remains responsible for execution and security.
+- Tool descriptions should be clear and specific.
+- Tool arguments should be validated.
+- Errors should be handled safely.
+- Mock tools are useful for learning before connecting real infrastructure.
+
+# 🧠 Core Concept
+
+The complete idea can be remembered as:
+```
+
+LLM decides ↓ Application executes ↓ Tool returns result ↓ LLM explains result
+
+```
+
+Tool calling is the mechanism that connects a language model with external functions and systems in a controlled way.
