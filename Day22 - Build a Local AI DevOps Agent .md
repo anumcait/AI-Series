@@ -970,5 +970,12 @@ The fundamental pattern is:
 
 GOAL ↓ DECIDE ↓ ACT ↓ OBSERVE ↓ DECIDE AGAIN ↓ COMPLETE
 
-
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/336a365e-3b77-4a83-88a6-bd75e54d170f" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7545c8a8-f46a-4068-87aa-ddd7e304111c" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/d52c6286-9522-4827-a64c-00da7d928a88" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/9f1af92e-534b-4e3c-992b-01a6565679db" />
+
+
+
+
