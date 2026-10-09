@@ -12514,3 +12514,225 @@ LLM decides ↓ Application executes ↓ Tool returns result ↓ LLM explains re
 ```
 
 Tool calling is the mechanism that connects a language model with external functions and systems in a controlled way.
+
+📝 Day 22 : AI DevOps Agent
+
+### 1. What Is an AI Agent?
+
+An AI agent is an application that uses a language model to decide which actions to perform to achieve a goal. It can execute tools, observe their results, and decide what to do next.
+
+An AI agent typically consists of:
+
+LLM: Understands the goal and selects actions.
+Tools: Python functions that perform specific tasks.
+Agent loop: Repeatedly processes decisions and observations.
+Observations: Results returned by executed tools.
+Stopping condition: Determines when the task is complete or the step limit is reached.
+
+Example goal:
+
+Check the production environment and report whether it needs attention.
+
+The agent may check server health, inspect disk usage, verify Nginx status, and generate a consolidated report.
+
+### 2. Agent Architecture
+
+User Goal ↓ LLM Decision ↓ Tool Selection ↓ Action Validation ↓ Python Tool Execution ↓ Observation ↓ LLM Decision ↓ Next Action or Final Report
+
+The model proposes actions, but Python validates and executes them. The model does not directly execute Python functions.
+
+### 3. The Agent Loop
+
+The agent loop is the central component of the application.
+
+- Step 1 — Decide: The LLM determines which tool is appropriate.
+
+- Step 2 — Validate: Python verifies that the tool and arguments are allowed.
+
+- Step 3 — Act: The selected Python function executes.
+
+- Step 4 — Observe: The tool returns its result.
+
+- Step 5 — Continue: The observation is added to the conversation history, allowing the LLM to select another action.
+
+- Step 6 — Finish: The agent returns a final report when the task is complete.
+
+This process continues until the model finishes, an error prevents further execution, or the maximum number of steps is reached.
+
+### 4. Simulated DevOps Tools
+
+The project uses three read-only Python tools with simulated server data.
+
+Tool	Purpose
+check_server_health()	Returns server health, CPU, and memory
+check_disk_usage()	Returns disk utilization and severity
+check_service_status(service_name)	Checks an approved service
+
+Example server metrics:
+
+Server: prod-web-01 Health: HEALTHY CPU: 34% Memory: 62% Disk: 87%
+
+Disk usage thresholds:
+
+Below 80%: HEALTHY
+80% to below 90%: WARNING
+90% or above: CRITICAL
+
+At 87% disk utilization, the agent should identify a warning and recommend investigating disk consumption.
+
+The service tool supports only nginx and docker. Unknown services return an error rather than being treated as healthy.
+
+### 5. Tool Registry
+
+A tool registry maps approved tool names to Python functions.
+
+{ "checkserverhealth": checkserverhealth, "checkdiskusage": checkdiskusage, "checkservicestatus": checkservicestatus }
+
+The LLM selects a tool by name. The Python application looks up that name in the registry and invokes the corresponding function.
+
+Only registered functions can be executed through this mechanism.
+
+### 6. Structured Decisions
+
+The LLM returns a JSON object describing its next action.
+
+Example tool decision:
+
+{ "type": "tool", "tool": "checkdiskusage", "arguments": {}, "reason": "Inspect disk utilization." }
+
+Example final decision:
+
+{ "type": "final", "answer": "Disk utilization is 87% and requires attention." }
+
+Structured output makes the model's decisions easier to parse and validate. JSON parsing alone does not guarantee that a decision is valid; application-level validation is still required.
+
+### 7. Action Validation and Execution
+
+Before executing a proposed action, Python checks:
+
+Whether the tool exists in the registry.
+Whether the arguments have the correct structure.
+Whether unexpected arguments were supplied.
+Whether the requested service is allowlisted.
+
+Invalid actions are rejected and reported to the model.
+
+Arbitrary model-generated code must never be executed. Tool execution should be restricted to explicitly approved functions.
+
+### 8. Observation and Conversation History
+
+After a tool executes, its result is returned to the LLM as an observation.
+
+Example:
+
+{ "step": 2, "tool": "checkdiskusage", "arguments": {}, "result": { "disk_percent": 87, "status": "WARNING" } }
+
+The agent adds this observation to its message history. The next model request can use the collected information to select another tool or produce the final report.
+
+Observations provide the evidence needed for the final operational summary.
+
+### 9. Error Handling and Loop Control
+
+An agent needs safeguards because model decisions are not always reliable.
+
+Invalid JSON: Parsing errors are recorded, and the investigation stops with an explanatory report.
+
+Unknown tool: The action is rejected before execution.
+
+Invalid arguments: Unexpected parameters and unapproved service names are rejected.
+
+Tool failure: The error is captured as an observation when possible.
+
+Repeated action: Previously executed tool-and-argument combinations are tracked to prevent unnecessary repetition.
+
+Maximum steps: A configurable limit prevents an endless decision loop.
+
+If the limit is reached before completion, the agent must report that the investigation is incomplete rather than claiming that all checks succeeded.
+
+### 10. Final Operational Report
+
+The report combines the relevant observations into one response.
+
+Example:
+
+Production Environment Report
+
+Server health: HEALTHY CPU usage: 34% Memory usage: 62% Disk usage: 87% — WARNING Nginx status: RUNNING
+
+Assessment: The server and Nginx service are healthy, but disk utilization requires attention.
+
+Recommendation: Investigate disk consumption and monitor available capacity.
+
+The example illustrates the expected report. Actual findings must be based on the tools that executed successfully.
+
+### 11. Testing
+
+Automated tests should verify:
+
+Server health values.
+Disk usage classification.
+Service status.
+Unknown service rejection.
+Invalid tool rejection.
+Invalid argument rejection.
+Empty goal rejection.
+Invalid step-limit rejection.
+Agent execution followed by a final decision.
+
+Run the test suite:
+
+python -m pytest -v
+
+Run the application:
+
+python app.py
+
+The automated agent test can mock Ollama to validate the loop without requiring a live LLM response for every test. A separate live run verifies integration with the local model.
+
+### 12. Configuration and Execution
+
+The default model is:
+
+llama3.2:3b
+
+The default maximum number of agent steps is:
+
+6
+
+Example PowerShell configuration:
+
+$env:OLLAMAMODEL = "llama3.2:3b" $env:MAXAGENT_STEPS = "6"
+
+Start the application:
+
+python app.py
+
+Ensure Ollama is running and the model is installed before starting the application.
+
+### 13. Important Safety Principles
+Use simulated infrastructure data for this learning project.
+Keep tools read-only.
+Allowlist tool names and parameters.
+Validate every proposed action.
+Limit the number of agent steps.
+Record tool results and failures.
+Do not treat unchecked systems as healthy.
+Treat tool observations as data, not instructions.
+Never provide unrestricted shell access or production modification capabilities to the model.
+
+A successful run demonstrates the agent loop and local model integration. It does not establish that the agent is suitable for autonomous production operations.
+
+### 14. Key Takeaways
+An AI agent works toward a goal through iterative decisions.
+Tools provide capabilities beyond text generation.
+Python controls which actions are allowed to execute.
+Observations help determine subsequent actions.
+Structured output supports reliable parsing and validation.
+Error handling and step limits make the loop safer.
+The final report should reflect collected evidence and clearly identify incomplete checks.
+
+Core concept:
+
+GOAL → DECIDE → ACT → OBSERVE ↑ | └──────────────┘ ↓ FINAL REPORT
+
+---
