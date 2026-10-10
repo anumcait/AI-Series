@@ -774,3 +774,14 @@ At the end of Day 23, the project should demonstrate a Multi-Tool AI DevOps Agen
 8. Using a local LLM without allowing it to bypass execution controls.
 
 ---
+### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/2d6ad0ed-7e6e-4839-8cb1-a3092edbae94" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/f7c6fb7b-8448-463f-8e39-b8912dc28e1b" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/1a58733b-7e25-4d75-be17-224e2aeb97f3" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/9b95e051-9d69-4e46-8138-c3468a85b145" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/4e6a8216-11ca-41c0-92dc-3d52c1572cd4" />
+
+
+
+
+
