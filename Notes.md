@@ -12736,3 +12736,354 @@ Core concept:
 GOAL → DECIDE → ACT → OBSERVE ↑ | └──────────────┘ ↓ FINAL REPORT
 
 ---
+
+# Day 23 — Multi-Tool AI DevOps Agent
+
+## 1. What Is a Multi-Tool AI DevOps Agent?
+
+A Multi-Tool AI DevOps Agent is an AI-powered application that uses multiple tools to investigate a problem, evaluate results, and decide what to investigate next.
+
+For example, when a user asks, "Investigate the server and tell me whether it is healthy," the agent can check server availability, monitor CPU, memory, and disk utilization, inspect application services, and analyze logs when a problem is detected.
+
+The agent combines the findings into a single diagnostic report. All server information in this project is simulated.
+
+## 2. Main Components
+
+### 2.1 Language Model
+
+Ollama with Llama 3.2 interprets the user's request, selects appropriate tools, and evaluates their results. The model can request additional tools when further investigation is necessary.
+
+The model proposes tool calls, but Python validates and executes them.
+
+### 2.2 Tool Functions
+
+Tool functions perform specific diagnostic operations. Each function has a defined purpose, accepted arguments, and expected output.
+
+### 2.3 Tool Registry
+
+The tool registry contains the tools available to the agent, along with their names, descriptions, and argument specifications.
+
+The model should select tools from this registered collection rather than inventing arbitrary function names.
+
+### 2.4 Tool Dispatcher
+
+The dispatcher validates the requested tool and its arguments, executes the corresponding Python function, and returns the result. Unknown tools must be rejected.
+
+### 2.5 Orchestration Layer
+
+The orchestration layer coordinates tool execution, collects results, evaluates conditions, and decides whether additional investigation is required.
+
+### 2.6 Final Report
+
+The final report combines diagnostic findings, warnings, failed checks, and recommendations into a readable result.
+
+## 3. Project Structure
+
+```text
+Day-23/
+├── app.py
+├── models.py
+├── requirements.txt
+├── test_tools.py
+└── tools.py
+```
+
+- **app.py:** Main application, orchestration, conditional execution, and reporting.
+- **models.py:** Ollama configuration and model communication.
+- **tools.py:** Diagnostic functions, tool registry, dispatcher, and serialization.
+- **requirements.txt:** Python dependencies.
+- **test_tools.py:** Tests for tool execution and validation.
+
+## 4. Diagnostic Tools
+
+### 4.1 Server Health Check
+
+**Function:** `check_server_health()`
+
+Checks simulated server availability and returns its health status.
+
+Example:
+
+```python
+{
+    "ok": True,
+    "status": "healthy"
+}
+```
+
+### 4.2 Resource Monitor
+
+**Function:** `monitor_resources()`
+
+Checks simulated CPU, memory, and disk utilization.
+
+Example:
+
+```python
+{
+    "ok": True,
+    "cpu_percent": 35,
+    "memory_percent": 61,
+    "disk_percent": 92
+}
+```
+
+If disk utilization reaches 92%, the agent may flag a warning according to the configured threshold. These values are illustrative, not actual server measurements.
+
+### 4.3 Service Checker
+
+**Function:** `check_services()`
+
+Checks the simulated status of Nginx, Tomcat, and the database.
+
+Example:
+
+```python
+{
+    "ok": True,
+    "services": {
+        "nginx": "running",
+        "tomcat": "running",
+        "database": "running"
+    }
+}
+```
+
+A stopped or unhealthy service should trigger further investigation when appropriate.
+
+### 4.4 Log Analyzer
+
+**Function:** `analyze_logs()`
+
+Inspects simulated log entries to identify relevant errors and warnings.
+
+Log analysis may be triggered when disk utilization exceeds a configured threshold or a service is unhealthy.
+
+Example:
+
+```python
+{
+    "ok": True,
+    "category": "resource",
+    "level": "WARNING",
+    "message": "Disk utilization is high."
+}
+```
+
+Log findings provide additional evidence but do not automatically establish the root cause.
+
+### 4.5 Tool Dispatcher
+
+**Function:** `dispatch_tool()`
+
+The dispatcher:
+1. Receives a tool name and arguments.
+2. Verifies that the tool is registered.
+3. Validates the arguments.
+4. Executes the corresponding function.
+5. Returns its result.
+6. Rejects unknown tools.
+
+The dispatcher must not execute arbitrary Python code or shell commands supplied by the model.
+
+### 4.6 JSON Serialization
+
+**Function:** `to_json()`
+
+Converts supported results into readable JSON for terminal output and debugging. Serialization formats results; it does not execute tools or select the next action.
+
+## 5. Agent Orchestration
+
+Orchestration means coordinating multiple tools and controlling their execution.
+
+A typical investigation follows these steps:
+
+1. Receive the user's request.
+2. Identify the diagnostic objective.
+3. Select an appropriate tool.
+4. Validate its name and arguments.
+5. Execute the tool through the dispatcher.
+6. Record the result.
+7. Evaluate the result.
+8. Decide whether another tool is needed.
+9. Inspect logs when justified.
+10. Combine the findings into a report.
+
+The sequence should depend on the investigation requirements and the available evidence.
+
+## 6. Conditional Execution
+
+Conditional execution means running a tool only when specified conditions are satisfied.
+
+Example:
+
+- Resource monitoring reports disk utilization of 92%.
+- The configured warning threshold is 85%.
+- The agent identifies a resource warning.
+- The log analyzer inspects relevant entries.
+- The findings are added to the final report.
+
+If all checks are healthy, log analysis may be skipped.
+
+**Important:** Decisions should use structured fields and numeric thresholds whenever possible. Searching serialized JSON for words such as `warning`, `high`, or `error` can produce false positives.
+
+For example, the message "No errors detected" contains the word `errors` but does not indicate a failure.
+
+## 7. Model-Driven Tool Selection
+
+The model receives the user's request and descriptions of the registered tools.
+
+The tool-calling cycle works as follows:
+
+1. Send the request and tool descriptions to Ollama.
+2. Receive the model's response.
+3. Determine whether a tool call was requested.
+4. Validate the requested tool and arguments.
+5. Execute the tool through the dispatcher.
+6. Return the result to the model in the required format.
+7. Let the model interpret the result.
+8. Continue with another tool call or produce a final answer.
+
+The request and response formats depend on the Ollama API and the integration being used.
+
+Not every model response is a valid tool call. Malformed responses must be handled safely.
+
+## 8. Separation of Model Logic and Python Execution
+
+The model interprets requests and proposes tool calls. Python remains responsible for:
+
+- Validating tool requests.
+- Executing registered functions.
+- Enforcing argument restrictions.
+- Recording results.
+- Handling failures.
+- Applying execution limits.
+
+This separation prevents the model from bypassing application controls. A model-generated request must be validated before execution.
+
+## 9. Error Handling
+
+The agent must handle errors without incorrectly reporting that the server is healthy.
+
+Important failure scenarios include:
+
+- Unknown tool names.
+- Invalid arguments.
+- Unsupported log categories.
+- Exceptions inside a tool.
+- Malformed tool results.
+- Ollama being unavailable.
+- Invalid model responses.
+- Repeated tool calls.
+- Missing diagnostic information.
+
+A failed check must be recorded as a failure or an unknown result.
+
+For example, if the service checker fails, the report must not claim that every service is running. Previously collected evidence should be preserved when another tool fails.
+
+## 10. Execution Limits
+
+An agent may repeatedly request tools without reaching a conclusion. Execution limits prevent unbounded loops and unnecessary calls.
+
+Useful limits include:
+- Maximum model/tool interaction rounds.
+- Maximum tool calls per investigation.
+- Permitted tool names.
+- Valid argument types and values.
+- Maximum output size.
+
+Example:
+
+```python
+MAX_AGENT_ROUNDS = 8
+```
+
+This is an illustrative limit. The appropriate value depends on the expected workflow.
+
+When a limit is reached, the agent should stop safely and report that the investigation is incomplete.
+
+## 11. Consolidated Health Report
+
+The final report combines the results of all executed diagnostic tools.
+
+It should include:
+- Investigation objective.
+- Server health result.
+- Resource utilization.
+- Service statuses.
+- Log findings, if available.
+- Tool execution errors.
+- Overall assessment.
+- Recommended next steps.
+
+The report must distinguish between confirmed findings, warnings, failed checks, and missing evidence.
+
+An overall status such as healthy, degraded, unhealthy, or undetermined should follow explicit application rules rather than relying entirely on the model's judgment.
+
+## 12. Testing
+
+Tool-level tests verify individual functions. Agent-level tests verify the complete orchestration workflow.
+
+| Test scenario | Expected result |
+|---|---|
+| All checks are healthy | Report findings and avoid unnecessary log analysis |
+| Disk usage exceeds the threshold | Identify a resource warning and investigate logs |
+| A service is stopped | Identify the service problem |
+| A tool name is invalid | Reject the request |
+| Arguments are invalid | Return a validation error |
+| A tool raises an exception | Record the failure safely |
+| Ollama is unavailable | Report that model-driven execution cannot continue |
+| The model requests an unknown tool | Reject the request |
+| The execution limit is reached | Stop and report an incomplete investigation |
+
+Run the existing tool tests:
+
+```bash
+python test_tools.py
+```
+
+Run the application:
+
+```bash
+python app.py
+```
+
+Passing `test_tools.py` does not prove that the complete agent works. Additional tests are needed for conditional execution, model responses, and execution limits.
+
+## 13. Important Design Principles
+
+1. **Single responsibility:** Keep model communication, tool execution, and orchestration separate.
+2. **Controlled execution:** Execute only registered tools.
+3. **Input validation:** Validate every tool request and argument.
+4. **Structured decisions:** Use explicit status fields and numeric thresholds.
+5. **Evidence preservation:** Keep successful results when another check fails.
+6. **Conditional investigation:** Run additional tools when the findings justify them.
+7. **Bounded execution:** Prevent endless tool-calling loops.
+8. **Honest reporting:** Never present failed checks as successful checks.
+9. **Simulated environment:** Keep all server readings simulated.
+10. **Testability:** Validate individual functions and the complete workflow.
+
+## 14. Key Terminology
+
+- **Tool:** A Python function that performs a specific operation.
+- **Tool registry:** The collection of available tools and their descriptions.
+- **Tool dispatcher:** The component that validates and executes a requested tool.
+- **Orchestration:** Coordination of multiple tools and their results.
+- **Conditional execution:** Running a tool only when specified conditions are satisfied.
+- **Tool calling:** A model's structured request to execute a registered function.
+- **Serialization:** Converting data into a format such as JSON.
+- **Execution limit:** A restriction on tool calls or interaction rounds.
+- **Consolidated report:** A single output containing investigation findings.
+- **Simulated data:** Example data used without accessing real infrastructure.
+
+## 15. Final Summary
+
+A Multi-Tool AI DevOps Agent combines language-model-based tool selection with controlled Python execution.
+
+Its main workflow is:
+
+**User request → Tool selection → Validation → Execution → Result evaluation → Conditional investigation → Consolidated report**
+
+The main objective is to use the results of multiple tools to determine what should be investigated next, handle failures safely, and produce a report supported by collected evidence.
+
+All server operations and readings remain simulated.

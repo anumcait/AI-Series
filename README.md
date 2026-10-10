@@ -47,6 +47,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 20 | AI RAG Chatbot | Python, Streamlit, Ollama, Llama 3.2, Sentence Transformers, all-MiniLM-L6-v2, ChromaDB, Conversational RAG, Conversation Memory, Query Rewriting, Query Embeddings, Similarity Search, Top-K Retrieval, Context + History, Grounded Generation, Source Attribution, Hallucination Control, Local LLM, Interactive Chatbot |
 | Day 21 | AI Tool Calling Assistant | Python, Ollama, Llama 3.2, Ollama Python SDK, Function Calling, Tool Calling, Custom Python Tools, Tool Definitions, JSON Schemas, Tool Parameters, Tool Selection, Argument Generation, Tool Registry, Tool Execution, Tool Results, Calculator Tool, Server Status Tool, Disk Usage Tool, Service Status Tool, Error Handling, Local LLM, DevOps AI Assistant |
 | Day 22 | Local AI DevOps Agent | Python, Ollama, Llama 3.2, Ollama Python SDK, AI Agents, Agent Loop, Goal-Oriented Task Handling, Multi-Step Tool Calling, Tool Selection, Structured Decisions, JSON Parsing, Tool Registry, Action Validation, Tool Execution, Observation Feedback, Iterative Decision Making, Server Health Tool, Disk Usage Tool, Service Status Tool, Error Handling, Duplicate Action Prevention, Maximum Step Limit, Final Operational Report, Simulated Infrastructure, Local LLM, DevOps AI Automation |
+| Day 23 | Multi-Tool AI DevOps Agent | Python, Ollama, Llama 3.2, Ollama Python SDK, Multi-Tool Orchestration, Tool Registry, Dynamic Tool Selection, Conditional Execution, Resource Monitoring, Server Health Checks, Service Status Checks, Log Analysis, JSON Tool Arguments, Result Aggregation, Conditional Investigation, Error Handling, Tool Execution Limits, Structured Diagnostic Reports, Simulated Infrastructure, Local LLM, DevOps AI Automation |
 ---
 
 # 🚀 Day 1 — AI Bug Description Clarifier
@@ -115,3 +116,6 @@ Build a DevOps-oriented AI assistant using Ollama that can select and execute Py
 
 # 🚀 Day 22 — AI DevOps Agent
 Build a local AI DevOps Agent using Python and Ollama that can plan multi-step operational tasks, execute Python tools, observe results, and generate a consolidated report.
+
+# 🚀 Day 23 — Multi-Tool AI DevOps Agent
+Build a local AI DevOps Agent using Python and Ollama that can intelligently select and coordinate multiple diagnostic tools, perform conditional investigations, analyze simulated server health, and generate a consolidated diagnostic report.
