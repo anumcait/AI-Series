@@ -269,3 +269,10 @@ _Exact responses depend on the model._
 - The agent provides suggestions only. Review commands carefully before executing them on production systems.
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/d774c2e4-0b32-4aa1-b5e9-f2f40438ca89" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/0dc05127-448b-4093-916f-145231c478ae" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/167ed478-255d-4131-b4fa-27c7ef4c0e78" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/72bbeca5-c21a-472a-9d35-f161ba01c5c9" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/ae54e3f7-b213-41df-a3cf-44deba3c356d" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/d94eb25e-03be-4f8e-a7e2-f288fecc621e" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/fc4d596c-acfb-448b-aead-0ab89d29bc2f" />
