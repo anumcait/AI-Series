@@ -13087,3 +13087,271 @@ Its main workflow is:
 The main objective is to use the results of multiple tools to determine what should be investigated next, handle failures safely, and produce a report supported by collected evidence.
 
 All server operations and readings remain simulated.
+
+# Day 24 — Local AI Agent with Short-Term Memory
+
+## 1. Introduction
+
+An AI agent with short-term memory can remember earlier messages within the current conversation and use them to answer follow-up questions correctly.
+
+A basic AI chatbot may process each question independently. An agent with memory maintains conversation history and sends relevant previous messages to the language model along with the latest question.
+
+**Technologies used:**
+- Python — implements the agent and manages conversation history.
+- Ollama — runs the language model locally.
+- Llama 3.2 — generates context-aware responses.
+- Lists and dictionaries — store messages in memory.
+- Requests — communicates with the Ollama API.
+
+## 2. What Is Short-Term Memory?
+
+Short-term memory is temporary storage of information from the current conversation.
+
+For example:
+
+- User: My production server has high disk usage.
+- Agent: Check which directories are consuming the most disk space.
+- User: What should be checked first?
+- Agent: Start by identifying the largest directories on the production server.
+
+The last question makes sense because the agent receives the earlier conversation as context.
+
+Without conversation history, the model might not understand what the user means by "first."
+
+**Important:** Short-term memory is not the same as permanent storage. A Python list stores messages in RAM, so the conversation normally disappears when the application exits.
+
+## 3. How Conversation Memory Works
+
+The process follows these steps:
+
+1. Receive a message from the user.
+2. Add the message to the conversation history.
+3. Send the history to Ollama.
+4. Let Llama 3.2 generate a response using the available context.
+5. Display the response.
+6. Add the assistant's response to the history.
+7. Repeat the process for the next message.
+
+The model does not automatically remember previous API requests. The application must provide the relevant conversation history with each request.
+
+## 4. Understanding Messages and Roles
+
+Ollama's chat API accepts a list of messages. Each message contains a role and content.
+
+Example:
+
+```python
+messages = [
+    {
+        "role": "system",
+        "content": "You are a helpful DevOps assistant."
+    },
+    {
+        "role": "user",
+        "content": "My server has high disk usage."
+    },
+    {
+        "role": "assistant",
+        "content": "Check which directories use the most space."
+    },
+    {
+        "role": "user",
+        "content": "What should be checked first?"
+    }
+]
+```
+
+The roles have different purposes:
+
+- **system:** Defines the assistant's instructions, behavior, and responsibilities.
+- **user:** Contains the user's messages.
+- **assistant:** Contains the model's previous responses.
+
+The model uses these messages to understand the conversation and generate an appropriate answer.
+
+## 5. Connecting Python to Ollama
+
+Ollama provides a local HTTP API for communicating with language models.
+
+The chat endpoint is:
+
+`http://localhost:11434/api/chat`
+
+A Python request can be sent as follows:
+
+```python
+import requests
+
+response = requests.post(
+    "http://localhost:11434/api/chat",
+    json={
+        "model": "llama3.2",
+        "messages": messages,
+        "stream": False
+    },
+    timeout=120
+)
+
+response.raise_for_status()
+answer = response.json()["message"]["content"]
+```
+
+Explanation:
+
+- `requests.post()` sends an HTTP POST request.
+- `model` specifies the model to use.
+- `messages` contains the conversation history.
+- `stream: False` requests the complete response rather than streamed chunks.
+- `timeout=120` limits how long the request can wait.
+- `raise_for_status()` raises an error for unsuccessful HTTP responses.
+- `response.json()` reads the JSON response.
+- `message.content` contains the assistant's answer.
+
+The model must be downloaded and Ollama must be running before the request can succeed.
+
+## 6. Managing Conversation History
+
+Python lists are suitable for storing messages during a conversation.
+
+```python
+messages = [
+    {"role": "system", "content": "You are a helpful AI assistant."}
+]
+
+messages.append({
+    "role": "user",
+    "content": "Explain disk usage."
+})
+
+messages.append({
+    "role": "assistant",
+    "content": "Disk usage shows how much storage is occupied."
+})
+```
+
+The `append()` method adds a new message to the end of the list.
+
+After each interaction, both the user's question and the assistant's answer should be stored. This allows subsequent requests to include earlier context.
+
+### Limiting conversation history
+
+As conversations become longer, the model must process more text. This consumes additional resources and may exceed the model's context window.
+
+A simple history limit can retain the latest messages:
+
+```python
+MAX_HISTORY = 10
+
+messages = [messages[0]] + messages[-MAX_HISTORY:]
+```
+
+Here, `messages[0]` preserves the system prompt, while the slice retains the latest ten messages.
+
+**Important:** This basic limit counts individual messages, not complete question-and-answer pairs or tokens. It may leave an incomplete conversational exchange. Production implementations should preserve valid message sequences and manage history according to token limits.
+
+## 7. Memory Commands
+
+The agent supports commands that help manage the current conversation.
+
+- `/help` — displays available commands.
+- `/memory` — displays stored conversation messages.
+- `/reset` — clears conversation history and restores the system prompt.
+- `/exit` — terminates the application.
+
+Resetting memory does not delete a database because this beginner implementation uses an in-memory Python list.
+
+## 8. Understanding the Context Window
+
+The context window is the amount of text, measured in tokens, that a model can process for a request.
+
+Tokens are small units of text; they may represent complete words, parts of words, punctuation, or other text fragments.
+
+A longer conversation generally requires more tokens. Sending unlimited history can increase processing time and eventually exceed the model's supported context length.
+
+Memory management helps by retaining relevant messages and removing older, less useful information.
+
+Possible strategies include:
+
+- Keeping only the latest messages.
+- Preserving important facts in a compact summary.
+- Removing irrelevant conversation details.
+- Tracking token usage rather than counting messages alone.
+
+## 9. Short-Term Memory vs. Persistent Memory
+
+**Short-term memory**
+- Usually stored in RAM.
+- Available during the current running session.
+- Simple to implement with a Python list.
+- Lost when the application exits unless explicitly saved.
+
+**Persistent memory**
+- Stored outside temporary application memory, such as in a JSON file or database.
+- Can survive application restarts.
+- Requires saving, loading, and managing stored information.
+- Needs appropriate privacy and security controls.
+
+Saving conversation history to a file does not automatically make the agent intelligent or guarantee that every stored detail will be relevant. The application must still select and supply useful context.
+
+## 10. Installation and Execution
+
+Install Python dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Install Ollama from https://ollama.com and download the model:
+
+```bash
+ollama pull llama3.2
+```
+
+Run the application from the project directory:
+
+```bash
+python main.py
+```
+
+If the connection fails, check that Ollama is running, the model is available, and the local API endpoint is accessible.
+
+## 11. Testing the Agent
+
+Test the following scenarios:
+
+1. Ask a question about a production server.
+2. Ask a follow-up question that depends on the earlier message.
+3. Use `/memory` to inspect stored messages.
+4. Use `/reset` to clear the conversation.
+5. Ask about the earlier issue again and verify that the old context is no longer available.
+6. Use `/exit` to stop the application.
+
+Responses may differ because language models generate answers dynamically.
+
+## 12. Error Handling and Safety
+
+Common errors include:
+
+- **Connection error:** Ollama is not running or cannot be reached.
+- **Model error:** The requested model is missing or unavailable.
+- **Timeout:** The model takes too long to respond.
+- **HTTP error:** The API returns an unsuccessful status.
+
+Use exception handling to prevent these errors from unexpectedly terminating the application.
+
+For DevOps tasks, generated commands must be reviewed before execution. An assistant that remembers previous messages does not automatically verify whether its recommendations are safe or correct.
+
+Conversation history may contain sensitive information. Avoid storing credentials, access tokens, or other secrets unnecessarily.
+
+## 13. Key Takeaways
+
+- Short-term memory stores conversation context for the current session.
+- Conversation history must be sent to the language model with each chat request.
+- Python lists and dictionaries provide a simple implementation.
+- System, user, and assistant roles serve different purposes.
+- History limits help control context size and processing costs.
+- Reset commands clear the current conversational context.
+- Persistent memory requires additional storage and retrieval logic.
+- Memory improves contextual understanding but does not guarantee factual accuracy.
+
+**Day 24 outcome:** A local AI agent that maintains short-term conversation memory, understands follow-up questions, manages recent history, and supports memory inspection and reset commands.
