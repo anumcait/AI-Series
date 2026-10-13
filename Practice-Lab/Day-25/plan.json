@@ -1,0 +1,41 @@
+{
+  "goal": "Implement a Python project",
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Install Python and pip",
+      "description": "Install the latest version of Python and pip",
+      "done": true
+    },
+    {
+      "id": 2,
+      "title": "Choose a Python framework",
+      "description": "Select a suitable Python framework for the project",
+      "done": true
+    },
+    {
+      "id": 3,
+      "title": "Set up a code editor",
+      "description": "Configure a code editor with Python extensions",
+      "done": true
+    },
+    {
+      "id": 4,
+      "title": "Write the first Python code",
+      "description": "Create a new Python file and write some code",
+      "done": true
+    },
+    {
+      "id": 5,
+      "title": "Test the Python code",
+      "description": "Run the Python code to ensure it works as expected",
+      "done": false
+    },
+    {
+      "id": 6,
+      "title": "Deploy the Python project",
+      "description": "Upload the Python project to a hosting platform",
+      "done": false
+    }
+  ]
+}

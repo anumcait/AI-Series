@@ -13355,3 +13355,226 @@ Conversation history may contain sensitive information. Avoid storing credential
 - Memory improves contextual understanding but does not guarantee factual accuracy.
 
 **Day 24 outcome:** A local AI agent that maintains short-term conversation memory, understands follow-up questions, manages recent history, and supports memory inspection and reset commands.
+
+
+# Day 25 — AI Planning and Task Decomposition
+
+## 1. Overview
+
+AI Planning and Task Decomposition is the process of converting a complex goal into smaller, ordered, manageable tasks. An AI planning agent uses a language model to generate a plan, Python to validate the plan, and a tracking mechanism to record task completion.
+
+**Project:** Build a local AI planning agent using Python, Ollama, and Llama 3.2.
+
+**Example goal:** Complete a beginner Python learning project in 7 days.
+
+## 2. Problem Statement
+
+Complex goals often require multiple steps that must be completed in a logical order. An AI model can suggest a plan, but its output may contain missing fields, invalid task IDs, or incorrectly structured data.
+
+A planning agent addresses these issues by generating structured tasks, validating the output, displaying the plan, and tracking completion.
+
+## 3. Core Concepts
+
+### 3.1 Task Decomposition
+
+Task decomposition means breaking a large goal into smaller tasks that are easier to understand and complete.
+
+Example:
+
+- **Goal:** Organize a technical workshop.
+- Task 1: Define the workshop objectives.
+- Task 2: Select the date and venue.
+- Task 3: Prepare the learning materials.
+- Task 4: Promote the workshop.
+- Task 5: Conduct the workshop and collect feedback.
+
+Tasks should be practical, achievable, and arranged in a sensible order.
+
+### 3.2 Planning
+
+Planning determines which tasks are needed and the order in which they should be performed. Tasks may have dependencies, meaning a particular task should not begin until another task is complete.
+
+For example, preparing workshop materials should happen after the workshop objectives and topics have been defined.
+
+### 3.3 Structured Output
+
+Structured output represents AI-generated information in a predictable format. JSON is suitable for this purpose because it supports objects, arrays, strings, numbers, and Boolean values.
+
+Example:
+
+```json
+{
+  "goal": "Complete a Python learning project",
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Learn Python basics",
+      "description": "Practice variables and data types",
+      "done": false
+    }
+  ]
+}
+```
+
+The `goal` field describes the overall objective. The `tasks` array contains individual tasks. Each task has an ID, title, description, and completion status.
+
+### 3.4 Plan Validation
+
+Plan validation checks whether the generated data follows the required structure before the application uses it.
+
+Typical validation rules include:
+
+- The goal must be a non-empty string.
+- The plan must contain between 3 and 7 tasks.
+- Every task must contain all required fields.
+- Task IDs must be consecutive, starting at 1.
+- Task titles must be non-empty strings.
+- Descriptions must be strings.
+- The `done` field must be a Boolean value (`true` or `false`).
+
+Structural validation does not guarantee that a plan is factually correct or logically optimal. The task descriptions and ordering should also be reviewed.
+
+### 3.5 Execution Control
+
+Execution control determines how tasks move through the workflow. In this project, a user decides whether a task should be marked complete, left pending, or skipped during the current tracking session.
+
+The program records completion status but does not automatically perform the tasks.
+
+### 3.6 Progress Tracking
+
+Progress tracking records which tasks have been completed.
+
+- `done = true`: Task completed.
+- `done = false`: Task pending.
+
+The number of completed tasks can be calculated using:
+
+```python
+completed = sum(task["done"] for task in plan["tasks"])
+total = len(plan["tasks"])
+```
+
+The result can be displayed as `completed/total`, such as `2/5 tasks completed`.
+
+## 4. Technologies Used
+
+- **Python:** Implements planning, validation, and progress tracking.
+- **Ollama:** Runs the language model locally.
+- **Llama 3.2:** Generates the proposed task plan.
+- **JSON:** Represents and saves the plan.
+- **VS Code:** Provides the development environment.
+
+The Ollama Python package connects Python code to the local Ollama service.
+
+## 5. System Workflow
+
+The agent follows these steps:
+
+1. Accept a project goal from the user.
+2. Send the goal and planning instructions to Llama 3.2.
+3. Request a JSON-formatted response.
+4. Parse the JSON into a Python dictionary.
+5. Validate the plan's structure and required fields.
+6. Display the goal and ordered tasks.
+7. Ask the user to update task completion status.
+8. Calculate the completion count.
+9. Save the final plan to `plan.json`.
+
+If plan generation or JSON parsing fails, the program displays an error instead of continuing with the invalid result.
+
+## 6. Important Functions
+
+### `create_plan(goal)`
+
+Sends the goal to the local language model using Ollama. The system prompt defines the required JSON structure and the expected number and ordering of tasks.
+
+The returned JSON string is converted into a Python dictionary using `json.loads()`.
+
+### `validate_plan(plan)`
+
+Checks the plan's data type, goal, task count, required fields, task IDs, titles, descriptions, and completion values.
+
+The function returns a Boolean result and a message explaining whether the plan passed validation.
+
+### `show_plan(plan)`
+
+Displays the goal and each task. The completion status is shown as `DONE` or `PENDING`.
+
+### `track_progress(plan)`
+
+Accepts user input for each unfinished task. The input `y` marks the task complete, `n` leaves it pending, and `q` stops the tracking loop.
+
+The function calculates progress and saves the updated plan to `plan.json` using `json.dump()`.
+
+### `main()`
+
+Coordinates the application. It accepts the goal, generates the plan, validates the output, displays the tasks, and starts progress tracking.
+
+The `if __name__ == "__main__":` condition ensures that `main()` runs when the file is executed directly.
+
+## 7. JSON and File Handling
+
+Python's built-in `json` module provides two important functions:
+
+- `json.loads()`: Converts a JSON string into a Python object.
+- `json.dump()`: Writes a Python object to a JSON file.
+
+The plan is saved with indentation for readability:
+
+```python
+with open("plan.json", "w", encoding="utf-8") as file:
+    json.dump(plan, file, indent=2, ensure_ascii=False)
+```
+
+The `with` statement ensures that the file is properly closed. The `"w"` mode creates the file if it does not exist and overwrites it if it already exists.
+
+**Important limitation:** The application saves the plan but does not reload it on the next run. Running the program again generates a new plan.
+
+## 8. Testing the Agent
+
+### Test 1: Plan Generation
+
+Run `python main.py` and enter a goal.
+
+**Expected result:** A plan containing 3–7 tasks is generated and validated.
+
+### Test 2: Completion Tracking
+
+Enter `y` for one task and `n` for another. Inspect `plan.json`.
+
+**Expected result:** The completed task has `"done": true`, and the pending task has `"done": false`.
+
+### Test 3: Quit Behavior
+
+Enter `q` at a task prompt.
+
+**Expected result:** The tracking loop stops, and the current plan is saved.
+
+### Common Errors
+
+- **Ollama connection error:** Ensure the Ollama service is running.
+- **Model not found:** Run `ollama pull llama3.2`.
+- **Missing Python package:** Activate the virtual environment and run `pip install -r requirements.txt`.
+- **JSON parsing error:** Check the model response and JSON formatting.
+- **Validation failure:** Inspect the generated plan for missing or invalid fields.
+
+## 9. Limitations
+
+- The generated plan may contain incorrect or impractical tasks.
+- Validation checks structure but does not fully evaluate planning quality.
+- Task dependencies are suggested by the model but are not programmatically enforced.
+- Tasks are tracked manually rather than executed automatically.
+- Saved plans are not reloaded during subsequent runs.
+- Invalid plans are rejected but not automatically repaired.
+
+## 10. Key Takeaways
+
+- Task decomposition converts complex goals into manageable steps.
+- Planning organizes tasks into a useful execution order.
+- Structured JSON output makes AI responses easier to process.
+- Validation prevents incorrectly structured data from entering the workflow.
+- Execution control allows users to manage task completion.
+- Progress tracking records completed and pending tasks.
+- JSON file handling provides a simple method of saving progress.
+
+**Final Outcome:** A local AI planning agent that generates a structured plan, validates its format, tracks task completion, and saves progress to a JSON file.

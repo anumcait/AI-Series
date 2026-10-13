@@ -49,6 +49,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 22 | Local AI DevOps Agent | Python, Ollama, Llama 3.2, Ollama Python SDK, AI Agents, Agent Loop, Goal-Oriented Task Handling, Multi-Step Tool Calling, Tool Selection, Structured Decisions, JSON Parsing, Tool Registry, Action Validation, Tool Execution, Observation Feedback, Iterative Decision Making, Server Health Tool, Disk Usage Tool, Service Status Tool, Error Handling, Duplicate Action Prevention, Maximum Step Limit, Final Operational Report, Simulated Infrastructure, Local LLM, DevOps AI Automation |
 | Day 23 | Multi-Tool AI DevOps Agent | Python, Ollama, Llama 3.2, Ollama Python SDK, Multi-Tool Orchestration, Tool Registry, Dynamic Tool Selection, Conditional Execution, Resource Monitoring, Server Health Checks, Service Status Checks, Log Analysis, JSON Tool Arguments, Result Aggregation, Conditional Investigation, Error Handling, Tool Execution Limits, Structured Diagnostic Reports, Simulated Infrastructure, Local LLM, DevOps AI Automation |
 | Day 24 | Local AI Agent with Short-Term Memory | Python, Ollama, Llama 3.2, Requests Library, Conversation History, Short-Term Memory, Context-Aware Responses, Message Roles, System Prompts, Python Lists and Dictionaries, Context Window Management, History Truncation, Memory Reset, Memory Inspection, Follow-Up Questions, Ollama Chat API, Error Handling, Local LLM, Session Management, Conversational AI |
+| Day 25 | AI Planning and Task Decomposition | Python, Ollama, Llama 3.2, AI Planning, Task Decomposition, Goal-Oriented Planning, Structured Outputs, JSON, Plan Generation, Plan Validation, Task Ordering, Task Dependencies, Execution Control, Task Completion Tracking, Progress Monitoring, Python Lists and Dictionaries, Boolean Status Management, JSON File Handling, Error Handling, Local LLM, AI Agent Workflow |
 ---
 
 # 🚀 Day 1 — AI Bug Description Clarifier
@@ -123,3 +124,6 @@ Build a local AI DevOps Agent using Python and Ollama that can intelligently sel
 
 # 🚀 Day 24 — Build a Local AI Agent with Short-Term Memory
 Build a local AI Agent using Python, Ollama, and Llama 3.2 that remembers previous conversations, understands follow-up questions, manages conversation history, and generates context-aware responses using short-term memory.
+
+# 🚀 Day 25 — Build an AI Agent for Planning and Task Decomposition
+Build an AI planning agent using Python, Ollama, and Llama 3.2 that breaks complex goals into ordered tasks, generates structured plans, validates the plan, and tracks task completion.
