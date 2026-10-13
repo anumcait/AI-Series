@@ -391,3 +391,15 @@ Day 25 demonstrates how to build a basic AI planning agent that decomposes a goa
 The agent combines language-model reasoning with deterministic Python checks. This is a useful foundation for more advanced agents that reload saved plans, enforce task dependencies, retry invalid plans, and execute approved actions.
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/8e23af85-e1e2-462d-8916-dd7c87c3fb62" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/0cd2e53d-fe99-4393-9cb2-c863ea2d4026" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/6057ccc8-64ec-4a19-a42d-663800edfdbc" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7fdd8a85-bb9e-4c4e-98cb-81d76054fbb9" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/f6242e57-d8ac-4665-a8a8-25451c984789" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/798e65b2-75d9-4df5-be4b-78e6ca5e48f7" />
+
+
+
+
+
+
