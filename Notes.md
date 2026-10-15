@@ -13578,3 +13578,191 @@ Enter `q` at a task prompt.
 - JSON file handling provides a simple method of saving progress.
 
 **Final Outcome:** A local AI planning agent that generates a structured plan, validates its format, tracks task completion, and saves progress to a JSON file.
+
+
+# Day 26 — AI Agent with Persistent Memory
+
+## 1. Introduction
+
+Persistent memory allows an AI agent to save useful information and recall it in future sessions, even after the application is closed and restarted.
+
+A language model does not automatically retain information from previous application sessions. The application must store facts, retrieve relevant information, and provide it to the model when answering questions.
+
+**Project:** Personal Learning Assistant
+**Technologies:** Python, Ollama, Llama 3.2:3b, JSON, Requests
+
+## 2. Project Architecture
+
+The application follows this workflow:
+
+1. The user enters a message or saves a fact.
+2. Python stores facts in `memories.json`.
+3. When a question arrives, Python searches saved memories.
+4. Relevant facts are added to the LLM prompt.
+5. Ollama runs Llama 3.2:3b to generate an answer using the retrieved context.
+
+The main components are memory storage, memory retrieval, prompt construction, and response generation.
+
+## 3. Project Setup
+
+Create a project directory named `day26-persistent-memory` and a Python virtual environment.
+
+Download the model:
+
+```bash
+ollama pull llama3.2:3b
+```
+
+Install the required Python library:
+
+```bash
+python -m pip install requests
+```
+
+Create `main.py` for the application logic. The `memories.json` file is created automatically when the first memory is saved.
+
+## 4. Persistent Memory Storage
+
+JSON is a lightweight text format used to store structured data. It supports lists, dictionaries, strings, numbers, and other basic data types.
+
+Example `memories.json`:
+
+```json
+[
+  {
+    "fact": "I am learning Python and AI agents.",
+    "created_at": "2026-10-14T12:30:00"
+  }
+]
+```
+
+Each memory contains:
+- `fact`: The information to remember.
+- `created_at`: The timestamp indicating when the memory was saved.
+
+### Memory Functions
+
+- `load_memories()` reads saved memories from the JSON file.
+- `save_memories()` writes memories to disk.
+- `remember()` adds a new fact and checks for exact duplicates.
+- `show_memories()` displays stored facts.
+- `forget_memory()` deletes a selected fact.
+- `reset_memories()` clears all facts after confirmation.
+
+The application handles missing files and malformed JSON without immediately crashing. However, corrupted memory data may require manual recovery.
+
+## 5. Memory Retrieval
+
+Storing facts is not sufficient. The application must find relevant facts when a new question is asked.
+
+The `retrieve_memories(question)` function performs basic keyword matching:
+
+1. Extract keywords from the user's question.
+2. Compare them with words in each saved fact.
+3. Rank matching facts by the number of overlapping keywords.
+4. Return up to ten relevant memories.
+
+For example, the saved fact:
+
+`I am learning Python and AI agents.`
+
+may be retrieved for the question:
+
+`What am I learning?`
+
+Keyword retrieval is simple but has limitations. Questions using different vocabulary may fail to retrieve relevant facts. Semantic search can improve retrieval in a future version.
+
+## 6. Connecting Ollama to Python
+
+Ollama runs the language model locally and provides an HTTP API.
+
+The application sends a request to:
+
+`http://localhost:11434/api/chat`
+
+The request includes:
+- The model name: `llama3.2:3b`
+- The system prompt describing the assistant's behavior
+- The retrieved memories
+- The user's question
+
+The Python `requests` library sends the HTTP request. The application reads the generated response from the returned JSON data.
+
+The model uses the retrieved facts as context. A system prompt instructs it not to invent personal facts when the saved memories do not contain an answer.
+
+## 7. Application Commands
+
+| Command | Purpose |
+|---|---|
+| `remember: <fact>` | Save a fact explicitly |
+| `/memory` | Display saved memories |
+| `/forget` | Delete one selected memory |
+| `/reset` | Delete all memories after confirmation |
+| `/exit` | Close the application |
+
+Ordinary messages are sent to the LLM for answering. In the current implementation, facts are saved only when the `remember:` command is used.
+
+## 8. Running the Application
+
+Start the application:
+
+```bash
+python main.py
+```
+
+Example workflow:
+
+```text
+You: remember: I am learning Python and AI agents.
+Memory saved successfully.
+
+You: /memory
+1. I am learning Python and AI agents.
+
+You: What am I learning?
+Assistant: You are learning Python and AI agents.
+```
+
+The exact wording of the assistant's response may vary.
+
+To test persistence:
+1. Save a fact.
+2. Enter `/exit`.
+3. Restart the application.
+4. Enter `/memory`.
+5. Verify that the previously saved fact is still present.
+
+This confirms that the information was stored on disk rather than kept only in the running process.
+
+## 9. Error Handling and Data Safety
+
+The application handles empty messages, invalid memory numbers, duplicate facts, common Ollama connection failures, and unexpected responses.
+
+The `/reset` command requires explicit confirmation to reduce accidental deletion.
+
+The JSON file contains personal information, so it should be kept private. Important memories should be backed up. The current implementation does not provide encryption or automatic recovery of corrupted files.
+
+## 10. Key Concepts
+
+**Persistent memory:** Information stored outside the running application so it survives restarts.
+
+**Memory retrieval:** Searching stored facts for information relevant to a new question.
+
+**Context injection:** Including retrieved memories in the prompt sent to the LLM.
+
+**Duplicate prevention:** Checking whether an identical fact already exists before saving it.
+
+**Local LLM:** A language model executed through local software such as Ollama.
+
+## 11. Current Limitations
+
+- Facts require explicit saving with `remember:`.
+- Keyword matching may miss relevant memories when the wording differs.
+- Exact duplicate detection does not recognize semantically equivalent facts.
+- JSON storage is suitable for a small project but may become inefficient as the memory collection grows.
+
+Possible improvements include automatic fact extraction, semantic search using embeddings, SQLite storage, and stronger memory validation.
+
+## Conclusion
+
+The Personal Learning Assistant demonstrates persistent memory using Python, JSON, and a locally running LLM. Its essential capability is not merely saving facts, but retrieving relevant facts and supplying them to the model so answers can use information from previous application sessions.
