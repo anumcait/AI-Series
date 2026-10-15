@@ -1,5 +1,4 @@
 # 🚀 Day 27 — Build a Human-in-the-Loop AI Agent
-Here is the complete `day.md` content for Day 27 in one single Markdown code block, ready to copy into your file. No nested code blocks or separate boxes inside it.
 
 ## Objective
 
@@ -388,32 +387,6 @@ Check that:
 
 Inspect `actions.jsonl` to understand the recorded outcome.
 
-## 14. Final Completion Checklist
-
-- [ ] Python, Ollama, and Llama 3.2 work locally.
-- [ ] Temporary sample files are created.
-- [ ] The model generates a structured JSON plan.
-- [ ] Each action displays its source, destination, and reason.
-- [ ] Approve, reject, and cancel work correctly.
-- [ ] Unsafe paths and invalid parameters are rejected.
-- [ ] Approved actions execute only after validation.
-- [ ] Rejected actions never reach the execution function.
-- [ ] Existing files are not overwritten.
-- [ ] Decisions and results are recorded in `actions.jsonl`.
-- [ ] All seven automated tests pass.
-- [ ] No important personal files are modified during testing.
-
-## 15. Final Deliverables
-
-Complete the following files:
-
-- `main.py`
-- `test_agent.py`
-- `requirements.txt`
-- `actions.jsonl`, generated during execution
-
-The project is complete when the AI can propose a file move, explain its reason, wait for a human decision, and demonstrate through automated tests that rejected actions are never executed.
-
 ## Key Learning
 
 An AI recommendation is not permission to execute.
@@ -421,3 +394,7 @@ An AI recommendation is not permission to execute.
 The LLM proposes actions, but Python controls permissions, validates parameters, enforces approval, performs file operations, and records outcomes.
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/4bf70bf6-35ab-42b8-bd1e-e23c1c42ceb4" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/4e8bcff9-0d14-4fc0-89bd-765acecd80d2" />
+
+
