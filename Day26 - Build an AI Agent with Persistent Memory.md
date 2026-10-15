@@ -86,3 +86,13 @@ Saving information is only one part of persistent memory. The application must a
 Successfully developed a basic local AI assistant with JSON-based persistent memory, keyword-based retrieval, and Ollama integration.
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/3ee2da4b-188b-40b6-a35a-dc1409d2da57" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/9dd505e9-8e7a-4da2-8713-a6b5d6f9a6cf" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/1fe28ebc-e35b-4671-b1b3-4d18c567ea05" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/2c15760e-e090-47a4-9202-49df1fdbcd56" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/910d21fb-9fce-4478-ad72-63f3a40ec06f" />
+
+
+
+
+
