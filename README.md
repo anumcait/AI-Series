@@ -51,6 +51,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 24 | Local AI Agent with Short-Term Memory | Python, Ollama, Llama 3.2, Requests Library, Conversation History, Short-Term Memory, Context-Aware Responses, Message Roles, System Prompts, Python Lists and Dictionaries, Context Window Management, History Truncation, Memory Reset, Memory Inspection, Follow-Up Questions, Ollama Chat API, Error Handling, Local LLM, Session Management, Conversational AI |
 | Day 25 | AI Planning and Task Decomposition | Python, Ollama, Llama 3.2, AI Planning, Task Decomposition, Goal-Oriented Planning, Structured Outputs, JSON, Plan Generation, Plan Validation, Task Ordering, Task Dependencies, Execution Control, Task Completion Tracking, Progress Monitoring, Python Lists and Dictionaries, Boolean Status Management, JSON File Handling, Error Handling, Local LLM, AI Agent Workflow |
 | Day 26 | AI Agent with Persistent Memory | Python, Ollama, Llama 3.2, Persistent Memory, Long-Term Memory, JSON Storage, Memory Management, Memory Retrieval, Keyword-Based Search, Context Injection, Prompt Engineering, Local LLM, REST API, Requests Library, Duplicate Memory Prevention, Memory Deletion, Memory Reset, JSON File Handling, Error Handling, Session Persistence, Context-Aware Responses, AI Agent Workflow |
+| Day 27 | Human-in-the-Loop AI Agent | Python, Ollama, Llama 3.2, Human Approval, Action Planning, JSON, File Operations, Path Validation, Approval Workflow, Controlled Execution, Audit Logging, Safety Testing, Error Handling, Local LLM, Requests Library |
 ---
 
 # 🚀 Day 1 — AI Bug Description Clarifier
@@ -131,3 +132,6 @@ Build an AI planning agent using Python, Ollama, and Llama 3.2 that breaks compl
 
 # 🚀 Day 26 — Build an AI Agent with Persistent Memory
 Build a persistent memory AI agent using Python, Ollama, and Llama 3.2 that stores useful facts in a local JSON file, retrieves relevant memories to answer questions, prevents duplicate memories, and retains information even after the application is restarted.
+
+# 🚀 Day 27 — Build a Human-in-the-Loop AI Agent
+Build a human-in-the-loop AI agent using Python, Ollama, and Llama 3.2 that generates structured action plans, explains proposed file operations, requires explicit human approval before execution, validates file paths, prevents unauthorized changes, and records decisions and execution results in a local audit log.

@@ -13766,3 +13766,181 @@ Possible improvements include automatic fact extraction, semantic search using e
 ## Conclusion
 
 The Personal Learning Assistant demonstrates persistent memory using Python, JSON, and a locally running LLM. Its essential capability is not merely saving facts, but retrieving relevant facts and supplying them to the model so answers can use information from previous application sessions.
+
+# Day 27 — Human-in-the-Loop AI Agent
+
+## 1. Introduction
+
+A Human-in-the-Loop (HITL) AI agent is an AI system that proposes actions but requires human approval before performing important operations.
+
+In a normal AI workflow, a model may generate a recommendation. In a human-in-the-loop workflow, the recommendation passes through a controlled approval process before execution.
+
+**Core principle:** An AI recommendation is not permission to execute.
+
+The AI proposes what should happen. The Python application decides whether the action is allowed to happen.
+
+## 2. Project Objective
+
+Build a local file organization assistant using Python, Ollama, and Llama 3.2.
+
+The user provides a goal, such as:
+
+    Organize my sample files into Documents, Images, and Reports.
+
+The agent identifies the available files and proposes where each file should go. Each proposal includes the source filename, destination, and reason.
+
+Before moving any file, the application requests explicit human approval.
+
+The project uses temporary sample files to prevent accidental modification of important data.
+
+## 3. How the Workflow Operates
+
+1. **User goal:** The user describes the desired result.
+2. **AI planning:** Llama 3.2 generates a structured JSON action plan.
+3. **Validation:** Python checks the proposed filenames, destinations, file types, and paths.
+4. **Human approval:** The user approves, rejects, or cancels the proposed action.
+5. **Controlled execution:** Only an approved and validated action can proceed.
+6. **Audit logging:** The application records the decision and execution result.
+
+If the model produces invalid JSON or an unsafe proposal, the application must not execute the action.
+
+## 4. Technology and Responsibilities
+
+- **Python:** Controls the workflow, validates actions, requests approval, performs file operations, and records results.
+- **Ollama:** Provides a local interface for running the language model.
+- **Llama 3.2:** Interprets the goal and proposes suitable file organization actions.
+- **JSON:** Represents the proposed actions in a structured format.
+- **Pathlib and shutil:** Help validate file paths and move files.
+- **Unittest:** Verifies that the approval rules and safety checks work correctly.
+
+The LLM is responsible for generating proposals, not enforcing permissions.
+
+## 5. Structured Action Plans
+
+A structured plan allows Python to inspect each proposed action rather than interpreting unrestricted conversational text.
+
+Example:
+
+```json
+{
+  "actions": [
+    {
+      "source": "notes.txt",
+      "destination": "Documents/notes.txt",
+      "reason": "Text files belong in Documents."
+    }
+  ]
+}
+```
+
+Each action contains three important fields:
+
+- `source`: The existing filename.
+- `destination`: The intended category and filename.
+- `reason`: The explanation for the proposed move.
+
+The application parses the JSON and checks its structure before processing the actions.
+
+Valid JSON does not automatically mean a safe action. Model-generated data must always be treated as untrusted input.
+
+## 6. Human Approval and Decisions
+
+The approval stage gives the user control over execution.
+
+- **Approve:** The application proceeds to execution after validating the action.
+- **Reject:** The application records the rejection and leaves the file untouched.
+- **Cancel:** The application records the cancellation and stops processing further actions.
+- **Invalid input:** The application requests a valid decision without executing anything.
+
+Approval must come from an explicit human decision. A model-generated field such as `"approved": true` is not sufficient.
+
+## 7. Safety and Path Validation
+
+Path validation prevents the agent from modifying files outside its permitted workspace.
+
+Before execution, Python must verify that:
+
+- The source file exists inside the temporary workspace.
+- The source and destination have valid formats.
+- The destination category is permitted.
+- The file extension matches the category.
+- The resolved paths remain inside the allowed directory.
+- Path traversal, such as `../`, is rejected.
+- Existing destination files are not overwritten.
+- Only supported file operations are permitted.
+
+The application must validate the action again immediately before executing it.
+
+These checks belong in Python, not in the model's instructions. A prompt requesting safe behavior is not a security boundary.
+
+## 8. Controlled File Execution
+
+The execution function performs a file move only after explicit approval and successful validation.
+
+The process is:
+
+1. Validate the proposed action.
+2. Resolve the source and destination paths.
+3. Create the permitted destination category if necessary.
+4. Confirm that the destination does not already exist.
+5. Move the file.
+6. Record success or failure.
+
+Rejected, cancelled, malformed, or unsafe actions must never reach successful execution.
+
+The initial implementation should use temporary test files instead of a real Downloads folder.
+
+## 9. Audit Logging
+
+An audit log provides a record of the agent's decisions and activities.
+
+The `actions.jsonl` file stores one JSON record per line. Each record can contain the timestamp, source, destination, reason, decision, and execution result.
+
+Example:
+
+```json
+{
+  "source": "notes.txt",
+  "destination": "Documents/notes.txt",
+  "decision": "rejected",
+  "result": "Not executed."
+}
+```
+
+The log should record approved, rejected, cancelled, blocked, and failed actions. Recording rejected actions is particularly important because it helps verify that the approval gate works correctly.
+
+## 10. Testing and Verification
+
+Automated tests verify that safety rules are enforced by the application rather than merely requested from the model.
+
+The important tests are:
+
+1. An approved action moves the file successfully.
+2. A rejected action leaves the file unchanged and never calls the execution function.
+3. A cancelled workflow stops processing remaining actions.
+4. Path traversal is rejected.
+5. Destinations outside the workspace are rejected.
+6. Existing destination files are not overwritten.
+7. Malformed model output causes no file operation.
+
+Run the tests using:
+
+    python -m unittest -v
+
+All seven tests should pass before the project is considered complete.
+
+## 11. Important Limitations
+
+The model can misunderstand a goal, return malformed output, or recommend an incorrect destination. Human approval does not replace technical validation.
+
+Path validation also requires care around symbolic links, concurrent file changes, and filesystem errors. The execution code must handle failures without falsely reporting success.
+
+The temporary workspace reduces risk during testing, but the approval workflow and validation rules must remain in place when the application is extended to work with real folders.
+
+## 12. Conclusion
+
+A human-in-the-loop AI agent separates planning from permission and execution.
+
+The LLM generates recommendations, Python validates the proposed actions, the human decides whether to proceed, and the application executes only permitted actions. Logging and automated tests provide evidence that the process behaves as intended.
+
+**Key takeaway:** The model may propose an action, but the application must enforce the approval gate.

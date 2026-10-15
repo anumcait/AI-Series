@@ -1,0 +1,6 @@
+{"timestamp": "2026-10-15T08:44:56.146377+00:00", "source": null, "destination": null, "reason": null, "decision": "error", "result": "Planning failed: 404 Client Error: Not Found for url: http://localhost:11434/api/generate"}
+{"timestamp": "2026-10-15T08:46:38.220930+00:00", "source": null, "destination": null, "reason": null, "decision": "error", "result": "Planning failed: The model did not return a JSON array."}
+{"timestamp": "2026-10-15T08:50:04.650736+00:00", "source": null, "destination": null, "reason": null, "decision": "error", "result": "Planning failed: Invalid format specifier ' \"notes.txt\",\n      \"destination\": \"Documents/notes.txt\",\n      \"reason\": \"Text files belong in Documents.\"\n    ' for object of type 'str'"}
+{"timestamp": "2026-10-15T08:51:57.948089+00:00", "source": "notes.txt", "destination": "Documents/notes.txt", "reason": "Text files belong in Documents.", "decision": "approved", "result": "executed"}
+{"timestamp": "2026-10-15T08:52:00.882104+00:00", "source": "photo.jpg", "destination": "Images/photo.jpg", "reason": "Images belong in Images category.", "decision": "approved", "result": "executed"}
+{"timestamp": "2026-10-15T08:52:04.950746+00:00", "source": "report.pdf", "destination": "Reports/report.pdf", "reason": "Reports belong in Reports category.", "decision": "rejected", "result": "Not executed."}
