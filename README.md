@@ -52,6 +52,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 25 | AI Planning and Task Decomposition | Python, Ollama, Llama 3.2, AI Planning, Task Decomposition, Goal-Oriented Planning, Structured Outputs, JSON, Plan Generation, Plan Validation, Task Ordering, Task Dependencies, Execution Control, Task Completion Tracking, Progress Monitoring, Python Lists and Dictionaries, Boolean Status Management, JSON File Handling, Error Handling, Local LLM, AI Agent Workflow |
 | Day 26 | AI Agent with Persistent Memory | Python, Ollama, Llama 3.2, Persistent Memory, Long-Term Memory, JSON Storage, Memory Management, Memory Retrieval, Keyword-Based Search, Context Injection, Prompt Engineering, Local LLM, REST API, Requests Library, Duplicate Memory Prevention, Memory Deletion, Memory Reset, JSON File Handling, Error Handling, Session Persistence, Context-Aware Responses, AI Agent Workflow |
 | Day 27 | Human-in-the-Loop AI Agent | Python, Ollama, Llama 3.2, Human Approval, Action Planning, JSON, File Operations, Path Validation, Approval Workflow, Controlled Execution, Audit Logging, Safety Testing, Error Handling, Local LLM, Requests Library |
+| Day 28 | Build a Self-Critiquing AI Agent | Python, Ollama, Llama 3.2, Self-Critique, Evaluation Loop, JSON, Quality Metrics, Relevance, Completeness, Clarity, Format, Score Thresholds, Retry Loop, Improvement Prompts, Response Comparison, Score Tracking, Evaluation History, Local LLM, Self-Improving Agent |
 ---
 
 # 🚀 Day 1 — AI Bug Description Clarifier
@@ -135,3 +136,6 @@ Build a persistent memory AI agent using Python, Ollama, and Llama 3.2 that stor
 
 # 🚀 Day 27 — Build a Human-in-the-Loop AI Agent
 Build a human-in-the-loop AI agent using Python, Ollama, and Llama 3.2 that generates structured action plans, explains proposed file operations, requires explicit human approval before execution, validates file paths, prevents unauthorized changes, and records decisions and execution results in a local audit log.
+
+# 🚀 Day 28 — Build a Self-Critiquing AI Agent
+Build a self-critiquing AI agent using Python, Ollama, and Llama 3.2 that generates answers, evaluates them against defined quality criteria, identifies weaknesses, improves responses through a controlled retry loop, compares initial and final results, and saves evaluation scores and improvement history to a local JSON report.

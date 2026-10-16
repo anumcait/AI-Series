@@ -13944,3 +13944,228 @@ A human-in-the-loop AI agent separates planning from permission and execution.
 The LLM generates recommendations, Python validates the proposed actions, the human decides whether to proceed, and the application executes only permitted actions. Logging and automated tests provide evidence that the process behaves as intended.
 
 **Key takeaway:** The model may propose an action, but the application must enforce the approval gate.
+
+# Day 28 — Build a Self-Critiquing AI Agent
+
+## 1. Introduction
+
+A Self-Critiquing AI Agent is an AI system that generates an answer, evaluates its quality, identifies weaknesses, and improves the answer before delivering the final result.
+
+A normal LLM application generates a response and returns it directly. A self-critiquing agent introduces an additional quality-control loop.
+
+**Core workflow:**
+
+Generate → Evaluate → Improve → Deliver
+
+The purpose is to improve the relevance, completeness, clarity, and formatting of AI-generated responses.
+
+## 2. Technology Stack
+
+- **Python:** Controls the agent workflow, evaluation logic, retries, and file operations.
+- **Ollama:** Runs the language model locally and provides an HTTP API.
+- **Llama 3.2:** Generates, evaluates, and improves answers.
+- **Requests:** Sends HTTP requests from Python to Ollama.
+- **JSON:** Structures evaluation results and stores reports.
+- **Prompt Engineering:** Defines how answers should be generated, evaluated, and improved.
+
+Running the model locally avoids requiring a cloud-based LLM API key.
+
+## 3. How the Agent Works
+
+### Step 1: User Task
+
+The user enters a question or instruction.
+
+Example:
+
+Explain the difference between embeddings and a vector database. Include an example and use simple language.
+
+The task becomes the reference against which the answer is evaluated.
+
+### Step 2: Generate the Initial Answer
+
+Python sends the task to Llama 3.2 through Ollama's chat API.
+
+The model generates an initial draft, which is stored for later comparison.
+
+**Why preserve the draft?**
+
+The original answer is needed to determine whether the improvement process changed the response and how the evaluation scores changed.
+
+### Step 3: Evaluate the Answer
+
+The evaluator receives the original task and generated answer. It returns a structured JSON scorecard with four criteria.
+
+| Criterion | Meaning |
+|---|---|
+| Relevance | Does the answer address the requested task? |
+| Completeness | Does it cover the important details? |
+| Clarity | Is the explanation easy to understand? |
+| Format | Does it follow the requested format? |
+
+Each criterion receives a score from 1 to 5.
+
+The total score is calculated as:
+
+Total Score = Relevance + Completeness + Clarity + Format
+
+The minimum is 4/20, and the maximum is 20/20.
+
+For example, scores of 5, 3, 4, and 5 produce a total of 17/20.
+
+The scorecard also contains:
+
+- `strengths`: What the answer does well.
+- `weaknesses`: What is missing or unclear.
+- `improvements`: Specific changes needed.
+
+### Step 4: Validate the Evaluation
+
+Python parses the model's JSON response and validates the scores and feedback fields.
+
+This is necessary because model-generated output can contain malformed JSON, invalid scores, or unexpected data types.
+
+Structured output makes the evaluation easier to process programmatically, but it does not guarantee that the evaluation itself is correct.
+
+### Step 5: Improve the Answer
+
+If the total score is below the configured threshold of 16/20, the agent sends the following information to the model:
+
+- Original task
+- Current answer
+- Evaluation scorecard
+- Identified weaknesses
+- Suggested improvements
+
+The model then produces a revised answer that addresses the feedback while preserving correct information.
+
+The revised answer is evaluated again.
+
+### Step 6: Control the Retry Loop
+
+The agent uses two settings:
+
+- `PASS_SCORE = 16`: The minimum total score required to stop early.
+- `MAX_RETRIES = 2`: The maximum number of improvement attempts.
+
+The initial answer is not counted as an improvement attempt.
+
+The process stops when the score reaches 16/20 or the maximum number of improvements is reached.
+
+This prevents infinite loops and excessive model calls.
+
+A score below the threshold at the final attempt does not prevent delivery; the final result is returned with its actual evaluation.
+
+## 4. Ollama API Integration
+
+Ollama exposes a local chat endpoint:
+
+`http://localhost:11434/api/chat`
+
+Python sends a request containing the model name, messages, and generation options.
+
+The `stream: false` setting requests the complete response instead of incremental output.
+
+For evaluation, JSON mode requests a JSON-formatted response that Python can parse.
+
+The Requests library sends the HTTP request, and `response.raise_for_status()` detects unsuccessful HTTP responses.
+
+The model's response is extracted from the returned message content.
+
+## 5. Important Python Functions
+
+### `ask_model()`
+
+Communicates with Ollama and returns the model's response as text.
+
+### `evaluate()`
+
+Requests a JSON scorecard, parses it, and validates the scores and feedback fields.
+
+### `improve()`
+
+Uses the original task and evaluation feedback to generate a revised answer.
+
+### `run_agent()`
+
+Controls the complete workflow: generation, evaluation, retry decisions, history tracking, final output, and report saving.
+
+Separating these functions makes the code easier to understand, test, and maintain.
+
+## 6. Evaluation History and JSON Storage
+
+The agent saves each run to `evaluations.json`.
+
+The report contains:
+
+- Timestamp and model name
+- Original task
+- Initial and final answers
+- Initial and final scorecards
+- Initial and final total scores
+- Number of improvement attempts
+- Complete attempt history
+
+The history preserves the answer and evaluation for every attempt.
+
+New reports are appended to the existing JSON list so that previous runs remain available.
+
+This makes it possible to inspect how an answer changed and whether its evaluation score improved.
+
+## 7. Example Execution
+
+**Task:** Explain embeddings versus a vector database with an example.
+
+**Initial answer:** The model provides a basic explanation but omits a practical example.
+
+**Evaluation:** Completeness receives a low score, and the feedback requests an example.
+
+**Improvement:** The model explains that embeddings represent information as numerical vectors, while a vector database stores and retrieves vectors for similarity searches.
+
+**Final result:** The agent displays the revised answer and scorecard and saves the full evaluation history.
+
+These results are illustrative. Actual responses and scores depend on the model.
+
+## 8. Testing and Troubleshooting
+
+Test the agent with simple questions, detailed tasks, and explicit formatting requirements.
+
+Verify that:
+
+- All four criteria receive valid scores.
+- Weaknesses are included in the evaluation.
+- Improvement attempts never exceed two.
+- The initial and final answers are preserved.
+- Multiple runs remain in `evaluations.json`.
+
+Common issues:
+
+- **Connection refused:** Ollama is not running or its API is unavailable.
+- **Model not found:** Download the model using `ollama pull llama3.2`.
+- **Missing dependency:** Install Requests using `pip install requests`.
+- **Invalid JSON:** Stop safely and inspect the model's evaluation response.
+- **Low final score:** The retry limit may be reached before the answer meets the threshold.
+
+## 9. Limitations and Reliability
+
+Self-critique does not guarantee correctness. The same model generates and evaluates the answer, so it may overlook factual errors, misunderstand requirements, or assign an unjustifiably high score.
+
+The scorecard measures model-assessed quality rather than independently verified truth.
+
+Reliability can be improved through external fact-checking, deterministic checks for required content and formatting, and tests against known expected results.
+
+## 10. Key Takeaways
+
+- Self-critique adds a quality-control stage to AI generation.
+- Evaluation criteria turn subjective feedback into structured scores.
+- JSON makes evaluation results machine-readable.
+- Feedback-driven prompts help the model revise weak answers.
+- Retry limits prevent uncontrolled repetition.
+- Evaluation history supports debugging and comparison.
+- Independent verification remains necessary for factual reliability.
+
+**Final concept:**
+
+Generate → Evaluate → Improve → Deliver
+
+The result is a local AI agent that evaluates its own output, attempts to correct identified weaknesses, and records the complete process for inspection.
