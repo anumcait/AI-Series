@@ -352,3 +352,15 @@ Built a local self-critiquing AI agent using Python, Ollama, and Llama 3.2 that 
 This provides the foundation for Day 29: building an AI workflow agent that combines planning, tool calling, memory, evaluation, and controlled approval.
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/55c9606a-a7d6-4920-a8b9-5706e260fb4c" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/a65f6769-0aa3-49c2-8838-b506675c2e1f" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/2067b68e-8e9c-45af-8512-773eabb83d10" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/356ec275-c227-49ef-b600-4d6921815060" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/09302bd4-df26-4a52-8fa3-a5ff06c4f0e9" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/6b97a983-454a-4618-91c5-cad5354c3571" />
+
+
+
+
+
+
