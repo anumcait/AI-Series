@@ -1,0 +1,6 @@
+[
+  {
+    "stage": "failure",
+    "error": "model 'llama3.2' not found (status code: 404)"
+  }
+]

@@ -14169,3 +14169,150 @@ Reliability can be improved through external fact-checking, deterministic checks
 Generate → Evaluate → Improve → Deliver
 
 The result is a local AI agent that evaluates its own output, attempts to correct identified weaknesses, and records the complete process for inspection.
+
+# Day 29 — Multi-Agent AI Workflow Orchestration
+
+## 1. Introduction
+
+AI Agent Workflow Orchestration is the process of coordinating multiple AI agents to complete a task through a defined sequence of steps.
+
+Each agent has a specific responsibility, receives the necessary input, performs its task, and passes its output to the next stage.
+
+This project uses Python, Ollama, and Llama 3.2 to build a local workflow consisting of three specialized agents: Research, Planning, and Reviewer.
+
+## 2. Technologies Used
+
+- **Python:** Controls the workflow, executes agents in sequence, transfers outputs, handles errors, and saves execution logs.
+- **Ollama:** Runs the language model locally and provides an interface for Python to communicate with it.
+- **Llama 3.2:** Generates the responses for each agent role.
+- **JSON:** Provides a structured format for exchanging information and recording results.
+- **Prompt Engineering:** Defines the responsibilities and expected behavior of each agent.
+
+## 3. Understanding the Workflow
+
+The workflow follows a sequential execution pattern:
+
+**User Task → Research Agent → Planning Agent → Reviewer Agent → Final Output**
+
+For example, the user task is to prepare a beginner-friendly AI learning plan for 30 days.
+
+### Research Agent
+
+The Research Agent identifies essential topics, prerequisites, learning order, and suitable practice activities.
+
+Its output becomes the input for the Planning Agent.
+
+### Planning Agent
+
+The Planning Agent uses the research findings to create an ordered learning plan with activities, milestones, and measurable outcomes.
+
+It receives both the original task and the research output.
+
+### Reviewer Agent
+
+The Reviewer Agent examines the research and proposed plan, identifies missing prerequisites or unclear steps, and produces an improved final result.
+
+Its output is displayed to the user.
+
+## 4. How Agent Orchestration Works
+
+Orchestration is the coordination of the workflow by Python.
+
+The Python program determines which agent executes first, what instructions it receives, what information is passed forward, and when execution should continue.
+
+The agents execute sequentially. The Planning Agent runs after Research completes, and the Reviewer runs after Planning completes.
+
+Each role is implemented as a separate call to the same Llama 3.2 model, using different instructions. Separate roles do not necessarily require separate models.
+
+## 5. Understanding the Python Implementation
+
+### Model Configuration
+
+The variable `MODEL` specifies `llama3.2`, while `OUTPUT_DIR` specifies the folder used to store execution logs.
+
+The output directory is created automatically if it does not exist.
+
+### The `run_agent()` Function
+
+This reusable function executes an agent.
+
+It receives:
+- `role`: The agent's name.
+- `instructions`: The agent's specific responsibility.
+- `task`: The original user request.
+- `previous_output`: Information received from an earlier stage.
+
+The function combines these details into a prompt and sends it to Ollama using `ollama.chat()`.
+
+The `format="json"` argument requests a JSON-formatted response. The response is parsed using `json.loads()` and returned as a Python dictionary.
+
+### Structured JSON Output
+
+Each agent is instructed to return an object containing:
+
+- `agent`: The agent's role.
+- `result`: The generated content.
+- `gaps`: Missing information or limitations.
+
+Structured output makes the information easier for Python to process and transfer between stages. Requesting JSON does not guarantee that every response will be complete or semantically correct.
+
+### Main Workflow
+
+The `main()` function accepts the user's task and executes the three agents in order.
+
+Each successful stage is added to the `history` list, preserving its output for logging.
+
+The Planning Agent receives the research result. The Reviewer receives both the research result and the proposed plan.
+
+### Logging and Error Handling
+
+The `logging` module records when agents start and complete their work.
+
+The `try` and `except` blocks handle workflow failures, such as connection problems or invalid JSON. The `finally` block saves the execution history even when an exception occurs.
+
+The resulting JSON file is stored in the `runs/` directory with a timestamp-based filename.
+
+A failure record helps identify the unsuccessful stage, although the basic implementation does not automatically retry failed agents.
+
+## 6. How Local Execution Works
+
+Ollama runs the language model on the local computer and exposes an HTTP API, normally at `http://localhost:11434`.
+
+When Python sends a request, Ollama generates the response and returns it to the program. Python then parses the result and forwards the required information to the next agent.
+
+The workflow runs sequentially and waits for each response before proceeding. It does not stream partial tokens or automatically access live internet sources.
+
+The model must be downloaded beforehand, and Ollama must be running when the application executes.
+
+## 7. Execution and Verification
+
+The workflow is started with:
+
+```bash
+python main.py
+```
+
+After entering a task, the expected results are:
+
+1. The Research Agent identifies relevant topics and prerequisites.
+2. The Planning Agent produces an organized plan.
+3. The Reviewer Agent checks and improves the proposed plan.
+4. The final reviewed result appears in the terminal.
+5. A JSON execution log is saved inside `runs/`.
+
+If the workflow fails, verify that Ollama is running, Llama 3.2 is installed, the Python virtual environment is activated, and the `ollama` package is installed.
+
+## 8. Key Concepts
+
+- **Role-based agents:** Different instructions define specialized responsibilities.
+- **Agent handoffs:** Outputs from one stage become inputs for another.
+- **Structured outputs:** JSON organizes information into predictable fields.
+- **Sequential orchestration:** Python controls execution order.
+- **Execution tracking:** Logs preserve outputs and failure information.
+- **Local inference:** Ollama runs the model without requiring a hosted LLM API.
+
+## Conclusion
+
+A multi-agent workflow combines specialized AI tasks into a coordinated process. Python manages execution and data transfer, Ollama provides local model access, and Llama 3.2 generates each agent's response.
+
+The result is a basic, explicit orchestration system that produces a reviewed output and records the execution history.
