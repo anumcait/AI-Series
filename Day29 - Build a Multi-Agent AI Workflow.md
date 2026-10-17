@@ -31,7 +31,7 @@ Test the model:
 
 bash
 ```
-ollama run llama3.2:2b
+ollama run llama3.2
 ```
 
 Enter a test prompt and confirm that the model responds. Type `/bye` to exit.
