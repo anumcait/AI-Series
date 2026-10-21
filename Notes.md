@@ -14316,3 +14316,237 @@ If the workflow fails, verify that Ollama is running, Llama 3.2 is installed, th
 A multi-agent workflow combines specialized AI tasks into a coordinated process. Python manages execution and data transfer, Ollama provides local model access, and Llama 3.2 generates each agent's response.
 
 The result is a basic, explicit orchestration system that produces a reviewed output and records the execution history.
+
+---
+
+# Day 30 — Local Multimodal AI Assistant
+
+## 1\. Introduction
+
+Multimodal AI is an AI system that can process more than one type of input, such as text, images, audio, or video.
+
+This project builds a local image-understanding assistant using Python, Ollama, Gemma 3 Vision, and Streamlit. Users can upload an image, receive a description, and ask questions about its contents.
+
+**Core concept:** The user provides an image and a natural-language question. A vision-capable model interprets the visual information and generates a text response.
+
+## 2\. Technology Stack
+
+- **Python:** Connects the user interface, image processing, and AI model.
+- **Ollama:** Runs and manages AI models locally.
+- **Gemma 3 Vision (****`gemma3:4b`****):** An image-capable language model that analyzes images and answers questions.
+- **Streamlit:** Creates a browser-based application without requiring a separate frontend.
+- **Pillow:** Opens and validates uploaded image files.
+
+## 3\. Project Structure
+
+```
+Day-30/
+├── app.py
+├── requirements.txt
+└── notes.md
+```
+
+- `app.py` contains the application logic.
+- `requirements.txt` lists the required Python packages.
+- `notes.md` documents the concepts, setup, implementation, and troubleshooting.
+
+The Python virtual environment is located at `D:\AI-Series\venv`.
+
+## 4\. Environment Setup
+
+### Python and Ollama
+
+Check Python:
+
+```
+python --version
+```
+
+Check Ollama:
+
+```
+ollama --version
+```
+
+Python runs the application, while Ollama provides the local model service.
+
+### Download the vision model
+
+```
+ollama pull gemma3:4b
+```
+
+This downloads the model files required for image understanding. The download requires an internet connection and sufficient disk space.
+
+Test the model:
+
+```
+ollama run gemma3:4b
+```
+
+Enter a simple prompt and confirm that the model responds. Exit using `/bye`.
+
+### Install dependencies
+
+From the Day-30 directory, run:
+
+```
+../venv/Scripts/python.exe -m pip install streamlit ollama pillow
+```
+
+The packages provide the interface, Ollama integration, and image validation.
+
+## 5\. Application Workflow
+
+The application follows this sequence:
+
+1. Upload an image through Streamlit.
+2. Validate the uploaded image using Pillow.
+3. Display the image in the interface.
+4. Submit a description request or follow-up question.
+5. Send the image and question to Ollama.
+6. Receive the model-generated answer.
+7. Display the response and retain recent conversation history.
+
+The main workflow is:
+
+**Image Upload → Validation → Vision Model → Visual Reasoning → Text Response**
+
+## 6\. Important Implementation Concepts
+
+### Image upload
+
+Streamlit's `st.file_uploader()` accepts image files with the configured extensions: JPG, JPEG, PNG, and WEBP.
+
+The uploaded file's bytes are passed to Pillow for verification and to Ollama for analysis.
+
+### Image validation
+
+Pillow's `Image.open()` checks whether the file can be interpreted as an image. The `verify()` method checks image integrity.
+
+Invalid or damaged files should produce an error message instead of being sent to the model.
+
+### Model configuration
+
+The application selects the model through a variable:
+
+```
+MODEL = "gemma3:4b"
+```
+
+Keeping the model name in one variable makes switching models easier.
+
+### Image understanding
+
+The application calls `ollama.chat()` with a message containing text and image data.
+
+Conceptually, the request includes:
+
+- A user message containing the question.
+- The image attached to that message.
+- The selected vision-capable model.
+
+The model interprets the image and generates a natural-language answer.
+
+### Conversation history
+
+Streamlit's `st.session_state` stores recent questions and responses across application reruns during the session.
+
+This allows follow-up questions to use earlier conversational context. The current image is attached to each new question.
+
+### Loading and errors
+
+`st.spinner()` displays a loading indicator while inference is running.
+
+Exception handling displays useful messages when the model cannot be reached, a request fails, or Ollama reports a model error.
+
+## 7\. Run the Application
+
+From the Day-30 project directory:
+
+```
+../venv/Scripts/python.exe -m streamlit run app.py
+```
+
+Open the local address:
+
+```
+http://localhost:8501
+```
+
+Upload an image and click **Describe this image**. After receiving a response, enter a follow-up question through the chat input.
+
+## 8\. How Real-Time Processing Works
+
+The application provides interactive, on-demand image analysis rather than continuous live-video processing.
+
+1. Streamlit receives the image and question.
+2. Python sends the request to the locally running Ollama service.
+3. The vision model processes the image and text.
+4. Ollama returns the generated response.
+5. Streamlit displays the result.
+
+Response time depends on model size, available RAM or VRAM, image resolution, and processor performance.
+
+Once the model is downloaded, inference can work offline, provided Ollama and the required local components are available.
+
+## 9\. Model Compatibility and Troubleshooting
+
+The initial `llama3.2-vision` model failed with:
+
+```
+unknown model architecture: 'mllama'
+```
+
+The installed Ollama version was `0.40.5`. The runtime could not load the model architecture.
+
+Gemma 3 Vision was selected as an alternative:
+
+```
+ollama pull gemma3:4b
+```
+
+After confirming that the replacement works, the incompatible model can be removed:
+
+```
+ollama rm llama3.2-vision
+```
+
+Check the installed models:
+
+```
+ollama list
+```
+
+The text-only `llama3.2:3b` model is separate and can be retained for other uses.
+
+Common troubleshooting steps:
+
+- **Module not found:** Install packages using the Python executable belonging to the environment that runs Streamlit.
+- **Connection refused:** Ensure Ollama is running.
+- **Model not found:** Check `ollama list` and download the required model.
+- **Out of memory:** Close other applications or select a smaller compatible vision model.
+- **Poor image description:** Try a clearer image with better lighting and resolution.
+- **Incorrect text extraction:** Use a sharper image; OCR accuracy depends on image quality and model capability.
+
+## 10\. Testing Checklist
+
+- [ ]The application starts successfully.
+- [ ]Valid images upload and display.
+- [ ]The model describes visible objects.
+- [ ]Follow-up questions receive relevant answers.
+- [ ]Readable text is interpreted when supported.
+- [ ]Invalid image files are rejected.
+- [ ]Model failures display useful error messages.
+- [ ]The selected vision model loads successfully.
+
+## 11\. Key Takeaways
+
+- Multimodal AI combines visual input with language-based reasoning.
+- Ollama provides local model execution and a Python interface.
+- Streamlit simplifies the creation of interactive AI applications.
+- Pillow helps validate uploaded images.
+- Session state supports conversational follow-up questions.
+- Model compatibility, hardware requirements, and image quality affect application performance.
+
+**Expected outcome:** A local Streamlit assistant capable of accepting images, describing their contents, and answering visual questions using a vision-capable AI model.
