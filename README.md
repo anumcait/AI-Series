@@ -55,6 +55,8 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 28 | Build a Self-Critiquing AI Agent | Python, Ollama, Llama 3.2, Self-Critique, Evaluation Loop, JSON, Quality Metrics, Relevance, Completeness, Clarity, Format, Score Thresholds, Retry Loop, Improvement Prompts, Response Comparison, Score Tracking, Evaluation History, Local LLM, Self-Improving Agent |
 | Day 29 | Multi-Agent AI Workflow Orchestration | Python, Ollama, Llama 3.2, AI Agents, Agent Loop, Goal-Oriented Task Handling, Multi-Step Tool Calling, Tool Selection, Structured Decisions, JSON Parsing, Tool Registry, Action Validation, Tool Execution, Observation Feedback, Iterative Decision Making, Server Health Tool, Disk Usage Tool, Service Status Tool, Error Handling, Duplicate Action Prevention, Maximum Step Limit, Final Operational Report, Simulated Infrastructure, Local LLM, DevOps AI Automation |
 | Day 30 | Local Multimodal AI Assistant | Python, Ollama, Gemma 3 Vision, Streamlit, Pillow, Multimodal AI, Image Understanding, Image Description, Visual Question Answering, Image Upload, Image Validation, Follow-Up Questions, Conversation History, Local LLM Inference, Model Integration, Error Handling |
+| Day 31 | Build a Local MCP-Powered AI Assistant 🔌🤖 | Python, Ollama, qwen3:4b, MCP (Model Context Protocol), FastMCP, Streamlit, Local Subprocess, Tool Discovery, Tool Calling, Input Schemas, Tool Execution, Workspace Validation, Read-Only Tools, Local File System Access, Natural-Language Tool Interaction, Real-Time Execution, Standard Input/Output (Stdio) Transport |
+
 ---
 
 # 🚀 Day 1 — AI Bug Description Clarifier
@@ -147,3 +149,7 @@ Build a multi-agent AI Workflow using Python, Ollama, and Llama 3.2 that coordin
 
 # 🚀 Day 30 — Build a Local Multimodal AI Assistant
 Build a Local Multimodal AI Assistant using Python, Ollama, Gemma 3 Vision, and Streamlit that accepts image uploads, analyzes visual content, generates detailed descriptions, answers follow-up questions, validates image files, handles model errors, and displays results through a local web interface.
+
+# 🚀 Day 31 — Build a Local MCP-Powered AI Assistant
+Build a Local MCP-Powered AI Assistant using Python, Ollama, and qwen3:4b that interacts with an MCP server through standard input/output, supports tool discovery, executes read-only file operations within an approved workspace, and presents the results through a Streamlit interface.
+

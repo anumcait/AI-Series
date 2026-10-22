@@ -14550,3 +14550,260 @@ Common troubleshooting steps:
 - Model compatibility, hardware requirements, and image quality affect application performance.
 
 **Expected outcome:** A local Streamlit assistant capable of accepting images, describing their contents, and answering visual questions using a vision-capable AI model.
+
+---
+
+# Day 31 — Notes: Local MCP-Powered AI Assistant
+
+## 1. What Is MCP?
+
+**Model Context Protocol (MCP)** is a standard protocol that allows AI applications to connect to external tools and data sources through a consistent interface.
+
+An AI model can understand a request and select an appropriate tool, while the tool performs the actual operation and returns its result.
+
+Examples include reading project files, querying databases, checking service health, and accessing approved data sources.
+
+## 2. Architecture
+
+The application consists of four main components:
+
+- **Streamlit:** Provides the user interface for entering questions and viewing answers.
+- **Ollama:** Runs the local language model `qwen3:4b` and supports tool calling.
+- **MCP client:** Connects to the MCP server, discovers available tools, and requests tool execution.
+- **MCP server:** Exposes Python functions as MCP tools and executes the requested operations.
+
+### Request Flow
+
+```text
+User Question
+     ↓
+Streamlit Interface
+     ↓
+Ollama — Selects Tool and Arguments
+     ↓
+MCP Client
+     ↓
+MCP Server
+     ↓
+Python Tool Executes
+     ↓
+Tool Result Returns to Client
+     ↓
+Ollama Explains the Result
+     ↓
+Answer Displayed in Streamlit
+```
+
+## 3. Project Structure
+
+```text
+Day-31/
+├── app.py
+├── server.py
+├── requirements.txt
+└── workspace/
+    └── README.md
+```
+
+- `app.py`: Connects Ollama, the MCP client, and Streamlit.
+- `server.py`: Defines and exposes the MCP tools.
+- `requirements.txt`: Lists the required Python packages.
+- `workspace/`: Contains files that the assistant is allowed to access.
+
+The Python virtual environment is maintained at `../../venv`.
+
+## 4. Dependencies
+
+The `requirements.txt` file contains:
+
+```text
+mcp>=1.28,<2
+ollama
+streamlit
+```
+
+Install the dependencies using:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+Verify the imports:
+
+```bash
+python -c "import mcp, ollama, streamlit; print('All dependencies installed successfully')"
+```
+
+The MCP SDK provides the client and server APIs, `ollama` communicates with the local language model, and `streamlit` provides the web interface.
+
+## 5. Ollama and the Language Model
+
+Ollama runs the language model locally and exposes an API that Python applications can use.
+
+The selected model is `qwen3:4b`.
+
+Download the model:
+
+```bash
+ollama pull qwen3:4b
+```
+
+Check the installed models:
+
+```bash
+ollama list
+```
+
+Test the model:
+
+```bash
+ollama run qwen3:4b
+```
+
+The model interprets user requests and can generate structured tool calls containing a tool name and arguments. Tool-calling reliability depends on the model and the request.
+
+## 6. MCP Server — `server.py`
+
+The server uses `FastMCP` to expose Python functions as discoverable tools.
+
+### Tool 1: `list_files()`
+
+Lists supported files in the approved workspace and returns their relative paths.
+
+### Tool 2: `read_file(path)`
+
+Reads a supported text file using a workspace-relative path and returns its contents.
+
+### Important Server Concepts
+
+- `FastMCP("Day31 Local Assistant")` creates the MCP server.
+- `@mcp.tool()` registers a Python function as an MCP tool.
+- Tool descriptions help the model understand when a tool is appropriate.
+- Input schemas describe the parameters required by each tool.
+- `mcp.run(transport="stdio")` starts communication through standard input and output.
+
+The server receives tool requests from the client and returns results. It does not independently decide which tool the AI should select.
+
+## 7. MCP Client — `app.py`
+
+The client coordinates tool discovery, model interaction, and tool execution.
+
+### Client Lifecycle
+
+1. **Start the server:** `StdioServerParameters` specifies the Python executable and server file.
+2. **Connect:** `stdio_client()` establishes communication with the server subprocess.
+3. **Initialize:** `session.initialize()` initializes the MCP session.
+4. **Discover tools:** `session.list_tools()` retrieves the current tool definitions.
+5. **Provide tool schemas:** The tool names, descriptions, and input schemas are passed to Ollama.
+6. **Select a tool:** The model generates a tool call when it determines that a tool is needed.
+7. **Execute the tool:** `session.call_tool()` sends the request to the MCP server.
+8. **Process the result:** The returned tool result is added to the conversation.
+9. **Generate the answer:** Ollama explains the result in natural language.
+10. **Display activity:** Streamlit shows the response and the selected tool's name and arguments.
+
+If the model does not request a tool, the application displays its direct response instead.
+
+## 8. How Real-Time Execution Works
+
+When a user submits a question, the application starts an MCP server subprocess, initializes the connection, and discovers the available tools.
+
+The language model receives the question and tool definitions. If a tool is selected, the client sends its name and arguments to the server. The server executes the Python function and returns the result.
+
+The model then uses the returned information to formulate an answer for the user.
+
+The application performs live execution for each submitted request. It does not continuously monitor files or services. A new MCP server session is started for each question in the current implementation.
+
+MCP standardizes tool communication; Ollama provides the model's reasoning and tool selection, while Python performs the actual operation.
+
+## 9. Streamlit Interface
+
+Launch the application from the Day-31 project directory:
+
+```bash
+python -m streamlit run app.py
+```
+
+Open the local application at:
+
+```text
+http://localhost:8501
+```
+
+The chat input accepts natural-language questions. The interface displays the answer, while the **MCP activity** expander displays the discovered tool names and executed tool arguments.
+
+## 10. Testing the Application
+
+### Test 1: List files
+
+**Prompt:**
+
+`List all files in my project folder.`
+
+**Observed result:**
+
+```text
+Approved workspace:
+D:\AI-Series\Practice-Lab\Day-31\workspace
+
+Your project folder contains 1 file:
+README.md
+```
+
+This confirms that the file-listing request returned the existing file in the approved workspace.
+
+### Test 2: Read and explain a file
+
+**Prompt:**
+
+`Read README.md and explain what this project does.`
+
+**Expected result:** The `read_file` tool returns the actual file contents, and the model explains those contents.
+
+### Test 3: Handle a missing file
+
+**Prompt:**
+
+`Read missing.txt.`
+
+**Expected result:** The assistant reports the missing file instead of inventing its contents.
+
+### Test 4: Reject an invalid path
+
+**Prompt:**
+
+`Read ../../some-secret.txt.`
+
+**Expected result:** The server rejects the invalid relative path or reports that access is denied.
+
+The MCP activity panel should be checked to verify that the intended tool was actually called.
+
+## 11. Safety and Error Handling
+
+The server includes basic read-only safeguards:
+
+- Workspace path validation prevents access outside the approved directory.
+- Symbolic-link checks help prevent access through linked files.
+- An extension allowlist restricts supported file types.
+- A 100 KB file-size limit prevents oversized files from being read.
+- Returned content is limited to 20,000 characters.
+- Exceptions are reported through the application rather than silently treated as successful operations.
+
+File contents must be treated as untrusted data, not as instructions to the AI model.
+
+These safeguards are suitable for a learning project but are not a complete security sandbox. Additional authorization and explicit human approval are necessary before introducing tools that modify files, delete data, execute shell commands, or change system services.
+
+## 12. Key Takeaways
+
+- MCP provides a standardized way to expose and invoke external tools.
+- Tool discovery retrieves available tool definitions and input schemas dynamically.
+- The model selects tools, but the server executes the underlying Python functions.
+- Tool results ground responses in actual data rather than model assumptions.
+- Streamlit provides an interactive interface for the complete workflow.
+- Local execution reduces dependence on external AI APIs, but does not automatically make an application secure.
+- The current implementation supports file listing and reading only; continuous monitoring and write operations are not implemented.
+
+## Conclusion
+
+The Day 31 project implements a local AI assistant using Python, Ollama, MCP, and Streamlit. The working application discovers MCP tools, selects tools through model-generated tool calls, executes read-only file operations, and presents the results in natural language.
+
+**Core concept:** MCP connects AI applications to external tools through a standardized interface, enabling language models to work with real data and services.
