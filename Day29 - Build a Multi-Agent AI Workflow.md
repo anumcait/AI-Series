@@ -193,7 +193,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-
+```
 
 ## Step 4: Run the Workflow
 
@@ -248,6 +248,12 @@ Key Learning: Unlike a single self-critiquing agent, this workflow coordinates m
 <img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/d9aba084-34fe-4b02-bc9a-f8bdb3e7456f" />
 <img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/6ca0a91b-b0af-4111-b31c-8abfe6e485f7" />
 <img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/be52837d-0d7e-461c-a1d4-28743081674e" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/f0726b8f-d7b4-4292-aec9-94d7e1916fd7" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/ef3322f4-ab53-42fb-9fdd-902c3d8c0d7b" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/4343e5f1-da33-4bb1-a81a-b4715f505c7a" />
+
+
+
 
 
 
