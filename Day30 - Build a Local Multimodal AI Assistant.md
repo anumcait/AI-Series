@@ -182,5 +182,7 @@ Python manages the interface and model requests, Streamlit provides the user exp
 ### Screenshots
 <img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/3a80193d-f6d3-48e2-a4c7-32afc684f4a9" />
 <img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/03f3ffeb-5e47-4db1-b302-b72853181286" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/ef3322f4-ab53-42fb-9fdd-902c3d8c0d7b" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/4343e5f1-da33-4bb1-a81a-b4715f505c7a" />
 
 
