@@ -178,3 +178,9 @@ Day 30 introduces multimodal AI by extending a text-focused application to under
 Python manages the interface and model requests, Streamlit provides the user experience, and Ollama runs the vision-capable model locally.
 
 **Expected outcome:** A working local image-understanding assistant that accepts images, describes visible objects, and answers questions about their contents.
+
+### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/3a80193d-f6d3-48e2-a4c7-32afc684f4a9" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/03f3ffeb-5e47-4db1-b302-b72853181286" />
+
+
