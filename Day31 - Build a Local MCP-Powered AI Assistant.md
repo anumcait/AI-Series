@@ -145,3 +145,11 @@ The application discovers tools at runtime, executes requests against the local 
 Successfully installed the dependencies, implemented the local MCP server and Streamlit client, connected Ollama, and verified that the assistant could list files from the approved workspace.
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/60571cf4-9bf9-45d7-b38f-a76717e28447" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/e8beb253-7e2a-4b90-aa56-556885146d35" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/502b8425-5e41-42bb-b331-dc92cc03329b" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/252eef4e-8d4a-482b-98ab-91501f44481b" />
+
+
+
+
