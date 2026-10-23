@@ -56,7 +56,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 29 | Multi-Agent AI Workflow Orchestration | Python, Ollama, Llama 3.2, AI Agents, Agent Loop, Goal-Oriented Task Handling, Multi-Step Tool Calling, Tool Selection, Structured Decisions, JSON Parsing, Tool Registry, Action Validation, Tool Execution, Observation Feedback, Iterative Decision Making, Server Health Tool, Disk Usage Tool, Service Status Tool, Error Handling, Duplicate Action Prevention, Maximum Step Limit, Final Operational Report, Simulated Infrastructure, Local LLM, DevOps AI Automation |
 | Day 30 | Local Multimodal AI Assistant | Python, Ollama, Gemma 3 Vision, Streamlit, Pillow, Multimodal AI, Image Understanding, Image Description, Visual Question Answering, Image Upload, Image Validation, Follow-Up Questions, Conversation History, Local LLM Inference, Model Integration, Error Handling |
 | Day 31 | Build a Local MCP-Powered AI Assistant 🔌🤖 | Python, Ollama, qwen3:4b, MCP (Model Context Protocol), FastMCP, Streamlit, Local Subprocess, Tool Discovery, Tool Calling, Input Schemas, Tool Execution, Workspace Validation, Read-Only Tools, Local File System Access, Natural-Language Tool Interaction, Real-Time Execution, Standard Input/Output (Stdio) Transport |
-
+| Day 32 | Build an AI Evaluation & Testing Framework | Python, Ollama, Llama 3.2, AI Evaluation, Testing Framework, Response Quality, Performance Tracking, Evaluation Reports, Ground Truth Comparison, Test Case Generation, Automated Testing, Quality Metrics, Score Tracking, Evaluation History, Local LLM, Test Automation |
 ---
 
 # 🚀 Day 1 — AI Bug Description Clarifier
@@ -153,3 +153,5 @@ Build a Local Multimodal AI Assistant using Python, Ollama, Gemma 3 Vision, and 
 # 🚀 Day 31 — Build a Local MCP-Powered AI Assistant
 Build a Local MCP-Powered AI Assistant using Python, Ollama, and qwen3:4b that interacts with an MCP server through standard input/output, supports tool discovery, executes read-only file operations within an approved workspace, and presents the results through a Streamlit interface.
 
+# 🚀 Day 32 — Build an AI Evaluation & Testing Framework
+Build an AI Evaluation & Testing Framework using Python, Ollama, and Llama 3.2 that measures response quality, tracks performance, and generates structured evaluation reports.

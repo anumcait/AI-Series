@@ -1,0 +1,34 @@
+[
+    {
+        "id": "T01",
+        "question": "What is Python?",
+        "expected_answer": "Python is a high-level programming language used for scripting, automation, web development, and data analysis.",
+        "must_include": [
+            "programming language",
+            "automation"
+        ],
+        "context": "",
+        "expected_format": "paragraph"
+    },
+    {
+        "id": "T02",
+        "question": "Write a Python function that adds two numbers.",
+        "expected_answer": "Define a function that accepts two numbers and returns their sum.",
+        "must_include": [
+            "def",
+            "return"
+        ],
+        "context": "",
+        "expected_format": "code"
+    },
+    {
+        "id": "T03",
+        "question": "According to the supplied context, how many days does the trial last?",
+        "expected_answer": "The trial lasts 14 days.",
+        "must_include": [
+            "14 days"
+        ],
+        "context": "The software trial lasts 14 days. A payment method is required after the trial ends.",
+        "expected_format": "paragraph"
+    }
+]

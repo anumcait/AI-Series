@@ -14807,3 +14807,243 @@ These safeguards are suitable for a learning project but are not a complete secu
 The Day 31 project implements a local AI assistant using Python, Ollama, MCP, and Streamlit. The working application discovers MCP tools, selects tools through model-generated tool calls, executes read-only file operations, and presents the results in natural language.
 
 **Core concept:** MCP connects AI applications to external tools through a standardized interface, enabling language models to work with real data and services.
+
+---
+
+# 📘 Day 32 — AI Evaluation & Testing Framework
+
+## 1. Introduction
+
+An AI application can generate fluent answers without necessarily being accurate, complete, relevant, or consistent. AI evaluation is the process of systematically measuring response quality using predefined test cases and scoring criteria.
+
+The framework uses Python, Ollama, and Streamlit to evaluate responses from a locally running language model.
+
+## 2. Project Objective
+
+The application performs the following tasks:
+
+- Loads test questions and evaluation criteria from a JSON file.
+- Sends questions to a local Ollama model.
+- Evaluates generated responses using scoring rules.
+- Compares two system prompts using the same test cases.
+- Identifies failed tests.
+- Displays evaluation results in a Streamlit dashboard.
+- Exports reports in JSON and CSV formats.
+- Uses Pytest to verify that scoring functions behave correctly.
+
+## 3. Technology Stack
+
+- **Python:** Implements the evaluation logic.
+- **Ollama:** Runs the language model locally.
+- **Streamlit:** Provides the interactive dashboard.
+- **Pandas:** Organizes evaluation results into tables.
+- **Requests:** Sends HTTP requests to Ollama.
+- **JSON:** Stores test cases and structured reports.
+- **CSV:** Exports results for spreadsheet analysis.
+- **Pytest:** Tests the scoring logic automatically.
+
+## 4. Project Structure
+
+```text
+Day-32/
+├── .venv/
+├── app.py
+├── test_cases.json
+├── test_scoring.py
+└── requirements.txt
+```
+
+- `app.py` contains model communication, scoring, prompt comparison, and dashboard code.
+- `test_cases.json` stores questions, expected answers, required keywords, reference context, and expected output formats.
+- `test_scoring.py` verifies evaluation behavior.
+- `requirements.txt` lists the required Python packages.
+- `.venv` isolates project dependencies.
+
+## 5. Environment Setup
+
+Create and activate a virtual environment:
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+Install dependencies:
+
+```powershell
+pip install streamlit pandas requests pytest
+```
+
+Verify Ollama:
+
+```powershell
+ollama --version
+ollama list
+```
+
+Download the model if necessary:
+
+```powershell
+ollama pull qwen3:4b
+```
+
+A virtual environment prevents project packages from interfering with other Python applications. Ollama supplies the local inference service and model.
+
+## 6. Test Dataset
+
+The JSON dataset contains three example cases:
+
+1. **T01:** Explain Python, with required keywords such as `programming language` and `automation`.
+2. **T02:** Write a Python function that adds two numbers, requiring `def` and `return`.
+3. **T03:** Answer a question about a 14-day trial using supplied reference context.
+
+Each test case contains:
+
+- `id`: Unique test identifier.
+- `question`: Input question sent to the model.
+- `expected_answer`: Reference answer for evaluating the result.
+- `must_include`: Required keywords or phrases.
+- `context`: Optional reference material.
+- `expected_format`: Expected response format, such as paragraph or code.
+
+A fixed dataset makes evaluations repeatable. Expected answers provide reference information, while required keywords support simple automated checks. The current implementation does not directly compare generated answers against the full expected answer.
+
+## 7. How AI Evaluation Works
+
+The evaluation pipeline follows this sequence:
+
+**Test Dataset → Prompt Construction → Ollama Inference → Response Scoring → Pass/Fail → Report**
+
+### Step 1: Prompt construction
+
+The application combines the system instruction, available reference context, and test question into a single prompt.
+
+### Step 2: Model inference
+
+Python sends an HTTP POST request to Ollama's local API:
+
+`http://localhost:11434/api/generate`
+
+The model generates an answer using the supplied prompt. The request uses `stream: false`, meaning the complete response is returned before evaluation continues.
+
+### Step 3: Response scoring
+
+The generated answer is evaluated using predefined heuristics.
+
+| Metric | Purpose |
+|---|---|
+| Relevance | Measures keyword overlap between the question and answer. |
+| Completeness | Measures how many required keywords appear. |
+| Clarity | Checks response length and sentence count. |
+| Instruction following | Checks the expected output format. |
+| Groundedness | Measures lexical overlap with supplied context. |
+| Overall score | Calculates the average of available metric scores. |
+
+Each metric is generally expressed on a scale of 0–100.
+
+Groundedness is calculated only when reference context is provided. Without context, it is omitted from the overall score.
+
+### Step 4: Pass/fail decision
+
+A test passes when the overall score is at least 70, completeness is at least 50, and instruction following is at least 50.
+
+These thresholds are configurable evaluation rules, not universal standards of AI quality.
+
+## 8. Streamlit Dashboard
+
+Run the application:
+
+```powershell
+python -m streamlit run app.py
+```
+
+Open the local URL displayed in the terminal, usually `http://localhost:8501`.
+
+The dashboard contains three tabs.
+
+### Run Evaluation
+
+- Select the Ollama model.
+- Enter a system prompt.
+- Execute the complete test dataset.
+- View answers, individual scores, overall scores, and pass/fail results.
+- Download JSON and CSV reports.
+
+A progress bar advances as test cases finish.
+
+### Compare Prompts
+
+Two different system prompts are evaluated against the same test cases using the same model.
+
+The dashboard displays individual results and average scores in a comparison chart. This helps identify which prompt performs better according to the selected metrics.
+
+### Results
+
+Displays failed test cases from the latest single-prompt evaluation. Downloaded reports provide copies that can be retained beyond the current Streamlit session.
+
+## 9. Realtime Execution
+
+The application executes each test sequentially:
+
+1. Streamlit receives the button click.
+2. Python sends a request to Ollama.
+3. Ollama generates the response.
+4. The scoring function calculates the metrics.
+5. The result is stored in session state.
+6. The progress bar advances to the next test.
+7. The completed results appear in the dashboard.
+
+The initial model request can take longer while the model loads into memory. Execution time also depends on hardware and model size.
+
+The current implementation updates progress between completed test cases. It does not display generated tokens individually.
+
+## 10. Automated Testing with Pytest
+
+Run the scoring tests:
+
+```powershell
+python -m pytest -v test_scoring.py
+```
+
+The three tests verify:
+
+- Correct scoring when required keywords are present.
+- Reduced completeness when required keywords are missing.
+- Availability of groundedness scoring when reference context exists.
+
+The expected outcome is three passing tests.
+
+Automated tests help verify the evaluation code independently of the language model's response quality.
+
+## 11. Failure Tracking and Reports
+
+Failure tracking identifies test cases that do not meet the configured scoring thresholds.
+
+A controlled experiment can be performed by adding an unrealistic required keyword, such as `quantum computing`, to T01 and rerunning the evaluation. The completeness score should decrease if the generated response does not contain that phrase.
+
+The original test criteria should then be restored.
+
+The application supports:
+
+- **JSON reports:** Structured results containing answers, scores, and test details.
+- **CSV reports:** Tabular results suitable for spreadsheet analysis.
+- **Prompt comparison CSV:** Results for both prompts.
+
+The single-prompt report includes an elapsed-time field measured from the beginning of the run. It is not an accurate per-request latency measurement.
+
+## 12. Important Limitations
+
+- Keyword matching cannot prove factual correctness.
+- High groundedness does not guarantee that every claim is supported by the reference context.
+- Clarity scoring is based on simple length and sentence-count rules.
+- Prompt scores are meaningful only in relation to the chosen dataset and evaluation criteria.
+- Results stored in Streamlit session state may be lost when the session resets.
+- LLM-as-judge evaluation, semantic similarity, and persistent historical tracking are not implemented in this version.
+
+## 13. Final Outcome
+
+The framework demonstrates the complete process of local AI response evaluation: preparing a fixed dataset, generating answers, calculating quality scores, comparing prompts, detecting potential failures, running automated scoring tests, and exporting reports.
+
+The central principle is that AI response quality should be measured systematically rather than judged only by whether an answer sounds convincing.
+
+---
