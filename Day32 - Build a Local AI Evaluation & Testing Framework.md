@@ -179,3 +179,16 @@ The current scoring system uses simple heuristics rather than semantic understan
 Day 32 introduces repeatable AI testing, local model evaluation, transparent quality scoring, prompt comparison, failure tracking, automated scoring tests, and report export. These are foundational skills for LLM evaluation, regression testing, prompt optimization, and LLMOps.
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/6ec56af5-8197-4058-9f84-28e1c0904b42" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/5ba0a94d-eecc-422d-b527-002c6e0b76f2" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/57d6a7b3-fec1-4aef-9ab5-19efaf4e8c78" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/dcbdc4c5-f5e7-4e8f-91cc-60e9f9c58764" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/ececaf4b-3edc-4b03-afa7-e578b652c02d" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/71e14eef-7eda-4205-80f9-fbe2ba298a9e" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/caf9b1c3-cffe-474d-b04f-0d7e2a7ff6da" />
+
+
+
+
+
+
