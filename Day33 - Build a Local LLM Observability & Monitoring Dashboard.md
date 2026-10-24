@@ -475,3 +475,17 @@ The completed application provides:
 
 ### Screenshots
 
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/d111ad88-b448-4cde-8d8a-0234cf1536a0" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/c59b0680-8a01-4e3f-a265-2d6bc0855ebd" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/bab01609-d19f-4b91-9f0d-47ba88ca2a3e" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/d8f76091-9eb2-45fa-a6de-8c3af6ca5dbc" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/d2a71cc8-e77d-4b91-a9dd-8dc8855eba1f" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/12d77de9-d850-4daa-a602-8fd8de6a1ab5" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/fb439d56-94ad-4305-9c9c-126f7fb770ab" />
+
+
+
+
+
+
+
