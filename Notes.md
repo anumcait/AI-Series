@@ -15047,3 +15047,178 @@ The framework demonstrates the complete process of local AI response evaluation:
 The central principle is that AI response quality should be measured systematically rather than judged only by whether an answer sounds convincing.
 
 ---
+
+# Day 33 — Local LLM Observability & Monitoring Dashboard
+
+## 1. Introduction
+
+LLM Observability is the practice of collecting and analyzing information about an LLM application's behavior while it runs.
+
+A working AI application must do more than generate answers. It should also provide information about response time, token usage, failures, and model performance.
+
+The Day 33 project builds a local monitoring dashboard using Python, Ollama, Qwen3, Streamlit, SQLite, Pandas, and Plotly.
+
+## 2. Project Architecture
+
+The application follows this workflow:
+
+1. **Streamlit:** Accepts user questions and displays responses and metrics.
+2. **Ollama:** Runs the local language model and generates responses.
+3. **Metrics collector:** Measures latency and extracts token usage and inference statistics.
+4. **SQLite:** Stores request metadata and performance metrics.
+5. **Pandas:** Loads and analyzes recorded metrics.
+6. **Plotly:** Visualizes latency and token usage.
+7. **CSV export:** Allows monitoring records to be downloaded for further analysis.
+
+Ollama runs locally at `http://localhost:11434`, while Streamlit usually serves the dashboard at `http://localhost:8501`.
+
+## 3. Ollama and Qwen3
+
+Ollama provides a local runtime and HTTP API for language models. Qwen3 is the model used for inference.
+
+The model is downloaded using:
+
+```bash
+ollama pull qwen3:4b
+```
+
+The model can be tested interactively using:
+
+```bash
+ollama run qwen3:4b
+```
+
+The `/api/chat` endpoint accepts messages and supports streaming responses. Each streamed line contains JSON data. The final response includes a completion indicator and may include inference statistics.
+
+## 4. Important Monitoring Metrics
+
+### Request count
+The total number of inference attempts recorded in the database.
+
+### Latency
+End-to-end latency measures the time between starting a request and finishing its response stream. It includes more than just model generation time.
+
+The application measures elapsed time using Python's `time.perf_counter()`.
+
+Conversion to milliseconds:
+
+`Latency (ms) = elapsed seconds × 1000`
+
+### Prompt tokens
+The number of input tokens processed by the model, reported through Ollama's `prompt_eval_count` field when available.
+
+### Output tokens
+The number of generated tokens, reported through Ollama's `eval_count` field when available.
+
+### Generation duration
+Ollama reports `eval_duration`, which represents the model's token-generation duration in nanoseconds.
+
+Conversion to milliseconds:
+
+`Generation duration (ms) = eval_duration / 1,000,000`
+
+### Tokens per second
+Generation throughput estimates how quickly the model generates output tokens.
+
+`Tokens/second = output tokens × 1,000,000,000 / eval_duration`
+
+This calculation is valid when the output token count and generation duration are available and the duration is greater than zero.
+
+### Success rate
+
+`Success rate (%) = successful requests / total requests × 100`
+
+Failed requests must remain part of the denominator because they represent real application attempts.
+
+### Error count
+The number of requests that failed because of timeouts, connection problems, HTTP errors, or incomplete streams.
+
+## 5. SQLite and Request History
+
+SQLite stores request metadata in the `requests` table.
+
+Each record contains:
+
+- Unique request ID
+- UTC timestamp
+- Model name
+- End-to-end latency
+- Request status
+- Prompt and output token counts
+- Model loading and generation durations
+- Generation throughput
+- Error type
+
+A UUID identifies each request. Timestamps allow records to be ordered chronologically.
+
+SQLite provides persistent storage, so monitoring history remains available after the Streamlit application restarts.
+
+Prompt text and generated responses are not stored by default. This reduces unnecessary collection of potentially sensitive information.
+
+## 6. How Streaming Works
+
+Streaming allows generated text to appear before the model finishes its entire answer.
+
+The process is:
+
+1. Streamlit submits a question.
+2. Python sends an HTTP request to Ollama.
+3. Ollama generates the response incrementally.
+4. HTTPX reads each incoming JSON line.
+5. The application extracts the generated text.
+6. Streamlit displays the text progressively.
+7. The final Ollama chunk provides completion information and available token metrics.
+8. The application records the request metrics in SQLite.
+
+The `stream=True` setting enables incremental responses. HTTPX's `iter_lines()` reads the incoming stream, while Streamlit's `st.write_stream()` displays the generated text.
+
+Streaming improves perceived responsiveness but does not necessarily reduce total generation time.
+
+## 7. Streamlit Dashboard
+
+The dashboard provides the following features:
+
+- **KPI metrics:** Total requests, average successful-request latency, success rate, and errors.
+- **Latency chart:** Shows recorded request latency over time.
+- **Token chart:** Compares prompt and generated token counts.
+- **Model comparison:** Groups request count, success rate, latency, output tokens, and generation throughput by model.
+- **Request history:** Displays individual monitoring records.
+- **CSV export:** Downloads the collected metrics for external analysis.
+
+Pandas processes the stored records, while Plotly generates interactive charts.
+
+The dashboard can compare multiple locally installed models. Meaningful comparisons require consideration of model size, hardware, prompt length, and warm-up effects.
+
+## 8. Error Handling
+
+Common failure scenarios include:
+
+- Ollama is unavailable.
+- The requested model is not installed.
+- The inference request times out.
+- Ollama returns an HTTP error.
+- The response stream ends without a completion marker.
+- The returned JSON is invalid.
+
+The application records failed requests and their error types rather than silently excluding them.
+
+The health and inference checks should be treated separately: an available Ollama service does not guarantee that a requested model is installed or that inference will succeed.
+
+## 9. Limitations and Production Considerations
+
+This project is a local observability prototype.
+
+- Token and timing metrics depend on the information returned by Ollama.
+- First-request latency may be higher because the model needs to load.
+- SQLite is suitable for local experimentation but may not suit high-volume distributed systems.
+- The dashboard requires additional authentication and access controls before being exposed to other users.
+- Production deployments need retention policies, structured logging, concurrency testing, monitoring alerts, and appropriate resource limits.
+- Model comparisons should use consistent test conditions.
+
+Future extensions can include OpenTelemetry, Prometheus, Grafana, distributed tracing, and automated alerting.
+
+## 10. Expected Outcome
+
+The completed application provides a local interface for submitting prompts, receiving Qwen3 responses, recording request metadata, visualizing performance, tracking failures, comparing models, and exporting monitoring data.
+
+The main objective is to understand how an LLM application behaves at runtime and how measured evidence can support troubleshooting and performance improvements.

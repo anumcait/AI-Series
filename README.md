@@ -57,6 +57,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 30 | Local Multimodal AI Assistant | Python, Ollama, Gemma 3 Vision, Streamlit, Pillow, Multimodal AI, Image Understanding, Image Description, Visual Question Answering, Image Upload, Image Validation, Follow-Up Questions, Conversation History, Local LLM Inference, Model Integration, Error Handling |
 | Day 31 | Build a Local MCP-Powered AI Assistant 🔌🤖 | Python, Ollama, qwen3:4b, MCP (Model Context Protocol), FastMCP, Streamlit, Local Subprocess, Tool Discovery, Tool Calling, Input Schemas, Tool Execution, Workspace Validation, Read-Only Tools, Local File System Access, Natural-Language Tool Interaction, Real-Time Execution, Standard Input/Output (Stdio) Transport |
 | Day 32 | Build an AI Evaluation & Testing Framework | Python, Ollama, Llama 3.2, AI Evaluation, Testing Framework, Response Quality, Performance Tracking, Evaluation Reports, Ground Truth Comparison, Test Case Generation, Automated Testing, Quality Metrics, Score Tracking, Evaluation History, Local LLM, Test Automation |
+| Day 33 | Build a Local LLM Observability & Monitoring Dashboard | Python, Ollama, qwen3:4b, Streamlit, SQLite, Pandas, Plotly, AI Observability, Request Monitoring, Latency Tracking, Token Metrics, Success Rates, Error Analysis, Model Comparison, Data Visualization, CSV Export, Local LLM Runtime, Runtime Analytics |
 ---
 
 # 🚀 Day 1 — AI Bug Description Clarifier
@@ -155,3 +156,7 @@ Build a Local MCP-Powered AI Assistant using Python, Ollama, and qwen3:4b that i
 
 # 🚀 Day 32 — Build an AI Evaluation & Testing Framework
 Build an AI Evaluation & Testing Framework using Python, Ollama, and Llama 3.2 that measures response quality, tracks performance, and generates structured evaluation reports.
+
+# 🚀 Day 33 — Build a Local LLM Observability & Monitoring Dashboard
+Build a Local LLM Observability & Monitoring Dashboard using Python, Ollama, and qwen3:4b that measures response quality, tracks performance, and generates structured evaluation reports.
+
