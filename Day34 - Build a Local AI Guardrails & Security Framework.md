@@ -1,4 +1,4 @@
-🚀 Day 34 — Build a Local AI Guardrails & Security Framework 🛡️🤖
+# 🚀 Day 34 — Build a Local AI Guardrails & Security Framework 🛡️🤖
 
 ## Project Goal
 
@@ -218,11 +218,25 @@ Each request passes through input validation and security checks before reaching
 
 ## Key Learning
 
-Day 32 introduced AI evaluation. Day 33 introduced AI observability. Day 34 introduces AI security and guardrails.
-
 This project demonstrates defense-in-depth through input validation, sensitive-data detection, prompt-injection screening, output validation, workspace restrictions, audit logging, and automated testing.
 
 **Security note:** Regex and keyword checks are imperfect. Production systems require stronger policy enforcement, strict tool permissions, least-privilege access, and human approval for destructive operations.
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/b1548510-0bc3-4480-b4f0-f190677d7066" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/01baeb24-612b-40d8-8c85-0e3f142552d3" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7cf8c3cf-2fe6-457b-8f00-9bc734135e40" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7fceed01-f7d2-47b8-9c25-7dcbfeea371b" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/6660c995-c97b-4efa-93fd-6b37f6f8b7da" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/c64acaa1-8f82-4acd-b566-fa16c710f784" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/a5ffe52b-b771-49fc-8e22-237408f7c630" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/9020f8f1-5c66-4d37-8ec1-c37273e0e4fd" />
+
+
+
+
+
+
+
+
 
