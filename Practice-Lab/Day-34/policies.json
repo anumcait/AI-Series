@@ -1,0 +1,8 @@
+{
+    "max_prompt_chars": 2000,
+    "block_injection": true,
+    "block_high_risk": true,
+    "redact_pii": true,
+    "model": "llama3.2:3b",
+    "allowed_workspace": "workspace"
+}
