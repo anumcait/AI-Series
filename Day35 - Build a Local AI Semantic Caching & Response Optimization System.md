@@ -517,3 +517,17 @@ Successfully implemented a local AI Semantic Caching System that:
 **Takeaway:** Efficient AI engineering is not only about generating intelligent answers. It is also about reducing unnecessary computation while preserving response relevance.
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/02a3a5c7-0532-4527-86ec-5424425d0339" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/0be5b38d-9414-45be-a276-a695644e95cd" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/101c00f5-5b7d-49d0-b387-db6b11303419" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/f1bb6421-7810-42b3-a85b-231f37afdf17" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/ebfd6c09-7586-479c-a801-22db68b03cde" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/46f83812-351c-4d50-b6f3-b9fe170da8ab" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/6bd1a128-b0dc-447d-abf0-06ef7ebe4c1f" />
+
+
+
+
+
+
+
