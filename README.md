@@ -59,6 +59,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 32 | Build an AI Evaluation & Testing Framework | Python, Ollama, Llama 3.2, AI Evaluation, Testing Framework, Response Quality, Performance Tracking, Evaluation Reports, Ground Truth Comparison, Test Case Generation, Automated Testing, Quality Metrics, Score Tracking, Evaluation History, Local LLM, Test Automation |
 | Day 33 | Build a Local LLM Observability & Monitoring Dashboard | Python, Ollama, qwen3:4b, Streamlit, SQLite, Pandas, Plotly, AI Observability, Request Monitoring, Latency Tracking, Token Metrics, Success Rates, Error Analysis, Model Comparison, Data Visualization, CSV Export, Local LLM Runtime, Runtime Analytics |
 | Day 34 | Build a Local LLM Prompt Library | Python, Ollama, Llama 3.2, AI Prompt Library, Prompt Management, Prompt Versioning, Prompt Validation, Safe Prompt Retrieval, Prompt Templates, Prompt History, Prompt Performance, Prompt Analytics, Local LLM, Prompt Engineering, Prompt Optimization |
+| Day 35 | Semantic Caching & LLM Response Optimization | Python, Ollama, Llama 3.2, Semantic Caching, Vector Search, Embedding Similarity, Response Caching, Duplicate Avoidance, Cache Eviction, Fallback Strategy, Local LLM, Optimization, Performance Improvement |
 ---
 
 # 🚀 Day 1 — AI Bug Description Clarifier
@@ -163,3 +164,6 @@ Build a Local LLM Observability & Monitoring Dashboard using Python, Ollama, and
 
 # 🚀 Day 34 — Build an AI System Prompt Library
 Build an AI System Prompt Library using Python, Ollama, and Llama 3.2 that stores reusable prompts in JSON, retrieves prompts by name, validates prompt structure, manages prompt versions, and provides a safe interface for prompt retrieval and management.
+
+# 🚀 Day 35 — Semantic Caching & LLM Response Optimization
+Build a Semantic Caching & LLM Response Optimization system using Python, Ollama, and Llama 3.2 that caches previous responses, retrieves cached responses based on similarity thresholds, avoids duplicate computations, manages cache expiration, and improves overall application performance.

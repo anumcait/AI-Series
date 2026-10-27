@@ -15585,3 +15585,699 @@ Verify that the expected decisions and statuses are recorded.
 The completed application demonstrates a local AI security pipeline with input validation, sensitive-data redaction, prompt-injection screening, risk classification, output validation, workspace restrictions, SQLite auditing, a Streamlit dashboard, and automated tests.
 
 **Key takeaway:** AI guardrails are most effective when multiple independent controls work together. Validation, privacy protection, authorization, secure tool execution, output checks, logging, and continuous testing form the foundation of a safer AI application.
+
+---
+
+# Day 35 — Semantic Caching & LLM Response Optimization
+## Complete Learning Notes
+
+## 1. What Is Semantic Caching?
+
+Semantic caching is a technique that stores previously generated AI responses and reuses them when a new question has sufficiently similar meaning.
+
+Traditional caching usually matches exact text or keys. Semantic caching compares the meaning of questions using numerical representations called **embeddings**.
+
+### Example
+
+Question 1:
+```text
+What is Docker?
+```
+
+Question 2:
+```text
+Can you explain Docker?
+```
+
+Although the wording differs, both questions have similar meanings.
+
+A semantic cache can identify this similarity and return an existing answer without calling the language model again.
+
+**Purpose:** Reduce unnecessary LLM inference, improve response speed, and save computing resources.
+
+---
+
+## 2. Why Is Semantic Caching Required?
+
+Large Language Models (LLMs) consume computational resources whenever they generate responses.
+
+For local models running through Ollama, inference uses CPU, GPU, and memory resources.
+
+Without caching:
+
+```text
+Question → LLM → Generate Answer
+Question → LLM → Generate Answer
+Question → LLM → Generate Answer
+```
+
+Even repeated questions require fresh generation.
+
+With semantic caching:
+
+```text
+Question → Cache Search
+              |
+              ├── HIT  → Return Stored Answer
+              |
+              └── MISS → LLM → Generate → Store Answer
+```
+
+### Benefits
+
+- Faster responses for repeated or equivalent questions.
+- Reduced LLM inference calls.
+- Lower CPU/GPU workload.
+- Better resource utilization.
+- Persistent reuse of previously generated answers.
+
+Caching does not automatically improve factual accuracy. Incorrect cached answers can also be reused.
+
+---
+
+## 3. What Is an Embedding?
+
+An embedding is a numerical vector representing the semantic characteristics of text.
+
+Example:
+
+```text
+"What is Docker?"
+        |
+        v
+Embedding Model
+        |
+        v
+[0.12, -0.34, 0.87, 0.21, ...]
+```
+
+The numbers are illustrative.
+
+Embedding models are trained to place semantically related text near each other in vector space.
+
+### Why Are Embeddings Needed?
+
+Computers cannot directly calculate semantic similarity from ordinary text.
+
+Embeddings convert text into numbers that mathematical algorithms can compare.
+
+### Sentence Transformers
+
+Sentence Transformers is a Python library for generating sentence-level embeddings.
+
+Example:
+
+```python
+from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer("all-MiniLM-L6-v2")
+
+embedding = model.encode("What is Docker?")
+
+print(embedding.shape)
+```
+
+Expected:
+
+```text
+(384,)
+```
+
+The `all-MiniLM-L6-v2` model produces 384-dimensional embeddings.
+
+The model runs locally after its initial download.
+
+---
+
+## 4. What Is Vector Similarity?
+
+Vector similarity measures how closely two embeddings are related.
+
+One commonly used technique is **cosine similarity**.
+
+### Cosine Similarity
+
+Cosine similarity compares the angle between two vectors.
+
+Formula:
+
+\[
+\text{Cosine Similarity}(A,B)=
+\frac{A \cdot B}{\|A\|\|B\|}
+\]
+
+Where:
+
+- `A` = first embedding
+- `B` = second embedding
+- `A · B` = dot product
+- `||A||` = magnitude of vector A
+- `||B||` = magnitude of vector B
+
+### Interpretation
+
+| Similarity | General interpretation |
+|---|---|
+| 1.00 | Identical vector direction |
+| 0.95 | Very high similarity |
+| 0.85 | Relatively high similarity |
+| 0.50 | Moderate similarity |
+| 0.00 | Orthogonal vectors |
+
+These are illustrative interpretations, not universal semantic thresholds.
+
+A high similarity score does not guarantee that two questions require the same answer.
+
+For example:
+
+```text
+How to enable logging?
+How to disable logging?
+```
+
+The questions are semantically related but require different instructions.
+
+---
+
+## 5. What Is a Similarity Threshold?
+
+A similarity threshold defines the minimum similarity required to reuse a cached answer.
+
+Example:
+
+```python
+threshold = 0.93
+```
+
+Decision:
+
+```python
+if similarity >= threshold:
+    print("CACHE HIT")
+else:
+    print("CACHE MISS")
+```
+
+### Example
+
+| Similarity | Threshold | Result |
+|---|---|---|
+| 0.98 | 0.93 | HIT |
+| 0.95 | 0.93 | HIT |
+| 0.89 | 0.93 | MISS |
+| 0.75 | 0.93 | MISS |
+
+### Important
+
+A higher threshold generally reduces incorrect matches but also reduces cache hits.
+
+A lower threshold increases reuse but raises the risk of returning an inappropriate answer.
+
+Thresholds must be tested using representative questions.
+
+---
+
+## 6. What Is ChromaDB?
+
+ChromaDB is a vector database designed to store and retrieve embeddings along with associated information.
+
+Traditional relational databases primarily organize structured data into tables.
+
+Vector databases support similarity-based retrieval.
+
+### What Is Stored?
+
+A semantic cache entry can contain:
+
+```text
+ID          : Unique identifier
+Embedding   : Numerical representation of question
+Document    : Generated AI answer
+Metadata    : Original question, timestamp, version
+```
+
+### Persistent Storage
+
+```python
+import chromadb
+
+db = chromadb.PersistentClient(
+    path="./chroma_cache"
+)
+```
+
+`PersistentClient` saves database information to local disk.
+
+This allows cached answers to remain available after restarting the application.
+
+### Create a Collection
+
+```python
+collection = db.get_or_create_collection(
+    name="day35_answers",
+    metadata={"hnsw:space": "cosine"}
+)
+```
+
+A collection is similar to a logical group of related records.
+
+The cosine setting configures the vector distance metric.
+
+### Store an Answer
+
+```python
+collection.add(
+    ids=["question-001"],
+    embeddings=[[0.1, 0.2, 0.3]],
+    documents=["Docker is a containerization platform."],
+    metadatas=[{"question": "What is Docker?"}]
+)
+```
+
+The example vector is simplified. Actual embedding dimensions must match the collection.
+
+### Search the Cache
+
+```python
+results = collection.query(
+    query_embeddings=[[0.1, 0.2, 0.3]],
+    n_results=1
+)
+```
+
+`n_results=1` requests the nearest matching record.
+
+For cosine distance in this configuration:
+
+```python
+similarity = 1 - distance
+```
+
+This converts the returned cosine distance into a similarity score.
+
+---
+
+## 7. What Is Ollama?
+
+Ollama is a local model runtime that allows language models to run on a computer.
+
+In this project, Ollama hosts Qwen3.
+
+### Download Model
+
+```powershell
+ollama pull qwen3:4b
+```
+
+### Test Model
+
+```powershell
+ollama run qwen3:4b
+```
+
+### Python Integration
+
+```python
+from ollama import Client
+
+client = Client(
+    host="http://localhost:11434"
+)
+
+response = client.chat(
+    model="qwen3:4b",
+    messages=[
+        {
+            "role": "user",
+            "content": "Explain Docker."
+        }
+    ]
+)
+
+print(response.message.content)
+```
+
+### Role in Semantic Caching
+
+Ollama is called only when no valid cached answer is available.
+
+On a cache HIT, the stored answer is returned without invoking Qwen3.
+
+---
+
+## 8. Cache HIT and Cache MISS
+
+### Cache HIT
+
+A cache HIT occurs when:
+
+1. A matching entry exists.
+2. Its similarity meets the threshold.
+3. The entry has not expired.
+4. Its model, prompt, and context remain compatible.
+
+Example:
+
+```text
+Question: What is Docker?
+
+Cached similarity: 1.00
+Threshold: 0.93
+Entry expired: No
+
+Result: CACHE HIT
+```
+
+The stored answer is returned.
+
+### Cache MISS
+
+A cache MISS occurs when:
+
+- No matching entry exists.
+- Similarity is below the threshold.
+- The cached entry has expired.
+- The cache was cleared.
+- The entry belongs to an incompatible configuration.
+
+Example:
+
+```text
+Question: What is Kubernetes?
+
+Nearest similarity: 0.78
+Threshold: 0.93
+
+Result: CACHE MISS
+```
+
+The application calls Ollama, generates an answer, and stores it.
+
+---
+
+## 9. What Is TTL?
+
+TTL stands for **Time To Live**.
+
+It determines how long a cached answer remains eligible for reuse.
+
+Example:
+
+```python
+ttl_hours = 24
+```
+
+A cached answer can be reused for up to 24 hours after creation, provided the other cache conditions are satisfied.
+
+### TTL Calculation
+
+```python
+import time
+
+created_at = time.time()
+
+age = time.time() - created_at
+
+if age < ttl_hours * 3600:
+    print("Cache valid")
+else:
+    print("Cache expired")
+```
+
+### Why Is TTL Important?
+
+Some information changes over time.
+
+Examples:
+
+- Software versions
+- Product prices
+- Server status
+- Weather conditions
+- Company policies
+
+An old answer may no longer be correct.
+
+**Important:** TTL expiration does not automatically delete an entry. The application can simply stop reusing it. Expired records can be removed through a separate cleanup process.
+
+---
+
+## 10. What Is Cache Invalidation?
+
+Cache invalidation means preventing previously stored answers from being reused.
+
+Common reasons include:
+
+- Underlying information has changed.
+- The model has changed.
+- The system prompt has changed.
+- An answer was found to be incorrect.
+- User permissions have changed.
+- The cache has exceeded its retention period.
+
+### Clear Cached Entries
+
+```python
+ids = collection.get()["ids"]
+
+if ids:
+    collection.delete(ids=ids)
+```
+
+This removes the retrieved entries from the collection.
+
+### Prompt Versioning
+
+```python
+PROMPT_VERSION = "day35-v1"
+```
+
+A version identifier helps separate responses generated under different application configurations.
+
+For production applications, cache identity may also need to include the model version, knowledge-base version, tenant, user permissions, and relevant context.
+
+---
+
+## 11. What Is Streamlit?
+
+Streamlit is a Python framework for building interactive web applications.
+
+It provides user-interface components without requiring a separate frontend framework.
+
+### Example
+
+```python
+import streamlit as st
+
+st.title("AI Semantic Cache")
+
+question = st.text_input("Enter question")
+
+if st.button("Ask"):
+    st.write(question)
+```
+
+### Components Used
+
+| Component | Purpose |
+|---|---|
+| `st.title()` | Display heading |
+| `st.text_input()` | Accept questions |
+| `st.button()` | Trigger processing |
+| `st.sidebar.slider()` | Adjust similarity threshold |
+| `st.metric()` | Display response time and cache status |
+| `st.dataframe()` | Show stored cache entries |
+| `st.success()` | Display success information |
+| `st.error()` | Display failures |
+
+Streamlit reruns the application script when users interact with widgets.
+
+`st.cache_resource` helps reuse expensive resources such as embedding models and database clients across reruns.
+
+---
+
+## 12. Complete Runtime Execution
+
+### First Request
+
+```text
+User: What is Docker?
+```
+
+Processing:
+
+1. Streamlit receives the question.
+2. Sentence Transformers generates an embedding.
+3. ChromaDB searches stored embeddings.
+4. No valid match is found.
+5. Cache status becomes MISS.
+6. Ollama sends the question to Qwen3.
+7. Qwen3 generates an answer.
+8. The application stores the embedding, answer, and metadata.
+9. Streamlit displays the answer and execution time.
+
+### Repeated Request
+
+```text
+User: What is Docker?
+```
+
+Processing:
+
+1. Streamlit receives the question.
+2. An embedding is generated.
+3. ChromaDB finds the existing entry.
+4. Similarity and expiration are checked.
+5. Cache status becomes HIT.
+6. The stored answer is returned.
+7. Ollama generation is skipped.
+8. Streamlit displays the result and response time.
+
+---
+
+## 13. Measuring Performance
+
+Response time can be measured using Python's `time.perf_counter()`.
+
+```python
+import time
+
+start = time.perf_counter()
+
+# Execute AI application logic
+
+elapsed = time.perf_counter() - start
+
+print(f"Response time: {elapsed:.2f}s")
+```
+
+### Performance Metrics
+
+**Response latency:** Total time required to return an answer.
+
+**Cache hit rate:** Percentage of requests served from cache.
+
+\[
+\text{Hit Rate} =
+\frac{\text{Cache Hits}}{\text{Total Requests}}
+\times 100
+\]
+
+**Cache miss rate:** Percentage of requests requiring fresh generation.
+
+**LLM calls avoided:** Number of requests served without invoking the language model.
+
+### Example
+
+For 100 requests:
+
+```text
+Cache Hits  : 40
+Cache Misses: 60
+Hit Rate    : 40%
+LLM Calls Avoided: 40
+```
+
+These are illustrative values.
+
+The Day 35 application measures individual request latency and displays stored entries. Historical hit-rate reporting requires additional request logging.
+
+---
+
+## 14. Common Errors and Troubleshooting
+
+| Problem | Possible reason | Solution |
+|---|---|---|
+| Ollama connection error | Ollama is not running | Start Ollama |
+| Model not found | Qwen3 model is missing | Run `ollama pull qwen3:4b` |
+| ModuleNotFoundError | Package not installed | Activate `.venv` and install dependencies |
+| First request is slow | Model loading or embedding download | Allow initialization to finish |
+| Similar question returns MISS | Similarity below threshold | Inspect score and tune threshold |
+| Incorrect answer reused | Threshold too permissive | Increase threshold and invalidate entry |
+| Expired answer reused | TTL logic incorrect | Check timestamp and expiration condition |
+| Cache disappears | Non-persistent database used | Use `PersistentClient` |
+| Streamlit port occupied | Another application uses port 8501 | Run with `--server.port 8502` |
+
+---
+
+## 15. Security and Production Considerations
+
+Semantic caching requires careful handling in real applications.
+
+### Data Privacy
+
+Cached answers may contain confidential information.
+
+Avoid sharing cached answers across users without authorization controls.
+
+### Answer Correctness
+
+Semantic similarity measures relatedness, not factual correctness.
+
+A highly similar question may still require a different answer.
+
+### Cache Isolation
+
+Separate cache entries according to relevant user permissions, organization, model configuration, and data context.
+
+### Data Freshness
+
+Use TTL and invalidation mechanisms for information that can change.
+
+### Monitoring
+
+Track:
+
+- Cache HIT/MISS counts
+- Average response time
+- Cache size
+- Expired entries
+- Incorrect cache matches
+- LLM calls avoided
+
+### Evaluation
+
+Test semantic caching with both equivalent questions and confusingly similar questions that require different answers.
+
+---
+
+## 16. Key Terminology
+
+| Term | Meaning |
+|---|---|
+| LLM | Large Language Model |
+| Inference | Generating a model response |
+| Embedding | Numerical representation of text |
+| Vector | Ordered collection of numbers |
+| Vector Database | Database supporting similarity search |
+| Cosine Similarity | Mathematical measure of vector similarity |
+| Semantic Search | Search based on meaning |
+| Cache HIT | Suitable stored answer found |
+| Cache MISS | New answer generation required |
+| TTL | Time To Live |
+| Cache Invalidation | Preventing reuse of outdated entries |
+| Latency | Time taken to process a request |
+| Persistence | Retaining stored data across restarts |
+| LLMOps | Operational practices for managing LLM applications |
+
+---
+
+## 17. Final Summary
+
+Semantic caching is an optimization technique that reduces repeated LLM inference by storing and retrieving previously generated answers based on semantic similarity.
+
+The complete system combines:
+
+- **Sentence Transformers** for embeddings.
+- **ChromaDB** for similarity search and persistent storage.
+- **Ollama + Qwen3** for local answer generation.
+- **Python** for cache logic, threshold validation, and expiration.
+- **Streamlit** for user interaction and performance visibility.
+
+The most important engineering principle is that **a cache HIT must be both efficient and appropriate**.
+
+Semantic caching improves AI application performance when similarity thresholds, data freshness, answer correctness, and access controls are carefully managed.
+
+---
+
+
