@@ -16278,6 +16278,199 @@ The most important engineering principle is that **a cache HIT must be both effi
 
 Semantic caching improves AI application performance when similarity thresholds, data freshness, answer correctness, and access controls are carefully managed.
 
----
+# Day 36 — Local AI Rate Limiting & Circuit Breaker
 
+## 1. Project Overview
 
+The purpose of this project is to make a local AI application reliable under heavy usage and when the AI service becomes unavailable.
+
+**Technology stack**
+- Python — application logic and request handling.
+- Ollama — runs the AI model locally.
+- Qwen3 4B — generates AI responses.
+- Streamlit — provides the interactive interface and monitoring dashboard.
+- SQLite — stores request history.
+- Pandas — processes stored metrics.
+- Plotly — visualizes request outcomes.
+
+## 2. How the Application Works
+
+The request flow is:
+
+1. A user enters a user ID and prompt.
+2. The rate limiter checks whether the user has exceeded the request limit.
+3. The circuit breaker checks whether the AI service is allowed to receive requests.
+4. If permitted, the application calls Ollama.
+5. The response or failure is recorded in SQLite.
+6. The dashboard displays request counts, errors, blocked requests, and circuit state.
+
+Requests that exceed limits or encounter an open circuit are rejected without calling the model.
+
+## 3. Rate Limiting
+
+Rate limiting controls how many requests a user can make within a specified period.
+
+**Project configuration:** 5 requests per user per rolling 60-second window.
+
+The application stores request timestamps for each user. Before accepting a request, expired timestamps are removed. If five timestamps remain within the window, the next request is blocked.
+
+Example:
+- Requests 1–5: allowed if the circuit is healthy.
+- Request 6 within 60 seconds: blocked.
+- After earlier requests expire: new requests can be accepted.
+
+Each user ID has its own rate-limit window. In this prototype, the user ID is a test identifier, not an authenticated identity.
+
+## 4. Circuit Breaker Pattern
+
+A circuit breaker prevents repeated calls to a failing service.
+
+### CLOSED
+- Normal operating state.
+- Requests can reach Ollama if rate limits permit.
+- Consecutive failed requests are counted.
+- After 3 failed requests, the circuit opens.
+
+### OPEN
+- Model requests are blocked.
+- A fallback message informs the user that the service is temporarily unavailable.
+- The application waits 30 seconds before permitting a recovery test.
+
+### HALF_OPEN
+- Allows a recovery probe to test whether Ollama is available.
+- Only one recovery probe should run at a time.
+- If the probe succeeds, the circuit returns to CLOSED.
+- If the probe fails, the circuit returns to OPEN and starts another recovery interval.
+
+A successful request resets the failure counter. Rate-limited or circuit-blocked requests should not count as model failures because Ollama was not called.
+
+## 5. Timeouts, Retries, and Fallbacks
+
+### Timeout
+A timeout prevents an HTTP request from waiting indefinitely.
+
+The application uses a connection timeout and a response-read timeout. The response timeout applies to each attempt, so total duration can exceed the configured timeout when retries occur.
+
+### Retry
+The application allows one retry after the initial failed attempt. This means a request can make up to two HTTP attempts.
+
+Retries should be limited because repeated attempts can increase latency and load. Production systems should distinguish transient failures from permanent errors.
+
+### Fallback
+When Ollama fails, the application displays a clear message:
+
+> The local AI service is temporarily unavailable. Please try again after the service recovers.
+
+The failure is recorded for monitoring.
+
+## 6. Ollama and Qwen3 Configuration
+
+The installed model was verified using:
+
+```bash
+ollama list
+
+```
+
+The application uses:
+
+python
+
+```
+MODEL = "qwen3:4b"
+OLLAMA_URL = "http://localhost:11434/api/generate"
+```
+
+The model name must match an installed Ollama model.
+
+A direct API test can be performed using:
+
+bash
+
+```
+curl.exe -X POST http://localhost:11434/api/generate \
+  -H "Content-Type: application/json" \
+  -d '{"model":"qwen3:4b","prompt":"Say hello","stream":false,"options":{"num_predict":100}}'
+```
+
+A successful response contains generated text in the `response` field. A `404` error can indicate an incorrect endpoint or service. A read timeout means the response did not arrive within the configured waiting period.
+
+Qwen3 may spend tokens on internal reasoning before producing visible text. A small token limit can result in an empty visible response. Where supported, `think: false` can disable thinking mode, and `num_predict` can limit generated output.
+
+## 7. SQLite Request History
+
+SQLite stores operational events in `requests.db`.
+
+Recorded information includes:
+
+- Timestamp
+- User ID
+- Request status
+- Request duration
+- Circuit state
+- Diagnostic details
+
+Typical statuses include `SUCCESS`, `ERROR`, `RATE_LIMITED`, and `CIRCUIT_BLOCKED`.
+
+SQLite allows request history to remain available after the application restarts. However, this prototype keeps rate-limit windows and circuit-breaker state in memory, so those states reset when the server process restarts.
+
+## 8. Streamlit Monitoring Dashboard
+
+The dashboard displays:
+
+- Total recorded events
+- Successful calls
+- Rate-limited requests
+- Current circuit state
+- Errors and circuit blocks
+- A Plotly chart of request outcomes
+- Recent request history from SQLite
+
+The dashboard updates when Streamlit reruns, such as after submitting a request or clicking the refresh button.
+
+## 9. Running the Application
+
+Activate the project's Python virtual environment and install the required packages:
+
+bash
+
+```
+pip install streamlit requests pandas plotly
+```
+
+Start the application:
+
+bash
+
+```
+python -m streamlit run app.py
+```
+
+Open:
+
+`http://localhost:8501`
+
+Ensure Ollama is running and the configured model is installed before submitting prompts.
+
+## 10. Practical Verification
+
+1. Submit a normal prompt and verify that an AI answer appears.
+2. Send five requests with the same user ID within 60 seconds; verify that the sixth is blocked.
+3. Temporarily change the Ollama port to an unavailable port, such as `11435`.
+4. Trigger three failed requests and verify that the circuit opens.
+5. Confirm that further requests are blocked while the circuit is OPEN.
+6. Restore port `11434`, wait 30 seconds after the circuit opens, and submit a recovery probe.
+7. Verify that a successful probe closes the circuit.
+8. Check that successes, errors, and blocked requests appear in the dashboard and SQLite history.
+
+After testing, restore the correct Ollama URL and model configuration.
+
+## 11. Important Limitations
+
+This is a local learning prototype. Its in-memory protection state is shared across sessions in one Python server process but is not coordinated across multiple processes or machines. Production deployment requires authenticated user identities, concurrency-safe state management, persistent or shared rate-limit storage, and stronger monitoring.
+
+## Key Takeaway
+
+Rate limiting controls traffic, circuit breakers prevent repeated calls to unhealthy services, timeouts and retries control request behavior, and SQLite provides an operational history. Together, these mechanisms make local AI applications more resilient and easier to monitor.
+
+```
