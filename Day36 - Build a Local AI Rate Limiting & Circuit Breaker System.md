@@ -93,4 +93,21 @@ For further testing, configure the generation request with `think=False` and a b
 
 Rate limiting protects the application from excessive requests. Circuit breakers prevent repeated calls to an unhealthy service, while timeouts, controlled retries, fallback messages, and persistent monitoring improve reliability.
 
-**Status:** Streamlit and the local Ollama API have been tested. Qwen3 generation has returned a successful response directly through the API. Complete the end-to-end dashboard, rate-limit, circuit-breaker, and recovery tests to verify the full Day 36 project.
+### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/77c2177f-8754-45a1-b22b-7ea1755af687" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/10c69580-d3cc-428f-9dca-eee17decd248" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/73dd4815-c03c-4096-a65a-2d9c746e72e8" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/b4c5ba75-89c0-4915-bfa5-ae7e21b2545a" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/4f334469-c578-49a7-9543-9ec137d7fbd8" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/3b6a74d3-c95f-4ac3-a93e-b49bc1c31b30" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/9b1fd386-87bc-4456-816d-e09b3e249580" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/8ac12472-6cb1-40a7-957f-9074f89e22c1" />
+
+
+
+
+
+
+
+
+
