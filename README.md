@@ -59,9 +59,9 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 32 | Build an AI Evaluation & Testing Framework | Python, Ollama, Llama 3.2, AI Evaluation, Testing Framework, Response Quality, Performance Tracking, Evaluation Reports, Ground Truth Comparison, Test Case Generation, Automated Testing, Quality Metrics, Score Tracking, Evaluation History, Local LLM, Test Automation |
 | Day 33 | Build a Local LLM Observability & Monitoring Dashboard | Python, Ollama, qwen3:4b, Streamlit, SQLite, Pandas, Plotly, AI Observability, Request Monitoring, Latency Tracking, Token Metrics, Success Rates, Error Analysis, Model Comparison, Data Visualization, CSV Export, Local LLM Runtime, Runtime Analytics |
 | Day 34 | Build a Local LLM Prompt Library | Python, Ollama, Llama 3.2, AI Prompt Library, Prompt Management, Prompt Versioning, Prompt Validation, Safe Prompt Retrieval, Prompt Templates, Prompt History, Prompt Performance, Prompt Analytics, Local LLM, Prompt Engineering, Prompt Optimization |
-| Day 35 | Semantic Caching & LLM Response Optimization | Python, Ollama, Llama 3.2, Semantic Caching, Vector Search, Embedding Similarity, Response Caching, Duplicate Avoidance, Cache Eviction, Fallback Strategy, Local LLM, Optimization, Performance Improvemen 
-| Day 36 | Build a Local AI Rate Limiting & Circuit Breaker | Python, Ollama, Llama 3.2, Rate Limiting, Circuit Breaker, Request Tracking, Time Window, Failure Threshold, Reset Mechanism, Request Behavior, Operational History, Error Handling |t |
-
+| Day 35 | Semantic Caching & LLM Response Optimization | Python, Ollama, Llama 3.2, Semantic Caching, Vector Search, Embedding Similarity, Response Caching, Duplicate Avoidance, Cache Eviction, Fallback Strategy, Local LLM, Optimization, Performance Improvement 
+| Day 36 | Build a Local AI Rate Limiting & Circuit Breaker | Python, Ollama, Llama 3.2, Rate Limiting, Circuit Breaker, Request Tracking, Time Window, Failure Threshold, Reset Mechanism, Request Behavior, Operational History, Error Handling |
+| Day 37 | Build a Local AI Task Queue & Background Job Processing System | Python, Ollama, Qwen3, Streamlit, SQLite, Background Workers, Threading, Job Queue, Asynchronous Processing, Job ID, Status Tracking, Priority Scheduling, Retry Mechanism, Failure Recovery, Persistent Storage, Result Retrieval, Execution Time Monitoring, Live Dashboard |
 ---
 
 # 🚀 Day 1 — AI Bug Description Clarifier
@@ -172,3 +172,6 @@ Build a Semantic Caching & LLM Response Optimization system using Python, Ollama
 
 # 🚀 Day 36 — Local AI Rate Limiting & Circuit Breaker
 Build a local AI Rate Limiting & Circuit Breaker system using Python, Ollama, and Llama 3.2 that controls request rates, prevents repeated calls to unhealthy services, manages request behavior, and provides an operational history.
+
+# 🚀 Day 37 — Local AI Task Queue & Background Job Processing System
+Build a local AI Task Queue & Background Job Processing system using Python, Streamlit, SQLite, Ollama, and Qwen3 that accepts multiple AI tasks, processes them asynchronously in the background, prioritizes queued jobs, retries failed requests, and tracks job status, results, and execution times through a monitoring dashboard.

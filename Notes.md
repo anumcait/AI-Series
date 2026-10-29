@@ -16473,4 +16473,201 @@ This is a local learning prototype. Its in-memory protection state is shared acr
 
 Rate limiting controls traffic, circuit breakers prevent repeated calls to unhealthy services, timeouts and retries control request behavior, and SQLite provides an operational history. Together, these mechanisms make local AI applications more resilient and easier to monitor.
 
+---
+
+# Day 37 — Local AI Task Queue & Background Job Processing System
+
+## 1. Objective
+
+Build a local AI application that accepts multiple tasks, processes them in the background, stores job information persistently, and displays job status and results through a Streamlit dashboard.
+
+The system supports summarization, translation, and question answering using Ollama and Qwen3.
+
+## 2. Technology Stack
+
+- **Python:** Implements job management and background processing.
+- **Threading:** Runs the worker independently of the user interface.
+- **SQLite:** Stores jobs, statuses, results, errors, and timestamps.
+- **Ollama:** Provides the local AI inference API.
+- **Qwen3:4b:** Generates AI responses.
+- **Streamlit:** Provides task submission and monitoring.
+- **Requests:** Sends HTTP requests to Ollama.
+
+## 3. Project Setup
+
+Create a project folder named `Day-37` and open it in VS Code.
+
+Create and activate a virtual environment:
+
+```bash
+python -m venv .venv
 ```
+
+Install the dependencies:
+
+```bash
+pip install streamlit requests
+```
+
+Install Ollama, download the model, and verify that it is available:
+
+```bash
+ollama pull qwen3:4b
+ollama list
+```
+
+The application uses:
+
+```python
+MODEL = "qwen3:4b"
+OLLAMA_URL = "http://localhost:11434/api/generate"
+```
+
+## 4. How the System Works
+
+### Step 1: Job Submission
+
+The user selects a task type, enters text or a question, chooses a priority, and submits the task.
+
+A unique UUID identifies every job. The submission function saves the task in SQLite and immediately returns the job ID without waiting for the AI response.
+
+### Step 2: Persistent Job Queue
+
+The `jobs.db` database stores the job information in a `jobs` table.
+
+Important fields include:
+
+- `id` — Unique job identifier.
+- `task` — Task type.
+- `prompt` — Submitted input.
+- `priority` — Scheduling priority.
+- `status` — Current job state.
+- `attempts` — Number of processing attempts.
+- `result` — Generated AI response.
+- `error` — Recorded error message.
+- `created_at`, `started_at`, `finished_at` — Job timestamps.
+
+SQLite makes job history persistent across application restarts.
+
+### Step 3: Background Worker
+
+A Python daemon thread continuously checks SQLite for pending jobs.
+
+The worker claims one job at a time and updates its status to `Running`. It then sends the task to Ollama using the configured Qwen3 model.
+
+Because AI processing happens in the background thread, task submission does not need to wait for the model to finish.
+
+### Step 4: Job Status Management
+
+The normal job lifecycle is:
+
+`Pending → Running → Completed`
+
+If processing repeatedly fails, the lifecycle becomes:
+
+`Pending → Running → Pending (retry) → Failed`
+
+The worker saves successful responses in SQLite. Failed requests record their error messages and are retried when attempts remain.
+
+The configured maximum is three attempts per job.
+
+### Step 5: Priority Scheduling
+
+Jobs are selected using:
+
+```sql
+ORDER BY priority DESC, created_at ASC
+```
+
+High-priority jobs are processed before Normal-priority jobs among those still pending. Jobs already running are not interrupted when a higher-priority job arrives.
+
+### Step 6: Streamlit Dashboard
+
+The dashboard refreshes every three seconds and displays:
+
+- Pending, Running, Completed, and Failed counts.
+- Overall success rate.
+- Job IDs and task types.
+- Priorities and attempt counts.
+- Submission, start, and finish timestamps.
+- AI results and error messages.
+- Duration of the last processing attempt.
+
+## 5. AI Task Types
+
+### Summarization
+Produces a concise version of the submitted text while preserving its main points.
+
+### Translation
+Translates the submitted text into English.
+
+### Question Answering
+Answers questions using the supplied context and can indicate when the context does not contain the answer.
+
+The application sends requests to Ollama's generation endpoint and waits for the complete response using `stream: False`.
+
+## 6. Retry and Recovery Mechanisms
+
+When an AI request fails, the worker records the error and checks the attempt count.
+
+- If attempts remain, the job returns to `Pending` after a short delay.
+- After three unsuccessful attempts, the job becomes `Failed`.
+- During application startup, jobs left in `Running` are returned to `Pending` so they can be attempted again.
+
+This is basic recovery, not guaranteed exactly-once processing. An interrupted task may be executed more than once if its response was generated but not saved.
+
+## 7. Running the Application
+
+Start Streamlit from the project directory:
+
+```bash
+python -m streamlit run app.py
+```
+
+Open:
+
+`http://localhost:8501`
+
+Keep the application terminal running while testing.
+
+## 8. Practical Test Results
+
+Three AI tasks were completed successfully:
+
+| Task | Result |
+|---|---|
+| Summarization | Produced a concise summary. |
+| Translation | Translated French text into English. |
+| Question answering | Identified that the supplied context did not explain why SQLite was selected. |
+
+Observed dashboard metrics:
+
+- Completed: 3
+- Pending: 0
+- Running: 0
+- Failed: 0
+- Success rate: 100%
+- Last-attempt durations: 35, 271, and 74 seconds.
+
+Some jobs required multiple attempts. Priority ordering, restart persistence, and failure recovery require separate verification.
+
+## 9. Important Limitations
+
+- A single worker processes jobs sequentially.
+- Priority affects the next pending job, not the currently running job.
+- The worker runs inside the Streamlit process and stops when that process exits.
+- SQLite preserves records, but recovery does not guarantee that every job executes exactly once.
+- Recorded duration measures the last attempt, not the total time across retries.
+
+## 10. Project Files
+
+- `app.py` — Application, worker, database logic, and dashboard.
+- `jobs.db` — Persistent job records and AI results.
+- `.venv/` — Python virtual environment.
+- `notes.md` — Technical notes and project documentation.
+
+## Key Takeaway
+
+A background job queue separates task submission from task execution. Persistent storage maintains job history, a worker processes tasks asynchronously, retries handle eligible failures, and the dashboard provides visibility into progress and results.
+
+---
