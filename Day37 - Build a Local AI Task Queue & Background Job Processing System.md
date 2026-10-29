@@ -106,4 +106,14 @@ Background workers allow AI tasks to execute independently of the user interface
 **Status:** Core implementation and three AI task tests completed successfully. Persistence across restart, priority ordering under a backlog, and failure recovery remain to be verified.
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/2cf2ef12-0dab-4d2f-be9c-a3b0071a30d9" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/522104d5-43bd-4e70-a421-8f34695282ed" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/1ab0950e-27f9-4ce0-ba68-a48240a75724" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/492741ec-9c21-4501-85d8-460bb9c1e113" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/f8d4784d-9ad6-4c9b-addc-a80af8d7e1ba" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/c227cf64-812c-45eb-8f75-aee877995cdf" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/cf38d200-b629-4ce9-a3cd-aec948dd62b9" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/694639e2-ba57-4681-92ac-a08d44f34a8c" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/8ce1150b-f21d-4de8-b2f9-de909d9ac284" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7da32d15-cd66-47f3-bb2d-2a671ce4b199" />
 
