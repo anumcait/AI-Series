@@ -1,4 +1,4 @@
-🚀 Day 38 — Build a Local AI Workflow Orchestration & Pipeline Automation Engine ⚙️🤖
+# 🚀 Day 38 — Build a Local AI Workflow Orchestration & Pipeline Automation Engine ⚙️🤖
 
 ## 1. Project Objective
 
@@ -228,3 +228,23 @@ Successfully built a local AI workflow orchestration engine using Python, Ollama
 The application connects multiple AI tasks into an automated workflow, manages dependencies, executes independent tasks concurrently, selects conditional execution paths, handles failures and stores execution history.
 
 **Key Takeaway:** Individual AI tasks perform useful operations. Workflow orchestration connects those tasks into complete, intelligent and automated business processes.
+
+### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7f328ed9-e2bc-48b2-91b3-48b57d6906d0" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/1769520c-d8b8-4934-9cc2-06862ddd8ab9" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/774b3779-eb72-4ce1-9d50-717e2ce16e19" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/dbf12d40-1c69-4d6c-b984-cfaf4f113610" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/b4a3efe9-9a0b-4f5b-b472-ad0225e4befd" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/272268a7-3d10-4a66-8036-421648d679dd" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/288505ea-19a8-4966-9679-77c2318582c2" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/238ffcef-c731-4300-b037-1b98e41a0fce" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/3c83faa8-d0e1-4804-9114-762ed66bde7c" />
+
+
+
+
+
+
+
+
+
