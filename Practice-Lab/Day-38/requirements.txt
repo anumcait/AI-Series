@@ -1,0 +1,5 @@
+streamlit
+ollama
+networkx
+plotly
+pandas
