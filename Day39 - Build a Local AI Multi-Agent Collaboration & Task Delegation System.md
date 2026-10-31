@@ -16,8 +16,6 @@ The system includes:
 
 ## 2\. Project Architecture
 
-text
-
 ```text
 User Request
      |
@@ -116,8 +114,6 @@ source venv/bin/activate
 
 ## 5\. Project Structure
 
-text
-
 ```text
 Day39_MultiAgent_System/
 │
@@ -132,8 +128,6 @@ Day39_MultiAgent_System/
 ## 6\. Dependencies
 
 Create `requirements.txt`:
-
-text
 
 ```text
 ollama
@@ -184,8 +178,6 @@ streamlit run app.py
 
 Open:
 
-text
-
 ```text
 http://localhost:8501
 ```
@@ -212,8 +204,6 @@ When a user submits a request:
 
 ### Test 1: DevOps
 
-text
-
 ```text
 Design an AWS deployment architecture for a Python
 application using Docker and CI/CD.
@@ -226,8 +216,6 @@ Expected: Research, architecture analysis, implementation recommendations and re
 
 ### Test 2: ERP
 
-text
-
 ```text
 Design an employee attendance reporting system.
 
@@ -238,8 +226,6 @@ trends, and prepare management reporting recommendations.
 Expected: Attendance analysis and reporting workflow.
 
 ### Test 3: Software Development
-
-text
 
 ```text
 Design a task management application using Python,
