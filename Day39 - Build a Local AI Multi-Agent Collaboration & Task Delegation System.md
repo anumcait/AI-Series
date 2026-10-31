@@ -297,3 +297,15 @@ Successfully built a local AI multi-agent collaboration system using Python and 
 **Day 39 Key Takeaway:** Multiple specialized AI agents can collaborate through task delegation, shared results and independent review to solve complex problems more effectively than a single undirected chatbot.
 
 **Project Status:** Complete after successful execution and verification of all acceptance checks.
+
+# Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/a0a6e4f3-db65-41b0-88fc-a40f878ba70b" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/320f8930-25a2-4a24-8ac8-9462ab830cdc" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/800c137f-2467-4b58-9df8-6100ab7cfcb8" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/c5ca1184-15b8-40cf-ad52-a3d6c7ff0cc9" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/df893cd5-0f59-45ab-9fbb-933a03c7409e" />
+
+
+
+
+
