@@ -402,3 +402,11 @@ The completed application should demonstrate:
 - Downloadable JSON reports.
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/df019423-751c-4384-a54a-0adab39ed506" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/39bf80d6-a342-4176-8589-832deb870532" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/d0954db5-5d73-44ce-977e-26e74f22ca54" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/cb071ead-5813-4733-bb0c-4c22a11064a9" />
+
+
+
+
