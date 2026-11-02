@@ -223,7 +223,7 @@ Test Qwen3:
 bash
 
 ```bash
-ollama run qwen3:8b
+ollama run qwen3:4b
 ```
 
 Ask:
