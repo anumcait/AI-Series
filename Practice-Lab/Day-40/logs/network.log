@@ -1,0 +1,5 @@
+2026-11-02 09:40:01 INFO API service started
+2026-11-02 09:41:01 WARNING API response delayed
+2026-11-02 09:41:10 ERROR Connection timed out
+2026-11-02 09:41:15 ERROR Upstream service unavailable
+2026-11-02 09:41:20 CRITICAL Multiple API requests failed

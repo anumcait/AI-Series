@@ -1,0 +1,5 @@
+2026-11-02 09:10:01 INFO Database connection initialized
+2026-11-02 09:11:01 ERROR Communications link failure
+2026-11-02 09:11:02 ERROR Connection refused: mysql:3306
+2026-11-02 09:11:05 ERROR Unable to acquire database connection
+2026-11-02 09:11:10 CRITICAL Database connection pool exhausted

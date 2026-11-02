@@ -1,0 +1,5 @@
+streamlit
+ollama
+pandas
+plotly
+pydantic

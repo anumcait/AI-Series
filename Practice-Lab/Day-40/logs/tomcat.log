@@ -1,0 +1,7 @@
+2026-11-02 09:00:01 INFO Tomcat server started
+2026-11-02 09:01:10 INFO Application deployed
+2026-11-02 09:02:15 ERROR HTTP 500 Internal Server Error
+2026-11-02 09:02:16 ERROR NullPointerException at UserController.java:45
+2026-11-02 09:02:18 ERROR HTTP 500 Internal Server Error
+2026-11-02 09:02:20 ERROR NullPointerException at UserController.java:45
+2026-11-02 09:02:25 CRITICAL Application request processing failed

@@ -17545,3 +17545,748 @@ ThreadPoolExecutor enables concurrent processing, Pydantic validates structured 
 
 ---
 
+# Day 40 – AI-Powered DevOps Incident Response & Root Cause Analysis
+
+## 1. Introduction
+
+An AI-powered DevOps Incident Response System is an intelligent application that analyzes application and infrastructure logs, detects failures, investigates error patterns, identifies possible root causes and recommends corrective actions.
+
+In traditional DevOps environments, engineers manually inspect logs, identify errors, correlate events and investigate infrastructure problems. This process can take considerable time.
+
+An AI-powered incident management system helps automate log analysis and investigation by combining Python-based detection with local AI models.
+
+**Project objective:** Build a local incident investigation platform using Python, Ollama, Qwen3, Streamlit and SQLite.
+
+## 2. Understanding the System Architecture
+
+The application follows this workflow:
+
+Application / Server Logs
+        |
+        v
+Log Ingestion
+        |
+        v
+Error Detection
+        |
+        v
+Incident Classification
+        |
+        +-------------------+
+        |         |         |
+        v         v         v
+     Log      Pattern     Impact
+   Analyst    Analyst    Analyst
+        |         |         |
+        +---------+---------+
+                  |
+                  v
+          Root Cause Analysis
+                  |
+                  v
+          Remediation Planner
+                  |
+                  v
+             Human Approval
+                  |
+                  v
+           Incident Report
+                  |
+                  v
+             SQLite DB
+                  |
+                  v
+          Streamlit Dashboard
+
+Each component performs a specific responsibility.
+
+## 3. Technologies and Their Responsibilities
+
+### Python
+Python is the primary programming language. It handles log ingestion, error detection, incident classification, AI communication and database operations.
+
+### Ollama
+Ollama provides a local environment for running large language models without requiring a cloud AI API.
+
+### Qwen3
+Qwen3 is the local language model responsible for understanding error messages, investigating log evidence, identifying possible causes and generating recommendations.
+
+The project uses:
+
+`qwen3:8b`
+
+### Streamlit
+Streamlit provides the web-based interface for uploading logs, investigating incidents and viewing dashboards.
+
+### SQLite
+SQLite stores incident IDs, timestamps, severity, category, supporting evidence, investigation reports and incident status.
+
+### Pandas
+Pandas processes and displays incident records in tabular format.
+
+### Regex
+Regular expressions identify important log entries such as ERROR, WARNING, CRITICAL, FATAL and Exception.
+
+### Pydantic
+Pydantic validates AI-generated incident reports against a predefined data structure.
+
+### Plotly
+Plotly generates graphical representations of incident severity and categories.
+
+### ThreadPoolExecutor
+ThreadPoolExecutor executes multiple AI analysis tasks concurrently using separate worker threads.
+
+## 4. Local AI Environment
+
+Ollama runs the Qwen3 model locally.
+
+Installation and model download:
+
+```bash
+ollama pull qwen3:8b
+````
+
+Verify the downloaded model:
+
+bash
+
+```bash
+ollama list
+```
+
+Start the Ollama service:
+
+bash
+
+```bash
+ollama serve
+```
+
+The local Ollama API is available at:
+
+`http://localhost:11434`
+
+Python communicates with Ollama through its Python library.
+
+Example:
+
+python
+
+```python
+import ollama
+
+response = ollama.chat(
+    model="qwen3:8b",
+    messages=[
+        {
+            "role": "user",
+            "content": "Explain an HTTP 500 error"
+        }
+    ]
+)
+
+print(response["message"]["content"])
+```
+
+The model receives a question and returns its generated response.
+
+## 5. Project Directory Structure
+
+text
+
+```text
+day40-aiops/
+│
+├── app.py
+├── requirements.txt
+├── incidents.db
+│
+├── logs/
+│   ├── tomcat.log
+│   ├── mysql.log
+│   ├── infrastructure.log
+│   ├── deployment.log
+│   └── network.log
+│
+└── reports/
+```
+
+app.py: Main application containing detection, classification, AI agents, RCA, database and dashboard functionality.
+
+requirements.txt: Contains the required Python libraries.
+
+logs/: Contains sample application and infrastructure logs.
+
+incidents.db: SQLite database containing incident history.
+
+reports/: Directory reserved for incident report files.
+
+## 6. Log Ingestion
+
+Log ingestion is the first stage of incident investigation.
+
+Application logs contain information about events occurring inside applications and infrastructure.
+
+Examples include:
+
+- Application startup messages.
+- Database connection failures.
+- HTTP errors.
+- CPU and memory warnings.
+- Deployment failures.
+- Network timeouts.
+
+The application uses Streamlit's file uploader to accept `.log` and `.txt` files.
+
+Uploaded content is read using Python:
+
+python
+
+```python
+log_text = uploaded.getvalue().decode(
+    "utf-8",
+    errors="replace"
+)
+```
+
+The log contents are converted into readable text for further processing.
+
+## 7. Error Detection Using Regex
+
+Regex means Regular Expression.
+
+It identifies specific patterns inside log messages.
+
+Example:
+
+python
+
+```python
+ERROR_PATTERN = re.compile(
+    r"\b(ERROR|WARNING|CRITICAL|FATAL|Exception|Traceback)\b",
+    re.IGNORECASE
+)
+```
+
+The application checks every log line against this pattern.
+
+python
+
+```python
+def detect_errors(log_text):
+    return [
+        line.strip()
+        for line in log_text.splitlines()
+        if ERROR_PATTERN.search(line)
+    ]
+```
+
+For example:
+
+Input:
+
+text
+
+```text
+INFO Application started
+ERROR Database connection failed
+WARNING CPU utilization 90%
+CRITICAL Application unavailable
+```
+
+Detected entries:
+
+text
+
+```text
+ERROR Database connection failed
+WARNING CPU utilization 90%
+CRITICAL Application unavailable
+```
+
+INFO messages are ignored by this initial error-detection function.
+
+## 8. Incident Classification
+
+After detecting errors, the application determines the initial severity and incident category.
+
+### Severity Classification
+
+| Severity | Meaning |
+| --- | --- |
+| CRITICAL | Severe operational failure |
+| HIGH | Application or service error |
+| MEDIUM | Warning requiring investigation |
+| LOW | Low-priority event |
+
+The initial classification uses predefined Python rules.
+
+### Incident Categories
+
+- Application
+- Database
+- Infrastructure
+- Deployment
+- Network/API
+
+For example:
+
+`Connection refused: mysql:3306`
+
+This indicates a possible database connection failure.
+
+`CPU utilization 98%`
+
+This indicates a possible infrastructure performance problem.
+
+Classification is an initial rule-based assessment. The AI-generated report provides further investigation and may require human correction.
+
+## 9. Multi-Agent AI Architecture
+
+A multi-agent system uses multiple specialized AI tasks to investigate the same incident from different perspectives.
+
+The project contains three analysis agents.
+
+### Agent 1 – Log Analyst
+
+Responsibilities:
+
+- Examine error messages.
+- Investigate exceptions.
+- Understand stack traces.
+- Identify possible application failures.
+
+Example:
+
+text
+
+```text
+ERROR NullPointerException
+at UserController.java:45
+```
+
+The Log Analyst investigates the possible programming error and identifies the relevant code location.
+
+### Agent 2 – Pattern Analyst
+
+Responsibilities:
+
+- Identify repeated errors.
+- Examine related events.
+- Detect recurring failure patterns.
+- Identify possible sequences of failures.
+
+Example:
+
+Repeated HTTP 500 errors may indicate a recurring application problem rather than an isolated request failure.
+
+### Agent 3 – Impact Analyst
+
+Responsibilities:
+
+- Estimate affected services.
+- Identify possible operational impact.
+- Explain application availability concerns.
+- Identify potential downstream effects.
+
+Example:
+
+Database connection failures may affect application operations that depend on database access.
+
+### Parallel Agent Execution
+
+The project uses Python's ThreadPoolExecutor.
+
+python
+
+```python
+with ThreadPoolExecutor(max_workers=3) as executor:
+
+    futures = {
+        name: executor.submit(
+            run_agent,
+            name,
+            task,
+            evidence
+        )
+        for name, task in tasks.items()
+    }
+
+    findings = {
+        name: future.result()
+        for name, future in futures.items()
+    }
+```
+
+Three independent investigation tasks are submitted to separate worker threads.
+
+Their results are collected and combined.
+
+Important: These are three specialized AI analysis tasks using the same Qwen3 model. They are not three separate language models.
+
+## 10. Root Cause Analysis (RCA)
+
+RCA stands for Root Cause Analysis.
+
+It is the process of investigating an incident to identify the underlying reason for a failure.
+
+The RCA stage receives:
+
+- Original log evidence.
+- Log Analyst findings.
+- Pattern Analyst findings.
+- Impact Analyst findings.
+- Initial severity and category.
+
+Qwen3 combines the findings and generates a structured incident report.
+
+Example:
+
+Incident: Tomcat HTTP 500 errors.
+
+Observed evidence:
+
+text
+
+```text
+ERROR HTTP 500 Internal Server Error
+ERROR NullPointerException at UserController.java:45
+```
+
+Possible root cause: A null object reference during request processing.
+
+Recommended investigation:
+
+- Inspect UserController.java around line 45.
+- Check whether the required object is initialized.
+- Review recent application changes.
+- Validate the correction in a test environment.
+
+A log message provides evidence, but it does not always prove the underlying root cause. RCA conclusions must distinguish confirmed facts from hypotheses.
+
+## 11. Pydantic Structured Reports
+
+Pydantic validates the structure of generated incident reports.
+
+Example:
+
+python
+
+```python
+class IncidentReport(BaseModel):
+    severity: str
+    category: str
+    summary: str
+    root_causes: list[str]
+    evidence: list[str]
+    impact: str
+    recommendations: list[str]
+    confidence: str
+    human_approval_required: bool = True
+```
+
+This ensures that the report contains the expected fields.
+
+Example report structure:
+
+json
+
+```json
+{
+  "severity": "CRITICAL",
+  "category": "Application",
+  "summary": "Tomcat HTTP 500 errors detected",
+  "root_causes": [
+    "Possible NullPointerException"
+  ],
+  "evidence": [
+    "NullPointerException at UserController.java:45"
+  ],
+  "impact": "Application requests may fail",
+  "recommendations": [
+    "Inspect the affected application code"
+  ],
+  "confidence": "Medium",
+  "human_approval_required": true
+}
+```
+
+Structured reports are easier to store, display and retrieve.
+
+## 12. Remediation Planning
+
+Remediation means taking corrective action to resolve an incident.
+
+The AI recommends possible corrective steps based on the investigation.
+
+Examples:
+
+| Incident | Recommended action |
+| --- | --- |
+| HTTP 500 | Investigate application exceptions |
+| MySQL connection failure | Check database availability and connectivity |
+| High CPU | Identify resource-intensive processes |
+| Deployment failure | Validate application configuration |
+| Network timeout | Investigate upstream connectivity |
+
+The system separates recommendations from execution.
+
+AI does not automatically execute server commands or modify infrastructure.
+
+## 13. Human-in-the-Loop Approval
+
+Human approval is an important safety mechanism.
+
+The application records whether an engineer has approved recommendations.
+
+Possible incident statuses:
+
+- OPEN
+- APPROVED
+- RESOLVED
+
+Approval records a decision in SQLite.
+
+It does not execute remediation commands.
+
+This prevents an incorrect AI recommendation from automatically modifying infrastructure.
+
+## 14. SQLite Incident Storage
+
+SQLite provides persistent storage for incident records.
+
+The application creates an incidents table with:
+
+- Incident ID
+- Creation timestamp
+- Severity
+- Category
+- Supporting evidence
+- AI-generated report
+- Status
+
+Example database operation:
+
+python
+
+```python
+conn.execute("""
+INSERT INTO incidents
+VALUES (?, ?, ?, ?, ?, ?, ?)
+""", (
+    incident_id,
+    created_at,
+    severity,
+    category,
+    evidence,
+    report,
+    "OPEN"
+))
+```
+
+SQLite stores each investigation so that incident history remains available after refreshing or restarting the dashboard.
+
+## 15. Live Log Monitoring
+
+The Live Monitoring tab monitors a local log file for newly appended entries.
+
+The application uses Python file operations.
+
+python
+
+```python
+with open(
+    path,
+    "r",
+    encoding="utf-8",
+    errors="replace"
+) as f:
+
+    f.seek(last_position)
+    new_lines = f.readlines()
+    last_position = f.tell()
+```
+
+### Understanding File Offset
+
+A file offset represents the current reading position inside a file.
+
+Instead of reading the entire file repeatedly, the application reads content added after the previous position.
+
+The Streamlit fragment executes periodically:
+
+python
+
+```python
+@st.fragment(run_every="5s")
+def live_monitor():
+    ...
+```
+
+This checks for new entries approximately every five seconds.
+
+### Testing Live Monitoring
+
+Append a new error:
+
+bash
+
+```bash
+echo "2026-11-02 10:00:00 ERROR New HTTP 500 error detected" >> logs/tomcat.log
+```
+
+The new error should appear in the Live Monitoring tab.
+
+Click Investigate Live Events to initiate AI analysis.
+
+Important: Log detection is periodic, while AI investigation is manually triggered. This implementation monitors one local file at a time and does not yet provide production-grade file rotation or remote server collection.
+
+## 16. Streamlit Dashboard
+
+Streamlit provides the application's graphical interface.
+
+The dashboard contains four tabs.
+
+### Log Analysis
+
+Allows uploading application and server log files.
+
+Displays:
+
+- Uploaded log contents.
+- Detected errors.
+- Incident severity.
+- Possible root causes.
+- Supporting evidence.
+- Recommendations.
+- AI agent findings.
+
+### Live Monitoring
+
+Displays newly detected log events from the monitored local file.
+
+### Dashboard
+
+Displays:
+
+- Total incidents.
+- Open incidents.
+- Resolved incidents.
+- Severity distribution.
+- Incident category charts.
+- Recent incident records.
+
+### Incident History
+
+Displays previously stored incidents.
+
+Allows engineers to review incident reports, record approval and mark incidents as resolved.
+
+## 17. Plotly Incident Visualization
+
+Plotly creates graphical representations of incident data.
+
+A pie chart displays incident severity distribution.
+
+A bar chart displays incident categories and their severity.
+
+These visualizations help engineers understand the distribution of operational failures.
+
+## 18. Practical Test Scenarios
+
+Five sample scenarios are included in the project.
+
+| Log file | Scenario | Expected result |
+| --- | --- | --- |
+| tomcat.log | HTTP 500 | Application failure |
+| mysql.log | Connection refused | Database failure |
+| infrastructure.log | CPU 98% | Infrastructure issue |
+| deployment.log | Missing DATABASE\_URL | Deployment failure |
+| network.log | Connection timeout | Network/API failure |
+
+Each scenario should produce detected log evidence, an initial classification, three AI agent findings, a possible RCA and remediation recommendations.
+
+## 19. Running the Application
+
+Start Ollama:
+
+bash
+
+```bash
+ollama serve
+```
+
+Activate the Python virtual environment.
+
+Start Streamlit:
+
+bash
+
+```bash
+streamlit run app.py
+```
+
+Open:
+
+`http://localhost:8501`
+
+Upload a sample log file in the Log Analysis tab.
+
+Click Investigate Incident.
+
+Review the report and verify that the incident appears in the dashboard and incident history.
+
+Test all five sample scenarios.
+
+## 20. Important Limitations and Production Considerations
+
+The current project is a functional local demonstration, not a complete production monitoring platform.
+
+The following enhancements would be required for production:
+
+- Multiple server log collection.
+- Docker and Kubernetes integration.
+- Linux system log monitoring.
+- CPU, memory and disk metrics collection.
+- Automatic incident triggering.
+- Duplicate incident detection.
+- File rotation handling.
+- Authentication and role-based approval.
+- Secure audit trails.
+- Protected handling of sensitive log data.
+- Controlled remediation execution.
+
+Logs must be treated as untrusted input. AI-generated diagnoses must be reviewed before corrective actions are taken.
+
+## 21\. Final Learning Outcomes
+
+The project demonstrates the following concepts:
+
+1. Local Large Language Model deployment.
+2. Log ingestion and processing.
+3. Regex-based error detection.
+4. Incident classification.
+5. Multi-agent AI investigation.
+6. Parallel execution using Python.
+7. Root Cause Analysis.
+8. Evidence-based AI reporting.
+9. Pydantic structured output validation.
+10. SQLite incident persistence.
+11. Real-time-style log monitoring.
+12. Streamlit dashboard development.
+13. Human-in-the-loop incident management.
+14. Remediation recommendation design.
+
+## 22\. Key Takeaway
+
+An AI-powered DevOps Incident Response System combines traditional monitoring techniques with local AI reasoning.
+
+Python detects and organizes operational events, specialized AI agents investigate different aspects of the incident, Qwen3 combines their findings into a possible root cause report, and SQLite preserves the investigation history.
+
+Streamlit provides a centralized interface for incident investigation and monitoring.
+
+Core principle: AI assists engineers in identifying and resolving operational problems, while humans retain control over infrastructure changes.
+
+```
+
+---

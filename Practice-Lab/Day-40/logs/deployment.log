@@ -1,0 +1,5 @@
+2026-11-02 09:30:01 INFO Deployment started version 2.0
+2026-11-02 09:30:10 INFO Previous version stopped
+2026-11-02 09:30:20 ERROR Application startup failed
+2026-11-02 09:30:21 ERROR Missing configuration property DATABASE_URL
+2026-11-02 09:30:25 CRITICAL Application failed to initialize
