@@ -18287,6 +18287,621 @@ Streamlit provides a centralized interface for incident investigation and monito
 
 Core principle: AI assists engineers in identifying and resolving operational problems, while humans retain control over infrastructure changes.
 
-```
 
 ---
+
+# Day 41 — Local AI Infrastructure Anomaly Detection & Predictive Alerting System
+
+## 1. Introduction
+
+Infrastructure monitoring is the process of continuously observing the health and performance of computer systems, servers, applications, and networks.
+
+Every running application depends on resources such as:
+
+- CPU
+- Memory (RAM)
+- Disk storage
+- Network bandwidth
+- Running processes
+
+When these resources are exhausted or behave unusually, applications may become slow, unresponsive, or unavailable.
+
+An AI-powered infrastructure monitoring system collects performance measurements, detects unusual behaviour, records alerts, and uses a language model to explain possible problems.
+
+The project uses Python, Ollama, Qwen3, Streamlit, and SQLite to build a local monitoring application.
+
+## 2. Understanding the Architecture
+
+The application consists of six main stages:
+
+1. Metric collection
+2. Historical data storage
+3. Anomaly detection
+4. Risk identification
+5. AI-powered investigation
+6. Dashboard visualization
+
+### Application Workflow
+
+    Infrastructure
+          |
+          v
+    Metric Collector
+          |
+          v
+    SQLite Database
+          |
+          v
+    Anomaly Detection
+          |
+          v
+    Alert Generation
+          |
+          v
+    Ollama + Qwen3
+          |
+          v
+    AI Explanation
+          |
+          v
+    Streamlit Dashboard
+
+Each stage has a separate responsibility.
+
+## 3. Infrastructure Metrics
+
+Infrastructure metrics are numerical measurements used to understand system performance.
+
+### 3.1 CPU Utilization
+
+CPU (Central Processing Unit) executes application instructions and operating system tasks.
+
+CPU utilization represents the percentage of CPU processing capacity currently being used.
+
+Example:
+
+- 10% — Low CPU utilization
+- 50% — Moderate utilization
+- 85% — High utilization
+- 95% — Very high utilization
+
+High CPU utilization may indicate:
+
+- Too many running processes
+- CPU-intensive application operations
+- Infinite loops or inefficient code
+- Heavy background processing
+- Insufficient processing capacity
+
+Python uses:
+
+`psutil.cpu_percent(interval=None)`
+
+This returns the measured CPU utilization percentage.
+
+### 3.2 Memory Utilization
+
+RAM temporarily stores data used by running applications and processes.
+
+When memory becomes insufficient, applications may slow down, operating systems may use swap space, and processes may be terminated.
+
+Python uses:
+
+`psutil.virtual_memory()`
+
+The percentage is available through:
+
+`psutil.virtual_memory().percent`
+
+Example:
+
+If a system has 16 GB RAM and approximately 12 GB is used, memory utilization is around 75%.
+
+High memory usage may indicate:
+
+- Memory leaks
+- Large application workloads
+- Too many running processes
+- Inefficient memory allocation
+
+### 3.3 Disk Utilization
+
+Disk utilization indicates how much storage capacity is occupied.
+
+Python uses:
+
+`psutil.disk_usage(path)`
+
+Important properties:
+
+- `total` — Total disk capacity
+- `used` — Used storage
+- `free` — Available storage
+- `percent` — Percentage of used storage
+
+Example:
+
+A 500 GB disk with 450 GB occupied has 90% utilization.
+
+When disk capacity becomes exhausted, applications may fail to write logs, databases may encounter storage errors, and services may stop working.
+
+### 3.4 Network Throughput
+
+Network monitoring measures the rate at which data is received and transmitted.
+
+Python uses:
+
+`psutil.net_io_counters()`
+
+It provides cumulative network byte counters:
+
+- `bytes_recv` — Total received bytes
+- `bytes_sent` — Total transmitted bytes
+
+Network throughput is calculated using:
+
+\[
+\text{Throughput} =
+\frac{\text{Current Bytes}-\text{Previous Bytes}}
+{\text{Elapsed Time}}
+\]
+
+The application converts the result into MB/s.
+
+Important distinction:
+
+Network byte counters represent cumulative traffic. Subtracting two measurements and dividing by elapsed time produces a transfer rate.
+
+## 4. Real-Time Monitoring
+
+Real-time monitoring means repeatedly collecting system measurements at a configured interval.
+
+In this project, the collection interval is approximately three seconds.
+
+The monitoring process follows these steps:
+
+1. Read current system metrics.
+2. Calculate network throughput.
+3. Retrieve recent historical measurements.
+4. Detect unusual behaviour.
+5. Store the current measurement.
+6. Record newly detected alerts.
+7. Wait for the next collection interval.
+
+### Background Threading
+
+Python's `threading` module runs the monitoring collector in a background thread.
+
+A background thread allows metric collection to continue while the dashboard handles user interactions.
+
+The application uses:
+
+`threading.Thread(target=self.collect_loop, daemon=True)`
+
+Important concepts:
+
+- **Main thread:** Runs the Streamlit application.
+- **Background thread:** Collects infrastructure measurements.
+- **Daemon thread:** Automatically stops when the main application process exits.
+
+The collector and dashboard operate independently.
+
+### Dashboard Refresh
+
+The application uses:
+
+`st_autorefresh(interval=INTERVAL * 1000)`
+
+The interval is specified in milliseconds.
+
+For a three-second refresh:
+
+\[
+3 \times 1000 = 3000 \text{ milliseconds}
+\]
+
+The dashboard periodically reloads the latest stored measurements.
+
+The dashboard refresh does not itself collect metrics. The background monitoring thread performs collection.
+
+## 5. SQLite Database
+
+SQLite is a lightweight relational database that stores application data in a local file.
+
+The project automatically creates:
+
+`monitoring.db`
+
+Two tables are maintained.
+
+### 5.1 Metrics Table
+
+Stores infrastructure measurements.
+
+| Column | Description |
+|---|---|
+| id | Unique measurement ID |
+| timestamp | Measurement time |
+| cpu | CPU utilization |
+| memory | Memory utilization |
+| disk | Disk utilization |
+| net_recv | Network receive rate |
+| net_sent | Network send rate |
+
+### 5.2 Alerts Table
+
+Stores detected infrastructure anomalies.
+
+| Column | Description |
+|---|---|
+| id | Unique alert ID |
+| timestamp | Alert creation time |
+| severity | Warning or critical |
+| metric | Affected metric |
+| value | Measured value |
+| reason | Detection explanation |
+
+### Why SQLite?
+
+- No separate database server is required.
+- Data persists after application restarts.
+- SQL queries make historical analysis easy.
+- It is suitable for local development and prototypes.
+
+The application also enables SQLite Write-Ahead Logging (WAL) mode to improve concurrent database access.
+
+## 6. Understanding Anomaly Detection
+
+An anomaly is a measurement or behaviour that differs significantly from expected system behaviour.
+
+Examples:
+
+- CPU suddenly increases from 20% to 98%.
+- Memory usage continuously increases.
+- Disk utilization approaches full capacity.
+- Network traffic suddenly becomes unusually high.
+
+The project implements three detection techniques.
+
+### 6.1 Threshold-Based Detection
+
+Threshold detection compares a metric against a configured limit.
+
+Example configuration:
+
+| Metric | Threshold |
+|---|---:|
+| CPU | 85% |
+| Memory | 85% |
+| Disk | 90% |
+
+Example:
+
+    CPU Usage = 92%
+    CPU Threshold = 85%
+
+Since 92 is greater than 85, the system generates an alert.
+
+The project classifies:
+
+- Warning — Metric reaches its configured threshold.
+- Critical — Metric reaches 95% or above.
+
+Threshold detection is simple and useful for identifying known resource limits.
+
+However, it cannot identify every unusual behaviour.
+
+For example, CPU usage increasing from 10% to 75% may be unusual even when the configured threshold is 85%.
+
+### 6.2 Statistical Anomaly Detection Using Z-Score
+
+Z-score measures how far a measurement is from the historical average in terms of standard deviations.
+
+Formula:
+
+\[
+Z = \frac{X-\mu}{\sigma}
+\]
+
+Where:
+
+- \(X\) = Current measurement
+- \(\mu\) = Historical mean
+- \(\sigma\) = Historical standard deviation
+
+Example:
+
+    Historical CPU average = 30%
+    Standard deviation = 10%
+    Current CPU = 65%
+
+\[
+Z = \frac{65-30}{10}=3.5
+\]
+
+A Z-score of 3.5 indicates a significant deviation from the historical average.
+
+The project uses an absolute Z-score of 3 or higher as an anomaly condition.
+
+Important points:
+
+- The detector requires at least 20 historical measurements.
+- Standard deviation must be greater than zero.
+- Z-score identifies deviations, not their causes.
+- A rapidly changing workload can make historical averages less useful.
+
+### 6.3 Isolation Forest
+
+Isolation Forest is an unsupervised machine learning algorithm used for anomaly detection.
+
+Unsupervised learning means the algorithm can identify unusual patterns without requiring previously labelled examples of normal and abnormal behaviour.
+
+The algorithm works by repeatedly splitting data into smaller groups.
+
+Unusual observations are generally isolated more quickly than normal observations.
+
+The project uses these features:
+
+- CPU utilization
+- Memory utilization
+- Disk utilization
+- Network receive rate
+- Network send rate
+
+Example:
+
+    CPU       = 90%
+    Memory    = 35%
+    Disk      = 60%
+    Network RX = 0.2 MB/s
+    Network TX = 0.1 MB/s
+
+The algorithm examines the combination of measurements rather than checking only one threshold.
+
+Important parameters:
+
+- `n_estimators=50` — Number of isolation trees.
+- `contamination=0.03` — Expected proportion of anomalies used by the model.
+- `random_state=42` — Makes the model initialization reproducible.
+
+Predictions:
+
+- `1` — Normal observation.
+- `-1` — Anomalous observation.
+
+The model is trained after at least 50 historical measurements.
+
+It uses recent measurements for training and evaluates the latest observation.
+
+Isolation Forest identifies unusual patterns; it does not predict the exact time of a future failure.
+
+## 7. Alert Management
+
+When an anomaly is detected, the application creates an alert containing:
+
+- Timestamp
+- Severity
+- Metric name
+- Measured value
+- Detection reason
+
+Repeated alerts for the same metric are limited using a 60-second cooldown.
+
+This prevents the database from filling with identical alerts every three seconds.
+
+The cooldown is an alert suppression mechanism, not a confirmation that the underlying issue has been resolved.
+
+## 8. AI-Powered Investigation with Ollama
+
+Ollama is a tool for running large language models locally.
+
+Qwen3 is the language model used in this project.
+
+The application communicates with Ollama through its local HTTP API:
+
+`http://localhost:11434/api/generate`
+
+The request contains:
+
+- Model name
+- Prompt
+- Current infrastructure metrics
+- Recent detected alerts
+
+The response contains the AI-generated explanation.
+
+### What Does the AI Do?
+
+Qwen3 receives the measured evidence and generates:
+
+1. Current infrastructure condition.
+2. Evidence supporting the assessment.
+3. Possible explanations.
+4. Recommended investigation steps.
+5. Safe corrective actions.
+
+Example:
+
+Input:
+
+    Memory utilization: 94%
+    CPU utilization: 35%
+    Disk utilization: 60%
+
+Possible AI analysis:
+
+- Memory usage is unusually high.
+- CPU utilization is comparatively moderate.
+- Investigate processes consuming the most RAM.
+- Check application memory usage over time.
+- Review whether swap usage is increasing.
+
+### Important AI Concept
+
+The language model does not directly measure CPU, memory, disk, or network utilization.
+
+Python collects the measurements and detects anomalies.
+
+The AI interprets the supplied evidence and generates explanations.
+
+An AI-generated explanation is a hypothesis, not proof of a root cause.
+
+The model must not be allowed to execute infrastructure commands automatically.
+
+## 9. Disk Capacity Trend Estimation
+
+The application includes a basic disk capacity estimate.
+
+It examines recent disk measurements and calculates the rate of disk usage growth.
+
+Example:
+
+| Time | Disk Usage |
+|---|---:|
+| Earlier | 60% |
+| Later | 62% |
+| Latest | 64% |
+
+If disk usage is increasing consistently, the application estimates the time required to reach 100%.
+
+Formula:
+
+\[
+\text{Time Remaining} =
+\frac{100-\text{Current Usage}}
+{\text{Growth Rate per Hour}}
+\]
+
+The estimate assumes that the recent growth rate continues.
+
+This is a simple linear trend estimate, not a guaranteed forecast.
+
+Sudden file deletion, log rotation, backups, and workload changes can make the estimate inaccurate.
+
+The application displays the estimate only when enough measurements exist and the upward trend is meaningful.
+
+## 10. Streamlit Monitoring Dashboard
+
+Streamlit provides the user interface for the application.
+
+The dashboard displays:
+
+### Current Metrics
+
+- CPU utilization
+- Memory utilization
+- Disk utilization
+- Network receive rate
+
+### Performance Charts
+
+Plotly displays historical CPU, memory, disk, and network measurements.
+
+Charts help identify:
+
+- Increasing resource usage
+- Sudden spikes
+- Performance variations
+- Continuous resource growth
+
+### Anomaly Records
+
+The alert section displays detected anomalies with their timestamps, severity, metric values, and reasons.
+
+### AI Investigation
+
+A button sends the latest infrastructure evidence to Qwen3.
+
+The generated explanation appears directly on the dashboard.
+
+### Data Export
+
+The dashboard provides CSV downloads for:
+
+- Infrastructure measurements
+- Detected alerts
+
+CSV files can be opened using spreadsheet applications for further analysis.
+
+## 11. Practical Testing
+
+The following tests verify the application.
+
+### Test 1 — Normal Monitoring
+
+- Start Streamlit.
+- Observe CPU, memory, disk, and network values.
+- Wait for multiple collection cycles.
+
+Expected: Measurements update and historical charts gradually populate.
+
+### Test 2 — Threshold Alert
+
+Temporarily reduce the CPU threshold to 1%.
+
+Expected: CPU utilization normally exceeds this threshold, generating a warning.
+
+Restore the original threshold after testing.
+
+### Test 3 — Machine Learning Detection
+
+Allow at least 50 measurements to accumulate.
+
+Expected: Isolation Forest becomes active and begins evaluating unusual combinations of infrastructure metrics.
+
+### Test 4 — AI Investigation
+
+Click the AI investigation button.
+
+Expected: Qwen3 provides an explanation based on current measurements and recent alerts.
+
+### Test 5 — Database Persistence
+
+Stop and restart the application.
+
+Expected: Previous metrics and alerts remain available because they are stored in SQLite.
+
+### Test 6 — CSV Export
+
+Download the metrics and alert CSV files.
+
+Expected: Files contain the corresponding historical records.
+
+## 12. Important Technical Limitations
+
+- Monitoring currently covers the local machine running the application.
+- Remote server and AWS monitoring are not implemented.
+- Network metrics represent machine-level traffic, not individual application traffic.
+- External notifications such as email, Slack, and PagerDuty are not implemented.
+- Isolation Forest is a basic anomaly detector, not a fully trained predictive failure model.
+- Disk capacity estimates depend on recent trends.
+- Detection results can contain false positives.
+- AI recommendations require human review.
+- No automatic infrastructure remediation is performed.
+
+## 13. Key Concepts to Remember
+
+| Concept | Meaning |
+|---|---|
+| Infrastructure Monitoring | Continuously observing system performance |
+| Observability | Understanding system behaviour through available telemetry |
+| Metric Collection | Gathering numerical system measurements |
+| Threshold Detection | Comparing measurements against configured limits |
+| Z-Score | Measuring deviation from the historical average |
+| Isolation Forest | Machine-learning-based anomaly detection |
+| AIOps | Applying AI and machine learning to IT operations |
+| Predictive Alerting | Identifying potential risks using observed trends |
+| SQLite | Local relational database |
+| Ollama | Local LLM runtime |
+| Qwen3 | AI model used for infrastructure explanations |
+| Streamlit | Python-based dashboard framework |
+| Plotly | Interactive data visualization library |
+| Threading | Running background tasks concurrently |
+
+## 14. Final Outcome
+
+A local AI-powered infrastructure monitoring application was built using Python, psutil, Ollama, Qwen3, SQLite, Streamlit, and Scikit-learn.
+
+The application continuously collects system metrics, detects unusual behaviour using threshold, statistical, and machine-learning techniques, stores historical measurements, and generates AI-powered explanations.
+
+**Key Takeaway:** Effective infrastructure monitoring combines measurable system data, anomaly detection, historical analysis, and AI-powered investigation to help engineers understand potential problems and respond more intelligently.
