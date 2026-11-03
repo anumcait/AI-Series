@@ -212,10 +212,18 @@ Open:
 - Anomaly detection identifies unusual behaviour but does not guarantee that a failure will occur.
 - AI recommendations require human evaluation; infrastructure changes are not executed automatically.
 
-## Day 41 Outcome
+### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/50905f85-ef98-4e29-991f-9e32d0f11f1d" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/8b98fe2d-48c2-4b61-af57-af1f6869bc89" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/549d5d70-ee33-4d51-974c-bf38ff4b311a" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/ee03798b-295e-4714-a9a8-4bc8edaf3ae4" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/f09abfa4-0c29-469f-bead-2eb9208410fb" />
 
-Successfully built a local infrastructure monitoring prototype that collects real system metrics, detects unusual behaviour using configurable thresholds and machine learning, stores historical data, and uses Qwen3 to explain potential infrastructure risks.
 
-Key Takeaway: Intelligent monitoring combines infrastructure metrics, anomaly detection, and AI-powered analysis to help engineers identify potential problems earlier and make better operational decisions.
+
+
+
+
+
 
 ```
