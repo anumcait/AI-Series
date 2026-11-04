@@ -168,3 +168,21 @@ AWS Account → Cost Explorer / EC2 / EBS / CloudWatch → Python Data Collectio
 Built a local AI-powered AWS FinOps assistant that collects cloud billing and infrastructure data, identifies potential cost optimization opportunities, detects unusual spending, generates Qwen3 recommendations, stores monitoring history, and displays findings through an interactive Streamlit dashboard.
 
 **Key Learning:** Cloud cost optimization combines billing analysis, infrastructure monitoring, resource utilization, anomaly detection, and AI-assisted decision-making.
+
+### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/a673a5c2-9d00-4d7e-aa22-3ba481df7a51" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/b1411ee7-c3b9-40ea-83a1-2d7eb2db5855" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/43cf15ac-01fa-457e-834a-9954bfd10081" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/6e1de7d0-6c23-486c-bad3-37a069b6108c" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/079210ec-c926-4b81-903b-0dcc917e6dd1" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/d43b0c7c-6e2f-4e3c-892a-3ae97bedf769" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/ae4ece5e-7f57-4703-a8a9-a30fb6869b09" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/4cfb6a54-7a3c-4bdf-9896-55787c7deda1" />
+
+
+
+
+
+
+
+
