@@ -67,7 +67,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 40 | Build a Local AI-Powered DevOps Incident Response & Root Cause Analysis System | Python, Ollama, Qwen3, Streamlit, SQLite, Pandas, Regex, Pydantic, Plotly, ThreadPoolExecutor, AIOps, Log Ingestion, Error Detection, Incident Classification, Log Analyst Agent, Pattern Analyst Agent, Impact Analyst Agent, Parallel AI Investigation, Root Cause Analysis, Evidence-Based Recommendations, Remediation Planning, Human-in-the-Loop Approval, Live Log Monitoring, Incident History, Incident Report Generation, Real-Time Monitoring Dashboard |
 | Day 41 | Build a Local AI Infrastructure Anomaly Detection & Predictive Alerting System | Python, Ollama, Qwen3, Streamlit, SQLite, psutil, Scikit-learn, Pandas, Plotly, Infrastructure Monitoring, CPU Monitoring, Memory Monitoring, Disk Monitoring, Network Monitoring, Anomaly Detection, Resource Usage Analysis, AI-Powered Alerts, Predictive Analysis, Infrastructure Health Dashboard| 
 | Day 42 | Build a Local AI Cost Optimization Advisor for Cloud Resources | Python, Ollama, Qwen3, AWS Boto3, Streamlit, SQLite, Pandas, Plotly, Cloud Cost Management, Cloud Inventory, Cost Optimization, Resource Utilization Analysis, AI-Powered Recommendations, Human-in-the-Loop Validation, Cloud Economics, Spend Optimization, Infrastructure Cost Analysis |
-
+| Day 43 | Build a Local AI-Powered AWS Security Posture & Misconfiguration Auditor | Python, Ollama, Qwen3, AWS Boto3, Streamlit, SQLite, Pandas, Plotly, AWS Security Auditing, Cloud Security Posture Management, IAM Security, S3 Public Access Detection, EC2 Security Group Analysis, EBS Encryption Checks, RDS Security, CloudTrail Monitoring, Security Risk Classification, AI-Powered Remediation Recommendations, Human-in-the-Loop Security Validation |
 
 ---
 
@@ -198,3 +198,6 @@ SQLite, psutil, Scikit-learn, Pandas, and Plotly that continuously collects CPU,
 
 # 🚀 Day 42 — Local AI-Powered AWS FinOps Assistant 
 Build a local AI-powered AWS FinOps assistant using Python, Ollama, Qwen3, Streamlit, SQLite, Boto3, Pandas, and Plotly to analyze cloud costs, identify potentially idle resources, detect cost spikes, and generate AI-powered cost optimization recommendations.
+
+# 🚀 Day 43 — Local AI-Powered AWS Security Posture & Misconfiguration Auditor 🔐
+Build a local AI-powered AWS security auditing assistant using Python, Boto3, Ollama, Qwen3, Streamlit, SQLite, Pandas, and Plotly to inspect AWS security configurations, identify common misconfigurations across S3, EC2, EBS, RDS, IAM, and CloudTrail, classify security risks, and generate AI-powered remediation recommendations.

@@ -19364,3 +19364,229 @@ After completing this project, the following concepts should be understood:
 
 ---
 
+# Day 43 — Notes: Local AI-Powered AWS Security Posture & Misconfiguration Auditor
+
+## 1. Cloud Security Posture Management (CSPM)
+
+Cloud Security Posture Management is the process of continuously or periodically checking cloud infrastructure configurations to identify security risks and misconfigurations.
+
+Examples include:
+- Publicly accessible storage buckets.
+- Unrestricted network access.
+- Unencrypted storage volumes.
+- Publicly accessible databases.
+- Weak identity and access controls.
+- Disabled audit logging.
+
+The purpose is to identify configuration risks before they lead to security incidents.
+
+## 2. AWS Boto3
+
+Boto3 is the AWS SDK for Python. It allows Python applications to communicate with AWS services through their APIs.
+
+In this project, Boto3 is used to:
+- Discover S3 buckets.
+- Inspect EC2 security groups and EBS volumes.
+- Check RDS database configurations.
+- Review IAM users and access keys.
+- Inspect CloudTrail trails and logging status.
+
+An AWS session uses the configured CLI profile to authenticate API requests. Credentials should never be hardcoded in application files.
+
+## 3. AWS IAM and Read-Only Permissions
+
+AWS Identity and Access Management (IAM) controls who can access AWS resources and which actions they can perform.
+
+The auditor uses a dedicated IAM identity with read-only permissions.
+
+Important concepts:
+
+- **User:** An identity that can access AWS resources.
+- **Policy:** A document defining allowed or denied actions.
+- **Access Key:** Credentials used by applications or CLI tools.
+- **MFA:** Multi-Factor Authentication adds another verification step.
+
+The application checks active access keys older than 90 days and IAM users without registered MFA devices.
+
+These are review indicators, not automatic proof of compromise or non-compliance.
+
+## 4. Amazon S3 Security
+
+Amazon Simple Storage Service (S3) stores objects in buckets.
+
+A bucket may become publicly accessible through:
+- Bucket access control lists (ACLs).
+- Bucket policies.
+- Incomplete Public Access Block settings.
+
+The auditor checks public ACL grants, public bucket policy status, and the four S3 Public Access Block settings.
+
+The four settings are:
+
+1. BlockPublicAcls
+2. IgnorePublicAcls
+3. BlockPublicPolicy
+4. RestrictPublicBuckets
+
+Public access is not always inappropriate, but it must be intentional and controlled.
+
+## 5. EC2 Security Groups
+
+Security groups act as virtual firewalls for AWS resources.
+
+They control inbound and outbound network traffic through rules based on protocols, ports, and source addresses.
+
+Examples of sensitive ports:
+
+| Port | Common service |
+|---|---|
+| 22 | SSH |
+| 3389 | RDP |
+| 3306 | MySQL |
+| 5432 | PostgreSQL |
+| 1521 | Oracle |
+| 27017 | MongoDB |
+
+The auditor identifies inbound rules exposing sensitive ports to `0.0.0.0/0` or `::/0`.
+
+These addresses represent unrestricted IPv4 and IPv6 sources respectively.
+
+Such rules should be reviewed and restricted to approved networks wherever possible.
+
+## 6. Amazon EBS Encryption
+
+Elastic Block Store (EBS) provides persistent block storage for EC2 instances.
+
+Encryption helps protect data at rest and supports secure storage practices.
+
+The auditor checks the `Encrypted` property of each discovered EBS volume.
+
+Unencrypted volumes are reported for review. Existing volumes may require a snapshot-and-recreate or migration process to enable encryption; the application does not perform this change.
+
+## 7. Amazon RDS Public Accessibility
+
+Amazon Relational Database Service (RDS) provides managed relational databases.
+
+A publicly accessible database may be reachable through public network paths, depending on its VPC, subnet, routing, and security group configuration.
+
+The auditor checks the `PubliclyAccessible` property of each discovered database instance.
+
+A public setting does not by itself prove that a database is exposed to everyone. Network controls must also be reviewed.
+
+## 8. AWS CloudTrail
+
+AWS CloudTrail records account activity and API events.
+
+It helps investigate:
+- Who performed an action.
+- Which API operation was called.
+- When an action occurred.
+- Which AWS resource was involved.
+
+The auditor discovers CloudTrail trails in the selected region and checks whether logging is active.
+
+A missing or inactive trail is reported for investigation. A complete audit should also review multi-region coverage, event selectors, log delivery, and organization-level trails.
+
+## 9. Security Risk Classification
+
+Findings are assigned project-defined severity levels:
+
+- **Critical:** Potentially serious exposure, such as a bucket identified as public.
+- **High:** Significant configuration risk, such as unrestricted sensitive-port access.
+- **Medium:** A configuration requiring review, such as an old active access key or unencrypted volume.
+- **Low:** Minor security observations, if additional checks are implemented.
+
+Severity depends on context. A finding should be investigated before deciding its actual business impact.
+
+## 10. SQLite Audit History
+
+SQLite is a lightweight relational database that stores audit results locally.
+
+The `findings` table stores:
+
+- Audit timestamp.
+- AWS region.
+- AWS service.
+- Resource identifier.
+- Severity.
+- Detected issue.
+- Recommended action.
+
+Each new audit inserts its findings into the database. This provides a historical record for reviewing previous scans.
+
+The current implementation stores findings, not a complete record of every successful check or clean resource.
+
+## 11. Ollama and Qwen3
+
+Ollama runs large language models locally.
+
+Qwen3 is the language model used to analyze security findings.
+
+The application sends structured finding data to the local Ollama API. Qwen3 then provides:
+- Clear explanations of detected risks.
+- Possible security impacts.
+- Practical remediation suggestions.
+- Human-readable summaries.
+
+The model does not connect directly to AWS or execute remediation commands. Its output is advisory and must be verified.
+
+## 12. Streamlit Dashboard
+
+Streamlit converts the Python application into an interactive web interface.
+
+The dashboard provides:
+- AWS region selection.
+- On-demand security audit execution.
+- Finding counts by severity.
+- Security findings table.
+- Severity distribution chart.
+- AI analysis.
+- CSV export.
+- Historical audit records.
+
+The dashboard runs locally and displays results returned by the Python application.
+
+## 13. Pandas, Plotly and CSV
+
+**Pandas** organizes security findings into DataFrames for filtering, display, and export.
+
+**Plotly** creates interactive charts showing the distribution of findings by severity.
+
+**CSV export** allows audit findings to be downloaded and reviewed using spreadsheet applications.
+
+## 14. Complete Application Workflow
+
+1. AWS credentials are loaded from the configured CLI profile.
+2. Boto3 establishes an authenticated AWS session.
+3. The application retrieves resource configurations through AWS APIs.
+4. Security rules evaluate the returned configurations.
+5. Detected risks are assigned severity levels.
+6. Findings and timestamps are stored in SQLite.
+7. Streamlit displays findings and scan errors.
+8. Qwen3 analyzes findings when requested.
+9. Results can be exported as CSV.
+
+## 15. Important Limitations
+
+- The project performs on-demand audits, not continuous monitoring.
+- S3 and IAM checks are account-wide; EC2, EBS, RDS, and CloudTrail checks are region-specific.
+- Permission failures mean a check is incomplete, not passed.
+- Only selected security configurations are inspected.
+- Public accessibility requires contextual network and policy review.
+- AI recommendations can be inaccurate and require human verification.
+- No AWS resources are modified automatically.
+
+## 16. Key Learning Outcomes
+
+- Understanding cloud security posture management.
+- Using Boto3 to inspect AWS configurations.
+- Applying least-privilege IAM permissions.
+- Identifying common AWS security misconfigurations.
+- Classifying security findings by risk.
+- Maintaining audit history using SQLite.
+- Integrating local LLMs with cloud security tools.
+- Building security dashboards using Streamlit and Plotly.
+- Applying AI-assisted security analysis within a human-controlled workflow.
+
+---
+
