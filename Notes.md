@@ -19364,7 +19364,7 @@ After completing this project, the following concepts should be understood:
 
 ---
 
-# Day 43 — Notes: Local AI-Powered AWS Security Posture & Misconfiguration Auditor
+# Day 43 — Local AI-Powered AWS Security Posture & Misconfiguration Auditor
 
 ## 1. Cloud Security Posture Management (CSPM)
 
@@ -19590,3 +19590,42 @@ The dashboard runs locally and displays results returned by the Python applicati
 
 ---
 
+# Day 44 — Notes: Local AI-Powered AWS Security Incident Detection & Investigation Assistant
+
+## 1. Project Overview
+
+The application monitors AWS CloudTrail management events, identifies potentially suspicious activities using predefined detection rules, and uses a locally running Qwen3 model to explain the findings.
+
+The application is built with Python, Boto3, Ollama, Streamlit, and SQLite.
+
+**Main workflow:**
+
+CloudTrail → Event Collection → Detection Rules → Severity Classification → AI Investigation → SQLite Storage → Streamlit Dashboard
+
+## 2. AWS CloudTrail
+
+AWS CloudTrail records activities performed in an AWS account through the AWS Management Console, CLI, and AWS APIs.
+
+Examples of recorded activities:
+- Console login attempts.
+- IAM user and policy changes.
+- Security group modifications.
+- EC2 instance termination.
+- CloudTrail logging changes.
+
+The application uses the CloudTrail `LookupEvents` API to retrieve recent management events.
+
+**Important:** CloudTrail Event History is regional. The application collects events from the configured region, `ap-south-1`. Events may take several minutes to become available.
+
+## 3. AWS Authentication and Permissions
+
+Boto3 connects to AWS using the configured AWS CLI profile.
+
+The `.env` configuration:
+
+```env
+AWS_PROFILE=default
+AWS_DEFAULT_REGION=ap-south-1
+OLLAMA_MODEL=qwen3:4b
+
+---

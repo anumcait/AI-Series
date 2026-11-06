@@ -1,0 +1,7 @@
+streamlit
+streamlit-autorefresh
+boto3
+pandas
+plotly
+requests
+python-dotenv

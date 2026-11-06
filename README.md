@@ -68,6 +68,8 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 41 | Build a Local AI Infrastructure Anomaly Detection & Predictive Alerting System | Python, Ollama, Qwen3, Streamlit, SQLite, psutil, Scikit-learn, Pandas, Plotly, Infrastructure Monitoring, CPU Monitoring, Memory Monitoring, Disk Monitoring, Network Monitoring, Anomaly Detection, Resource Usage Analysis, AI-Powered Alerts, Predictive Analysis, Infrastructure Health Dashboard| 
 | Day 42 | Build a Local AI Cost Optimization Advisor for Cloud Resources | Python, Ollama, Qwen3, AWS Boto3, Streamlit, SQLite, Pandas, Plotly, Cloud Cost Management, Cloud Inventory, Cost Optimization, Resource Utilization Analysis, AI-Powered Recommendations, Human-in-the-Loop Validation, Cloud Economics, Spend Optimization, Infrastructure Cost Analysis |
 | Day 43 | Build a Local AI-Powered AWS Security Posture & Misconfiguration Auditor | Python, Ollama, Qwen3, AWS Boto3, Streamlit, SQLite, Pandas, Plotly, AWS Security Auditing, Cloud Security Posture Management, IAM Security, S3 Public Access Detection, EC2 Security Group Analysis, EBS Encryption Checks, RDS Security, CloudTrail Monitoring, Security Risk Classification, AI-Powered Remediation Recommendations, Human-in-the-Loop Security Validation |
+| Day 44 | Build a Local AI-Powered AWS Security Incident Detection & Investigation Assistant | Python, Ollama, Qwen3, AWS Boto3, AWS CloudTrail, Streamlit, SQLite, Pandas, Plotly, Cloud Security Monitoring, Security Incident Detection, Failed Login Detection, AccessDenied Analysis, IAM Activity Monitoring, Suspicious API Activity Detection, Rule-Based Threat Detection, Security Severity Classification, AI-Powered Incident Investigation, Human-in-the-Loop Security Review |
+
 
 ---
 
@@ -201,3 +203,6 @@ Build a local AI-powered AWS FinOps assistant using Python, Ollama, Qwen3, Strea
 
 # 🚀 Day 43 — Local AI-Powered AWS Security Posture & Misconfiguration Auditor 🔐
 Build a local AI-powered AWS security auditing assistant using Python, Boto3, Ollama, Qwen3, Streamlit, SQLite, Pandas, and Plotly to inspect AWS security configurations, identify common misconfigurations across S3, EC2, EBS, RDS, IAM, and CloudTrail, classify security risks, and generate AI-powered remediation recommendations.
+
+# 🚀 Day 44 — Local AI-Powered AWS Security Incident Detection & Investigation Assistant 🔐
+Build a local AI-powered AWS security incident investigation assistant using Python, Boto3, AWS CloudTrail, Ollama, Qwen3, Streamlit, SQLite, Pandas, and Plotly to collect CloudTrail management events, detect suspicious activities such as failed console logins, repeated AccessDenied errors, IAM and security group changes, classify potential security incidents, and generate AI-powered investigation insights and response recommendations with human review.
