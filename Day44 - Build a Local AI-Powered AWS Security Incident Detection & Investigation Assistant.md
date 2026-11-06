@@ -1,4 +1,4 @@
-# Day 44 — Local AI-Powered AWS Security Incident Detection & Investigation Assistant
+# 🚀 Day 44 — Build a Local AI-Powered AWS Security Incident Detection & Investigation Assistant 🔐☁️
 
 ## Objective
 Build a local AI-powered application to collect AWS CloudTrail events, detect suspicious activities, and investigate potential security incidents using local Qwen3.
