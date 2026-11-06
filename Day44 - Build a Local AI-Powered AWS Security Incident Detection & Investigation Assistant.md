@@ -55,3 +55,13 @@ CloudTrail → Event Collection → Rule-Based Detection → Severity Classifica
 Built a local AWS security incident detection and investigation assistant using Python, Boto3, CloudTrail, Ollama, Qwen3, Streamlit, and SQLite.
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/1ab91785-81e7-403c-9ea8-2a135d5fc15a" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/200abdaf-9f3c-4126-8331-917a9da9e335" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/ca6eed5c-dc00-459b-83f7-48c5dfbad3a3" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/8c60ab00-93cd-4669-9b71-2713f27768ce" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/a044ec9d-b12b-4023-bbde-ed568656afa9" />
+
+
+
+
+
