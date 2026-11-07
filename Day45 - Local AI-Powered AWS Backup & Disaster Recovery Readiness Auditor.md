@@ -80,3 +80,12 @@ AWS account connectivity was verified, but no backup resources were returned dur
 ## Outcome
 
 Implemented a local AWS Backup & Disaster Recovery Readiness Auditor with Boto3 resource discovery, backup risk checks, SQLite storage, local Qwen3 integration, and a Streamlit dashboard.
+
+### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/075d6d8a-a864-4882-bf58-511f2abbf529" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7bb4bc9d-7eee-4c90-af9c-65eea0627fc1" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/24e0fd99-8d9c-4687-abfb-7bb8e6b73ed1" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/e68d6484-99c2-4313-b8f2-289b62f8d4fa" />
+
+
+
