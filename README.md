@@ -69,7 +69,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 42 | Build a Local AI Cost Optimization Advisor for Cloud Resources | Python, Ollama, Qwen3, AWS Boto3, Streamlit, SQLite, Pandas, Plotly, Cloud Cost Management, Cloud Inventory, Cost Optimization, Resource Utilization Analysis, AI-Powered Recommendations, Human-in-the-Loop Validation, Cloud Economics, Spend Optimization, Infrastructure Cost Analysis |
 | Day 43 | Build a Local AI-Powered AWS Security Posture & Misconfiguration Auditor | Python, Ollama, Qwen3, AWS Boto3, Streamlit, SQLite, Pandas, Plotly, AWS Security Auditing, Cloud Security Posture Management, IAM Security, S3 Public Access Detection, EC2 Security Group Analysis, EBS Encryption Checks, RDS Security, CloudTrail Monitoring, Security Risk Classification, AI-Powered Remediation Recommendations, Human-in-the-Loop Security Validation |
 | Day 44 | Build a Local AI-Powered AWS Security Incident Detection & Investigation Assistant | Python, Ollama, Qwen3, AWS Boto3, AWS CloudTrail, Streamlit, SQLite, Pandas, Plotly, Cloud Security Monitoring, Security Incident Detection, Failed Login Detection, AccessDenied Analysis, IAM Activity Monitoring, Suspicious API Activity Detection, Rule-Based Threat Detection, Security Severity Classification, AI-Powered Incident Investigation, Human-in-the-Loop Security Review |
-
+| Day 45 | Build a Local AI-Powered AWS Backup & Disaster Recovery Readiness Auditor | Python, Ollama, Qwen3, AWS Boto3, AWS EC2, EBS, RDS, AWS Backup, Streamlit, SQLite, Pandas, Plotly, Cloud Backup Auditing, EBS Snapshot Monitoring, RDS Backup Retention, Backup Vault Monitoring, Recovery Point Analysis, Backup Risk Classification, Disaster Recovery Readiness, RPO, RTO, AI-Powered Recovery Recommendations, Human-in-the-Loop Validation |
 
 ---
 
@@ -206,3 +206,7 @@ Build a local AI-powered AWS security auditing assistant using Python, Boto3, Ol
 
 # 🚀 Day 44 — Local AI-Powered AWS Security Incident Detection & Investigation Assistant 🔐
 Build a local AI-powered AWS security incident investigation assistant using Python, Boto3, AWS CloudTrail, Ollama, Qwen3, Streamlit, SQLite, Pandas, and Plotly to collect CloudTrail management events, detect suspicious activities such as failed console logins, repeated AccessDenied errors, IAM and security group changes, classify potential security incidents, and generate AI-powered investigation insights and response recommendations with human review.
+
+# 🚀 Day 45 — Local AI-Powered AWS Backup & Disaster Recovery Readiness Auditor 💾☁️
+Build a local AI-powered AWS backup auditing assistant using Python, Boto3, AWS EC2, EBS, RDS, AWS Backup, Ollama, Qwen3, Streamlit, SQLite, Pandas, and Plotly to inspect EBS snapshots, RDS backup retention, AWS Backup plans, vaults, and recovery points, identify missing or outdated backups, classify potential backup risks, and generate AI-powered disaster recovery recommendations with human review.
+

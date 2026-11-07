@@ -19629,3 +19629,327 @@ AWS_DEFAULT_REGION=ap-south-1
 OLLAMA_MODEL=qwen3:4b
 
 ---
+
+# Day 45 — Notes: Local AI-Powered AWS Backup & Disaster Recovery Readiness Auditor
+
+## 1. Project Overview
+
+The AWS Backup & Disaster Recovery Readiness Auditor is a local application that examines AWS backup configurations, identifies potential backup risks, and generates AI-powered investigation recommendations.
+
+The application uses Python and Boto3 to collect AWS information, SQLite to store audit history, and Ollama with Qwen3 to explain findings.
+
+**Main workflow:**
+
+AWS Account → Resource Discovery → Backup Checks → Risk Classification → AI Analysis → SQLite → Streamlit Dashboard
+
+## 2. Understanding AWS Backup and Disaster Recovery
+
+**Backup:** A copy of data or a resource that can be used to recover information after failure or accidental deletion.
+
+**Disaster Recovery (DR):** The process of restoring applications, databases, and infrastructure after an outage or disaster.
+
+Two important recovery concepts:
+
+- **RPO (Recovery Point Objective):** Maximum acceptable data loss, measured in time.
+- **RTO (Recovery Time Objective):** Maximum acceptable time to restore a service.
+
+Example:
+- RPO = 4 hours means the business aims to lose no more than four hours of data.
+- RTO = 2 hours means the service should be restored within two hours.
+
+Backup configuration should follow business recovery requirements.
+
+## 3. AWS Authentication and Configuration
+
+The application connects through the AWS CLI profile `day45`.
+
+The `.env` file contains:
+
+```env
+AWS_PROFILE=day45
+AWS_DEFAULT_REGION=ap-south-1
+OLLAMA_MODEL=qwen3:4b
+```
+
+AWS identity is verified using:
+
+```bash
+aws sts get-caller-identity --profile day45
+```
+
+The IAM identity requires read-only permissions for:
+
+| Service | Required actions |
+|---|---|
+| STS | `GetCallerIdentity` |
+| EC2 | `DescribeVolumes`, `DescribeSnapshots` |
+| RDS | `DescribeDBInstances` |
+| AWS Backup | `ListBackupPlans`, `ListBackupVaults`, `ListRecoveryPointsByBackupVault` |
+
+These permissions allow resource discovery without modifying AWS resources.
+
+## 4. EBS Volume and Snapshot Auditing
+
+Amazon EBS provides block storage for EC2 instances.
+
+An EBS snapshot is a point-in-time backup of an EBS volume.
+
+The application uses:
+
+- `DescribeVolumes` to discover EBS volumes.
+- `DescribeSnapshots` to retrieve snapshots owned by the account.
+
+The audit checks:
+
+1. Whether a volume has a completed snapshot.
+2. Whether the latest completed snapshot is recent.
+3. The volume's size and encryption status.
+4. The number of associated snapshots.
+
+Current example rules:
+
+| Condition | Classification |
+|---|---|
+| No completed snapshot | High |
+| Latest snapshot older than 7 days | Medium |
+| Recent completed snapshot | Healthy |
+
+The seven-day threshold is an example audit rule, not a universal AWS backup requirement.
+
+**Important:** A snapshot's existence does not prove that the volume can be restored successfully.
+
+## 5. RDS Automated Backup Auditing
+
+Amazon RDS provides managed relational database services.
+
+Automated backups support point-in-time recovery within the configured retention period.
+
+The application uses:
+
+`DescribeDBInstances`
+
+Important fields:
+
+- `DBInstanceIdentifier`
+- `Engine`
+- `BackupRetentionPeriod`
+- `LatestRestorableTime`
+- `MultiAZ`
+- `PubliclyAccessible`
+
+The audit checks backup retention:
+
+| Condition | Classification |
+|---|---|
+| Retention is 0 days | Critical |
+| Retention below 7 days | High |
+| Retention configured and latest restore time available | Healthy |
+
+The retention requirement should be based on business recovery policies.
+
+## 6. AWS Backup Plans and Vaults
+
+AWS Backup is a centralized service for managing and monitoring backups across supported AWS services.
+
+**Backup Plan**
+
+Defines backup scheduling, lifecycle, and retention rules.
+
+**Backup Vault**
+
+A logical container that stores recovery points.
+
+**Recovery Point**
+
+A saved backup that can potentially be used to restore a resource.
+
+The application uses:
+
+- `ListBackupPlans` to discover backup plans.
+- `ListBackupVaults` to discover backup vaults.
+- `ListRecoveryPointsByBackupVault` to retrieve recovery points.
+
+The audit checks whether backup plans and vaults exist and whether vaults contain recovery points.
+
+An empty vault does not necessarily mean the entire AWS account has no backups. Other services and backup mechanisms may be involved.
+
+## 7. Boto3 Pagination
+
+AWS APIs may return large result sets across multiple pages.
+
+A single API response may not contain every resource.
+
+Boto3 paginators retrieve additional pages automatically.
+
+Example:
+
+```python
+volumes = [
+    item
+    for page in ec2.get_paginator("describe_volumes").paginate()
+    for item in page["Volumes"]
+]
+```
+
+The same approach is used for EBS snapshots, RDS instances, and AWS Backup plans.
+
+Pagination helps prevent incomplete resource discovery in larger accounts.
+
+## 8. Backup Risk Classification
+
+The application evaluates collected resource information using predefined rules.
+
+Example findings:
+
+- EBS volume without a completed snapshot.
+- EBS snapshot older than the configured threshold.
+- RDS automated backup retention disabled.
+- RDS retention below the configured threshold.
+- Backup vault without recovery points.
+- AWS account without an AWS Backup plan.
+
+Severity levels:
+
+- Critical: Important backup protection is missing.
+- High: Significant backup coverage concern.
+- Medium: Configuration requires review.
+- Healthy: The configured checks passed.
+
+A Healthy result means only that the implemented checks passed. It does not guarantee disaster recovery readiness.
+
+## 9. SQLite Audit History
+
+SQLite stores audit results locally.
+
+The `audits` table contains:
+
+- Audit ID and timestamp.
+- AWS account ID.
+- AWS region.
+- Resource name and type.
+- Finding status.
+- Finding description.
+- Additional resource details.
+
+Each audit execution creates a new set of records.
+
+This provides historical information for reviewing changes in backup configurations and identifying recurring risks.
+
+## 10. Local AI Analysis with Ollama and Qwen3
+
+Ollama runs the Qwen3 model locally.
+
+The application sends collected audit findings to:
+
+`http://localhost:11434/api/generate`
+
+Qwen3 is asked to:
+
+- Explain the identified backup risks.
+- Describe possible business impact.
+- Recommend investigation steps.
+- Suggest backup configuration improvements.
+
+The AI receives resource details as untrusted evidence.
+
+AI recommendations are advisory. They must be validated before making AWS configuration changes.
+
+## 11. Streamlit Dashboard
+
+Streamlit provides the user interface.
+
+The dashboard displays:
+
+- AWS account ID and region.
+- EBS volume and snapshot counts.
+- RDS database count.
+- AWS Backup plan and vault counts.
+- Recovery point count.
+- Backup health findings.
+- Risk distribution chart.
+- AI investigation recommendations.
+- Audit history.
+- CSV export.
+
+The manual **Run Audit** button starts a new AWS collection.
+
+The optional automatic refresh checks AWS every five minutes.
+
+**Important:** This is periodic polling, not instant monitoring. AWS API responses reflect the information currently available from the services.
+
+## 12. Testing and Troubleshooting
+
+Verify AWS access:
+
+```bash
+aws sts get-caller-identity --profile day45
+```
+
+Check EBS volumes:
+
+```bash
+aws ec2 describe-volumes --profile day45 --region ap-south-1
+```
+
+Check snapshots:
+
+```bash
+aws ec2 describe-snapshots --owner-ids self --profile day45 --region ap-south-1
+```
+
+Check RDS databases:
+
+```bash
+aws rds describe-db-instances --profile day45 --region ap-south-1
+```
+
+Check AWS Backup plans:
+
+```bash
+aws backup list-backup-plans --profile day45 --region ap-south-1
+```
+
+Check backup vaults:
+
+```bash
+aws backup list-backup-vaults --profile day45 --region ap-south-1
+```
+
+Common problems:
+
+| Problem | Possible reason |
+|---|---|
+| AccessDenied | Missing IAM permissions |
+| Zero resources | Empty account or selected region |
+| No recovery points | No backups in the selected vault |
+| Ollama connection error | Local Ollama service is not running |
+| Model not found | Qwen3 model is not installed |
+| Incomplete discovery | Pagination or API collection issue |
+
+The initial audit returned account `888577063211`, region `ap-south-1`, and zero volumes, snapshots, databases, backup plans, and vaults. AWS identity connectivity was verified; CLI resource discovery is required to confirm the empty results.
+
+## 13. Important Limitations and Security Considerations
+
+- Auditing is restricted to the configured AWS region.
+- The implementation checks selected EBS, RDS, and AWS Backup information.
+- Cross-region backup copies are not yet fully audited.
+- Actual backup restoration is not performed.
+- Recovery Time Objective and Recovery Point Objective are not automatically validated.
+- Backup presence does not guarantee successful recovery.
+- Permissions and API failures must be considered before declaring an audit complete.
+- No automatic backup creation, deletion, restoration, or resource modification is performed.
+
+## 14. Key Concepts Learned
+
+- AWS Backup and Disaster Recovery.
+- RPO and RTO.
+- EBS snapshots and volume auditing.
+- RDS automated backup retention.
+- AWS Backup plans, vaults, and recovery points.
+- Boto3 API integration and pagination.
+- Read-only AWS auditing.
+- Backup risk classification.
+- SQLite audit history.
+- Local LLM integration using Ollama and Qwen3.
+- Streamlit dashboards and periodic polling.
+- AI-assisted cloud reliability assessment.
