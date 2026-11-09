@@ -1,0 +1,10 @@
+streamlit
+sounddevice
+soundfile
+numpy
+scipy
+faster-whisper
+pyttsx3
+ollama
+plotly
+pandas

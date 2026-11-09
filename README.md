@@ -70,6 +70,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 43 | Build a Local AI-Powered AWS Security Posture & Misconfiguration Auditor | Python, Ollama, Qwen3, AWS Boto3, Streamlit, SQLite, Pandas, Plotly, AWS Security Auditing, Cloud Security Posture Management, IAM Security, S3 Public Access Detection, EC2 Security Group Analysis, EBS Encryption Checks, RDS Security, CloudTrail Monitoring, Security Risk Classification, AI-Powered Remediation Recommendations, Human-in-the-Loop Security Validation |
 | Day 44 | Build a Local AI-Powered AWS Security Incident Detection & Investigation Assistant | Python, Ollama, Qwen3, AWS Boto3, AWS CloudTrail, Streamlit, SQLite, Pandas, Plotly, Cloud Security Monitoring, Security Incident Detection, Failed Login Detection, AccessDenied Analysis, IAM Activity Monitoring, Suspicious API Activity Detection, Rule-Based Threat Detection, Security Severity Classification, AI-Powered Incident Investigation, Human-in-the-Loop Security Review |
 | Day 45 | Build a Local AI-Powered AWS Backup & Disaster Recovery Readiness Auditor | Python, Ollama, Qwen3, AWS Boto3, AWS EC2, EBS, RDS, AWS Backup, Streamlit, SQLite, Pandas, Plotly, Cloud Backup Auditing, EBS Snapshot Monitoring, RDS Backup Retention, Backup Vault Monitoring, Recovery Point Analysis, Backup Risk Classification, Disaster Recovery Readiness, RPO, RTO, AI-Powered Recovery Recommendations, Human-in-the-Loop Validation |
+| Day 46 | Build a Local AI-Powered Real-Time Voice Assistant | Python, Faster-Whisper, Ollama, Qwen3, pyttsx3, SoundDevice, SoundFile, Streamlit, SQLite, Plotly, Speech-to-Text (STT), Text-to-Speech (TTS), Real-Time Voice Pipeline, Audio Waveforms, Offline Conversational AI |
 
 ---
 
@@ -209,4 +210,8 @@ Build a local AI-powered AWS security incident investigation assistant using Pyt
 
 # 🚀 Day 45 — Local AI-Powered AWS Backup & Disaster Recovery Readiness Auditor 💾☁️
 Build a local AI-powered AWS backup auditing assistant using Python, Boto3, AWS EC2, EBS, RDS, AWS Backup, Ollama, Qwen3, Streamlit, SQLite, Pandas, and Plotly to inspect EBS snapshots, RDS backup retention, AWS Backup plans, vaults, and recovery points, identify missing or outdated backups, classify potential backup risks, and generate AI-powered disaster recovery recommendations with human review.
+
+# 🚀 Day 46 — Local AI-Powered Real-Time Voice Assistant 🎙️🤖
+Build a 100% offline, privacy-first conversational voice assistant using Python, Faster-Whisper, Ollama, Qwen3, Windows SAPI5, pyttsx3, SoundDevice, SoundFile, Streamlit, NumPy, and Requests to capture spoken microphone audio or simulated voice streams, transcribe speech with sub-second latency, reason through multi-turn dialogue with oral-adapted system prompts, synthesize natural spoken voice responses, and interact through a real-time Streamlit dashboard with conversation history and audio playback. 
+
 
