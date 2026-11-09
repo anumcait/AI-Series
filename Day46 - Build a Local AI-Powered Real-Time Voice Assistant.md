@@ -258,7 +258,15 @@ Implemented a local real-time AI voice assistant with Faster-Whisper speech-to-t
 
 ### Screenshots
 
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/075d6d8a-a864-4882-bf58-511f2abbf529" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7bb4bc9d-7eee-4c90-af9c-65eea0627fc1" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/24e0fd99-8d9c-4687-abfb-7bb8e6b73ed1" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/e68d6484-99c2-4313-b8f2-289b62f8d4fa" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/22a6165c-5c33-454b-b3de-4b503e11cd4f" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/174750c7-bbfd-4952-afad-43e885acda9a" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/5c2610db-a970-4959-8b8c-c1c56f4c95f1" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/1cb86e0e-3ef2-43a1-a4f3-b5e2f632a117" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/690bf7e4-6c03-4780-9042-a08b69ed6c77" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/0a50c3d2-3d71-4a14-8041-37c922c556c4" />
+
+
+
+
+
+
