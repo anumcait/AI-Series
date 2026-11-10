@@ -20142,3 +20142,96 @@ The dashboard is structured into two functional columns:
 - Building interactive multimodal voice dashboards in Streamlit.
 
 ---
+
+# Day 47 — Build a Local AI-Powered Voice-Controlled DevOps Assistant
+
+## 1. System Architecture & Core Workflow
+
+A voice-controlled DevOps operational assistant combines automatic speech recognition, autonomous function calling, local infrastructure diagnostics, and offline vocal synthesis:
+
+```
+[Spoken DevOps Query] ➔ [Faster-Whisper STT (Float32)] ➔ [Ollama Qwen3 (Tool Selection)]
+                                                                  │
+       ┌──────────────────────────────────────────────────────────┴────────┐
+       ▼                                                                   ▼
+[Tool Invocations (psutil / socket / logs)]                      [Direct Voice Answer]
+       │
+       ▼
+[JSON Observation Fed Back to LLM]
+       │
+       ▼
+[Qwen3 Final Voice Synthesis] ➔ [Windows SAPI5 TTS] ➔ [Browser Playback & Live UI]
+```
+
+All speech models, LLM reasoning, diagnostic probes, and vocal outputs execute entirely on the local host.
+
+---
+
+## 2. Infrastructure Diagnostic Tool Registry
+
+The assistant registers deterministic Python functions exposed to the LLM via JSON function schemas:
+
+| Tool Name | Engine | Parameters | Operational Output |
+|---|---|---|---|
+| `get_system_health` | `psutil` | None | CPU %, Memory %, Free Disk GB, status |
+| `check_process_status` | `psutil.process_iter` | `process_name` (str) | Process running state, PID list, count |
+| `check_port_reachability` | `socket` | `host` (str), `port` (int) | TCP reachability flag, socket error/success |
+| `inspect_recent_incident_logs` | Structured In-Memory / File | `filter_level` (str) | Log records filtered by ERROR / WARN / INFO |
+
+---
+
+## 3. Autonomous Multi-Turn Tool Loop
+
+The agent loop executes across four distinct steps:
+1. **Initial Dispatch:** The transcribed speech is forwarded to Ollama alongside the `tools` array.
+2. **Model Decision:** Qwen3 determines whether the query requires diagnostic execution (emitting `tool_calls`) or direct answering.
+3. **Execution & Observation:** The application invokes the corresponding Python function and captures the JSON result.
+4. **Final Synthesis:** The observation is appended as a `tool` role message, and Qwen3 synthesizes a concise, two-sentence status report suitable for speech playback.
+
+---
+
+## 4. Dual-Mode Audio & Resilient Voice I/O
+
+- **Microphone Hardware Check:** Queries system input channels using `sounddevice.query_devices()`.
+- **Automated Fallback:** In environments without a connected physical microphone (`PaErrorCode -9996`), synthetic speech streams are generated in-memory via Windows SAPI5 and loaded directly as Float32 NumPy arrays.
+- **Array-Direct STT:** Audio frames are fed directly to Faster-Whisper, bypassing PyAV container errors.
+- **Offline TTS:** Windows native SAPI5 (`SpVoice` & `SpFileStream`) writes WAV files asynchronously with `pythoncom.CoInitialize()`, played through Streamlit with browser `autoplay=True`.
+
+---
+
+## 5. Streamlit Operational Interface
+
+- **Live Infrastructure Bar:** Instant metrics for CPU %, Memory %, and Free Disk GB updated on page load.
+- **Dual Voice Controls:** Toggle between Physical Microphone capture and Simulated Voice Testing.
+- **Tool Inspection Cards:** Expandable JSON viewer showing exact arguments dispatched by the LLM and raw outputs returned by host tools.
+- **Dialogue & Audio Player:** Chat history interface with automated spoken response replay.
+
+---
+
+## 6. Common Problems & Troubleshooting
+
+| Problem | Cause | Resolution |
+|---|---|---|
+| Missing tool calls | LLM generated prose instead of tool dispatch | Ensure system prompt strictly instructs model to inspect systems using available tools |
+| Tool JSON parsing error | `tool_call["arguments"]` returned as raw string | Safely parse with `json.loads` before invoking Python functions |
+| Port check timeout | Target host unreachable or firewall dropping packets | Set socket connection timeout to 2.0s to avoid hanging the assistant |
+| High CPU during transcription | Faster-Whisper beam size too large | Use `beam_size=1` with `int8` CPU quantization for sub-second execution |
+
+---
+
+## 7. Important Limitations
+
+- Probing is restricted to host-level visibility and privileges of the executing Python user.
+- Destructive actions (service restarts, process kills) require human confirmation safeguards.
+- Spoken command recognition accuracy depends on technical pronunciation of process names and port numbers.
+- Turn-based audio synchronization does not support mid-speech interruption.
+
+---
+
+## 8. Key Concepts Learned
+
+- Voice-driven agentic architectures and multimodal tool chaining.
+- JSON function calling schemas with local models using Ollama.
+- Real-time system and process telemetry extraction using `psutil`.
+- Network port probing using Python raw sockets.
+- Connecting speech recognition, autonomous decision making, and vocal telemetry into a unified dashboard.
