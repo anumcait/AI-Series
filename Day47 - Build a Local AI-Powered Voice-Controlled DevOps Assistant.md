@@ -450,9 +450,10 @@ with col_chat:
 Successfully implemented a voice-controlled DevOps operational assistant combining Faster-Whisper automatic speech recognition, Ollama Qwen3 tool calling, host infrastructure diagnostic probes via `psutil` and sockets, and offline vocal telemetry via Windows SAPI5 in an interactive Streamlit UI.
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/be7dd9a1-292e-4217-9de9-b1f3a7939377" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/2055cc20-9ac4-4ac9-b96f-3591c16583f2" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/58a5c1ca-6ef2-4a87-8845-8136d015447b" />
 
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/075d6d8a-a864-4882-bf58-511f2abbf529" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7bb4bc9d-7eee-4c90-af9c-65eea0627fc1" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/24e0fd99-8d9c-4687-abfb-7bb8e6b73ed1" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/e68d6484-99c2-4313-b8f2-289b62f8d4fa" />
+
+
 
