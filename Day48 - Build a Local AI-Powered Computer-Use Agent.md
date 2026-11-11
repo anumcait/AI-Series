@@ -389,6 +389,8 @@ Successfully designed and verified a local AI-powered Computer-Use agent that au
 <img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/fc199351-3fb0-4980-8f84-8d068f565fa9" />
 <img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7607d8da-8498-40af-b783-c25a6ceca3d2" />
 <img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/717effee-31b5-4995-b74c-6379ae48f673" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/b7caef86-ca1f-4a00-8b87-b093b65b2835" />
+
 
 
 
