@@ -20235,3 +20235,142 @@ The agent loop executes across four distinct steps:
 - Real-time system and process telemetry extraction using `psutil`.
 - Network port probing using Python raw sockets.
 - Connecting speech recognition, autonomous decision making, and vocal telemetry into a unified dashboard.
+
+---
+
+# Day 48 — Build a Local AI-Powered Computer-Use Agent
+
+## 1. System Architecture & Core Workflow
+
+A Computer-Use Agent bridges natural language reasoning with direct operating system graphical interaction:
+
+```
+[User Desktop Objective]
+           │
+           ▼
+[Ollama Qwen3 (Structured Action Decomposition)]
+           │
+           ▼
+[Safety Validator & Whitelist Enforcement]
+           │
+           ▼
+┌───────────────────────────────────────────┐
+│     OS Execution Layer (ctypes / GUI)     │
+│ ├─ open_application(app_name)             │
+│ ├─ type_text(text)                        │
+│ ├─ press_key(key)                         │
+│ ├─ mouse_click(x, y)                      │
+│ └─ capture_desktop_state()                │
+└───────────────────────────────────────────┘
+           │
+           ▼
+[Execution Trace Logging & Streamlit Mission Control]
+```
+
+The system operates 100% locally with zero cloud dependencies, supporting both native live automation and headless dry-run simulation.
+
+---
+
+## 2. OS Automation Primitives
+
+Computer-use agents interact with the OS through fundamental user-space primitives:
+
+### 2.1 Window and State Inspection
+Operating systems track the current focused window using window handles (`HWND`). Using Windows `User32` via Python `ctypes`:
+- `GetForegroundWindow()`: Retrieves the window handle of the active foreground process.
+- `GetWindowTextW()`: Extracts the title bar text of the focused application.
+
+### 2.2 Keystroke Injection & Typing
+Characters and navigation hotkeys are dispatched to the currently focused input control:
+- High-level character writing (`pyautogui.write` or PowerShell `SendKeys`).
+- Special keystrokes (such as `Enter`, `Tab`, `Escape`) to submit forms or switch focus.
+
+### 2.3 Mouse Positioning & Clicking
+Simulating mouse events requires mapping absolute coordinates $(x, y)$ on the display resolution grid:
+- `SetCursorPos(x, y)`: Repositions the mouse pointer.
+- `mouse_event(dwFlags, dx, dy, dwData, dwExtraInfo)`: Dispatches left button down (`0x0002`) and left button up (`0x0004`) events.
+
+---
+
+## 3. Safety Guardrails & Dual-Mode Execution
+
+Direct OS manipulation introduces risks of unintentional system modification or destructive execution. The agent implements three safety tiers:
+
+1. **Token Blocklist:** Rejects actions containing destructive tokens such as `shutdown`, `rmdir`, `del`, `format`, or `regedit`.
+2. **Application Whitelist:** Restricts application launching exclusively to vetted utilities (`notepad`, `calculator`, `paint`, `explorer`).
+3. **Dual Execution Modes:**
+   - **Safe Dry-Run / Simulation Mode:** Emits simulated action traces without generating real hardware events, enabling deterministic testing in non-interactive environments or background tasks.
+   - **Live Desktop Execution:** Directly triggers native Windows API mouse and keyboard events.
+
+---
+
+## 4. Local AI Planning & Action Decomposition
+
+The agent utilizes local Qwen3 to translate abstract user goals into a sequential array of executable action objects.
+
+### 4.1 Schema Definition
+The model is prompted to emit strictly valid JSON adhering to a structured plan format:
+
+```json
+{
+  "plan": [
+    {
+      "action": "open_application",
+      "params": {"app_name": "notepad"},
+      "explanation": "Launch text editor"
+    },
+    {
+      "action": "type_text",
+      "params": {"text": "System Online"},
+      "explanation": "Type status text into document"
+    },
+    {
+      "action": "press_key",
+      "params": {"key": "enter"},
+      "explanation": "Create new line"
+    }
+  ]
+}
+```
+
+### 4.2 Deterministic Fallbacks
+When running under high CPU/memory pressure, deterministic rule-based mappings handle common desktop commands (such as text note creation or calculation queries) to guarantee sub-second latency.
+
+---
+
+## 5. Streamlit Mission Control Interface
+
+The user interface provides full transparency into the agent's internal loop:
+- **Telemetry Bar:** Displays real-time agent status, active model, active foreground window title, and guardrail enforcement status.
+- **Execution Audit Log:** Expandable step-by-step trace cards detailing each action, parameter dictionary, and resulting execution status.
+- **Interactive Dry-Run Toggle:** Instant switching between virtual testing and physical OS automation.
+
+---
+
+## 6. Common Problems & Troubleshooting
+
+| Problem | Cause | Resolution |
+|---|---|---|
+| Keystrokes sent to wrong window | Foreground focus shifted before typing began | Add a 0.5s pause after application launch to allow the window to gain input focus |
+| `FAILSAFE` triggered | Mouse moved to the screen corner during PyAutoGUI execution | PyAutoGUI emergency stop triggered; verify coordinates stay within display bounds |
+| Action blocked by guardrail | Command contained unwhitelisted application or dangerous token | Review parameters against allowed application dictionary |
+| Window title returns "Desktop / Shell" | No active application has foreground focus | Ensure target application is explicitly launched or focused |
+
+---
+
+## 7. Important Limitations
+
+- Live execution requires an interactive desktop session (Session 1); background services (Session 0) must run in Dry-Run / Simulation mode.
+- Absolute coordinate clicks depend on display resolution and DPI scaling factors.
+- Fast execution may outpace window rendering; synchronization delays are required between window creation and text input.
+
+---
+
+## 8. Key Concepts Learned
+
+- Fundamentals of autonomous Computer-Use agent architectures.
+- Native OS automation primitives via Windows `User32` and `ctypes`.
+- Designing structured JSON action plans using local LLMs.
+- Implementing defense-in-depth safety guardrails and application whitelists.
+- Building transparent execution trace viewers for autonomous desktop agents.
+

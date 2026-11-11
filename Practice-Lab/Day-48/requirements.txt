@@ -1,0 +1,8 @@
+streamlit
+ollama
+psutil
+pillow
+pyautogui
+requests
+pandas
+

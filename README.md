@@ -72,6 +72,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 45 | Build a Local AI-Powered AWS Backup & Disaster Recovery Readiness Auditor | Python, Ollama, Qwen3, AWS Boto3, AWS EC2, EBS, RDS, AWS Backup, Streamlit, SQLite, Pandas, Plotly, Cloud Backup Auditing, EBS Snapshot Monitoring, RDS Backup Retention, Backup Vault Monitoring, Recovery Point Analysis, Backup Risk Classification, Disaster Recovery Readiness, RPO, RTO, AI-Powered Recovery Recommendations, Human-in-the-Loop Validation |
 | Day 46 | Build a Local AI-Powered Real-Time Voice Assistant | Python, Faster-Whisper, Ollama, Qwen3, pyttsx3, SoundDevice, SoundFile, Streamlit, SQLite, Plotly, Speech-to-Text (STT), Text-to-Speech (TTS), Real-Time Voice Pipeline, Audio Waveforms, Offline Conversational AI |
 | Day 47 | Build a Local AI-Powered Voice-Controlled DevOps Assistant | Python, Faster-Whisper, Ollama, Qwen3, Windows SAPI5, pyttsx3, psutil, Socket, SoundDevice, SoundFile, Streamlit, Function Calling, DevOps AI Agent, Vocal Telemetry, System Health Probing |
+| Day 48 | Build a Local AI-Powered Computer-Use Agent | Python, Ollama, Qwen3, Windows User32, ctypes, PyAutoGUI, psutil, Streamlit, Computer Use, OS Automation, Desktop Keystrokes, Window Inspection, Safety Guardrails, Action Trace |
 
 ---
 
@@ -217,5 +218,9 @@ Build a 100% offline, privacy-first conversational voice assistant using Python,
 
 # 🚀 Day 47 — Local AI-Powered Voice-Controlled DevOps Assistant 🎙️⚙️
 Build a local AI-powered voice-controlled DevOps operational assistant using Python, Faster-Whisper, Ollama, Qwen3, Windows SAPI5, pyttsx3, psutil, Socket, SoundDevice, SoundFile, and Streamlit to capture spoken infrastructure commands, transcribe queries, dynamically trigger diagnostic tools for system health, process verification, port connectivity, and incident log analysis via Ollama tool calling, and deliver spoken status telemetry and real-time dashboard visualization.
+
+# 🚀 Day 48 — Local AI-Powered Computer-Use Agent 🖥️🤖
+Build a local AI-powered Computer-Use agent using Python, Ollama, Qwen3, Windows User32, ctypes, PyAutoGUI, psutil, and Streamlit that autonomously translates natural language desktop goals into sequential OS actions (application launch, text input, keystrokes, and coordinate clicks), enforces strict safety guardrails and dry-run simulation modes, and displays transparent step-by-step execution traces in a live mission control dashboard.
+
 
 
