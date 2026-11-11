@@ -385,9 +385,13 @@ with vis2:
 Successfully designed and verified a local AI-powered Computer-Use agent that autonomously translates natural language goals into validated OS actions, executes them safely through native Windows primitives, and provides transparent step-by-step tracing in an interactive Streamlit UI.
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/1b2d77df-2406-4951-a0eb-b5556f12ee5e" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/fc199351-3fb0-4980-8f84-8d068f565fa9" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7607d8da-8498-40af-b783-c25a6ceca3d2" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/717effee-31b5-4995-b74c-6379ae48f673" />
 
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/075d6d8a-a864-4882-bf58-511f2abbf529" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7bb4bc9d-7eee-4c90-af9c-65eea0627fc1" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/24e0fd99-8d9c-4687-abfb-7bb8e6b73ed1" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/e68d6484-99c2-4313-b8f2-289b62f8d4fa" />
+
+
+
+
 
