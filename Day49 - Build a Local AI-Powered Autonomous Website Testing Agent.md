@@ -394,9 +394,22 @@ else:
 Successfully built and verified a local AI-powered Autonomous Website Testing Agent that crawls web application DOM structures, detects broken navigation links, pinpoints accessibility and security header violations, calculates an objective Site Health Score, and synthesizes executive QA reports using local Qwen3 in an interactive Streamlit UI.
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/246ca886-eedb-4fbb-b8de-81f94e927842" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/ad9ac820-1f99-4b25-b978-d62507acfff0" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/05cf655f-217a-4c18-a399-309271badaa2" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7adb3d60-08f0-4122-aa7f-bef8f9f489c9" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/48c8a8a6-34e7-41db-84e1-3ffac1f96d98" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/b2de95e2-448c-4f15-9ac9-33c620836465" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/c8ca775b-e850-4880-9616-cc84e6e4ff29" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7ea0e3cc-1c37-49ba-b43a-0dca234a88cb" />
 
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/075d6d8a-a864-4882-bf58-511f2abbf529" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7bb4bc9d-7eee-4c90-af9c-65eea0627fc1" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/24e0fd99-8d9c-4687-abfb-7bb8e6b73ed1" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/e68d6484-99c2-4313-b8f2-289b62f8d4fa" />
+
+
+
+
+
+
+
+
+
 
