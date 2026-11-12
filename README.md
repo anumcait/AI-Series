@@ -73,6 +73,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 46 | Build a Local AI-Powered Real-Time Voice Assistant | Python, Faster-Whisper, Ollama, Qwen3, pyttsx3, SoundDevice, SoundFile, Streamlit, SQLite, Plotly, Speech-to-Text (STT), Text-to-Speech (TTS), Real-Time Voice Pipeline, Audio Waveforms, Offline Conversational AI |
 | Day 47 | Build a Local AI-Powered Voice-Controlled DevOps Assistant | Python, Faster-Whisper, Ollama, Qwen3, Windows SAPI5, pyttsx3, psutil, Socket, SoundDevice, SoundFile, Streamlit, Function Calling, DevOps AI Agent, Vocal Telemetry, System Health Probing |
 | Day 48 | Build a Local AI-Powered Computer-Use Agent | Python, Ollama, Qwen3, Windows User32, ctypes, PyAutoGUI, psutil, Streamlit, Computer Use, OS Automation, Desktop Keystrokes, Window Inspection, Safety Guardrails, Action Trace |
+| Day 49 | Build a Local AI-Powered Autonomous Website Testing Agent | Python, BeautifulSoup4, Requests, Ollama, Qwen3, Streamlit, Pandas, Plotly, Automated QA, Broken Link Scanner, Accessibility (a11y) Auditing, Security Headers, Health Scoring, Bug Reports |
 
 ---
 
@@ -222,5 +223,7 @@ Build a local AI-powered voice-controlled DevOps operational assistant using Pyt
 # 🚀 Day 48 — Local AI-Powered Computer-Use Agent 🖥️🤖
 Build a local AI-powered Computer-Use agent using Python, Ollama, Qwen3, Windows User32, ctypes, PyAutoGUI, psutil, and Streamlit that autonomously translates natural language desktop goals into sequential OS actions (application launch, text input, keystrokes, and coordinate clicks), enforces strict safety guardrails and dry-run simulation modes, and displays transparent step-by-step execution traces in a live mission control dashboard.
 
+# 🚀 Day 49 — Local AI-Powered Autonomous Website Testing Agent 🧪🤖
+Build a local AI-powered autonomous Website Testing & QA Agent using Python, BeautifulSoup4, Requests, Ollama, Qwen3, Streamlit, and Pandas that automatically crawls web application DOM structures, detects broken links (404s), audits image and form accessibility (a11y), verifies HTTP security headers, calculates an objective Site Health Score (0-100%), and generates executive bug reports and remediation roadmaps.
 
 
