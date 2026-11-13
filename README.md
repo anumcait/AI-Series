@@ -74,6 +74,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 47 | Build a Local AI-Powered Voice-Controlled DevOps Assistant | Python, Faster-Whisper, Ollama, Qwen3, Windows SAPI5, pyttsx3, psutil, Socket, SoundDevice, SoundFile, Streamlit, Function Calling, DevOps AI Agent, Vocal Telemetry, System Health Probing |
 | Day 48 | Build a Local AI-Powered Computer-Use Agent | Python, Ollama, Qwen3, Windows User32, ctypes, PyAutoGUI, psutil, Streamlit, Computer Use, OS Automation, Desktop Keystrokes, Window Inspection, Safety Guardrails, Action Trace |
 | Day 49 | Build a Local AI-Powered Autonomous Website Testing Agent | Python, BeautifulSoup4, Requests, Ollama, Qwen3, Streamlit, Pandas, Plotly, Automated QA, Broken Link Scanner, Accessibility (a11y) Auditing, Security Headers, Health Scoring, Bug Reports |
+| Day 50 | Build a Local AI-Powered CI/CD Pipeline Failure Investigation Agent | Python, Ollama, Qwen3, Streamlit, Regex, Pandas, Plotly, CI/CD Troubleshooting, Root Cause Analysis (RCA), Stack Trace Slicing, Git Diff Generation, Post-Mortem Reports |
 
 ---
 
@@ -225,5 +226,9 @@ Build a local AI-powered Computer-Use agent using Python, Ollama, Qwen3, Windows
 
 # 🚀 Day 49 — Local AI-Powered Autonomous Website Testing Agent 🧪🤖
 Build a local AI-powered autonomous Website Testing & QA Agent using Python, BeautifulSoup4, Requests, Ollama, Qwen3, Streamlit, and Pandas that automatically crawls web application DOM structures, detects broken links (404s), audits image and form accessibility (a11y), verifies HTTP security headers, calculates an objective Site Health Score (0-100%), and generates executive bug reports and remediation roadmaps.
+
+# 🚀 Day 50 — Local AI-Powered CI/CD Pipeline Failure Investigation Agent ⚙️🤖
+Build a local AI-powered CI/CD failure investigation agent using Python, Ollama, Qwen3, Streamlit, Regex, and Pandas that automatically parses verbose build logs, extracts critical failure signatures (exit codes, stack traces, culprit lines), isolates the failing workflow stage, and performs Senior SRE Root Cause Analysis to generate Git diff patches and export incident post-mortems.
+
 
 

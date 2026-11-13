@@ -20503,4 +20503,127 @@ To support offline testing environments where external network access may be res
 - Synthesizing categorized engineering bug reports using local LLMs.
 - Building comprehensive automated QA dashboards in Streamlit.
 
+---
+
+# Day 50 — Build a Local AI-Powered CI/CD Pipeline Failure Investigation Agent
+
+## 1. System Architecture & Core Workflow
+
+A CI/CD Pipeline Failure Investigation Agent automates the analysis of verbose, noisy build logs to isolate failure domains and produce actionable engineering remediation:
+
+```
+[Raw CI/CD Pipeline Console Logs]
+                 │
+                 ▼
+[Log Preprocessing & Error Slicing (Regex)]
+  ├─ Exit Code Discovery (`exit code: \d+`)
+  ├─ Culprit File / Line Extraction (`file.py:\d+`)
+  └─ Window Tail Trimming (Last 35 lines)
+                 │
+                 ▼
+[Stage Flow Isolation (Build / Test / Container / Deploy)]
+                 │
+                 ▼
+[Local Qwen3 Senior SRE Root Cause Analysis (RCA)]
+  ├─ 1. Failure Root Cause Summary
+  ├─ 2. Categorization (Assertion, Docker, Auth)
+  ├─ 3. Immediate Git Diff Code Patch
+  └─ 4. CI/CD Hardening & Prevention Steps
+                 │
+                 ▼
+[Streamlit Incident Dashboard & Exportable Post-Mortem]
+```
+
+The system operates 100% locally with zero external telemetry, enabling private debugging of proprietary enterprise pipelines.
+
+---
+
+## 2. CI/CD Failure Domains & Error Signatures
+
+Continuous Integration and Continuous Deployment workflows typically fail across five fundamental operational boundaries:
+
+### 2.1 Unit & Integration Testing
+- **Signatures:** `AssertionError`, `pytest-8.x.x FAILED`, `panic: runtime error`.
+- **Root Causes:** Regression introduced in business logic, unhandled edge cases, mock behavior divergence, or test configuration discrepancies (such as signature verification disabled in test environments).
+
+### 2.2 Containerization & Docker Image Packaging
+- **Signatures:** `The command ... returned a non-zero code: 100`, `E: Unable to locate package`, `failed to solve with frontend dockerfile.v0`.
+- **Root Causes:** Ephemeral package repository DNS failures, missing base dependencies, unpinned upstream package versions, or incorrect user permissions inside container layers.
+
+### 2.3 Cloud Authentication & OIDC Deployment Gates
+- **Signatures:** `ExpiredToken`, `AssumeRoleWithWebIdentity`, `Unauthorized`, `403 AccessDenied`.
+- **Root Causes:** Expired short-lived OIDC tokens, missing IAM trust policy conditions, misconfigured GitHub Actions runner permissions (`id-token: write`), or clock drift.
+
+---
+
+## 3. Heuristic Log Slicing Engine
+
+Raw build logs frequently exceed 10,000 lines, flooding LLM context windows with irrelevant compilation progress messages. The agent applies deterministic slicing:
+
+1. **Keyword Filtering:** Scans for high-density error markers (`error:`, `failed`, `fatal:`, `traceback`, `assertionerror`, `exception`).
+2. **Regex Exit Code Extraction:** Matches process termination signals:
+   ```python
+   re.search(r"exit code:?\s*(\d+)", line, re.IGNORECASE)
+   ```
+3. **Culprit Reference Isolation:** Pinpoints source code files and line numbers:
+   ```python
+   re.search(r"([\w/\.-]+\.py:\d+)", line)
+   ```
+4. **Tail Windowing:** Extracts the final 35 lines preceding process termination, which captures the immediate stack trace context.
+
+---
+
+## 4. Local AI SRE Root Cause Synthesis
+
+The agent conditions local Qwen3 with a Senior SRE persona to evaluate sliced error signatures:
+
+- **Executive Summary:** Concisely explains the failure mechanism in 2–3 sentences.
+- **Categorization:** Classifies the issue to facilitate incident routing (Application Developer vs DevOps vs Cloud Infrastructure).
+- **Git Diff Patch:** Produces copyable, syntax-valid diff blocks ready for pull request submission:
+  ```diff
+  --- a/config/settings.py
+  +++ b/config/settings.py
+  - VERIFY_JWT_EXPIRATION = False
+  + VERIFY_JWT_EXPIRATION = True
+  ```
+- **Pipeline Hardening:** Recommends defensive measures (such as layer caching, retry logic, or credential timeout extensions).
+
+---
+
+## 5. Streamlit Incident Response Interface
+
+- **Stage Flow Visualizer:** Horizontal status cards depicting each pipeline stage (`Checkout`, `Lint`, `Tests`, `Build`, `Deploy`) with visual green success and red failure badges.
+- **Log Drill-Down:** Tabs separating the synthesized AI RCA report, raw terminal logs, extracted error signatures, and exportable post-mortem JSON artifacts.
+- **One-Click Post-Mortem Export:** Generates standardized JSON incident records containing metadata, failure signatures, and remediation guides.
+
+---
+
+## 6. Common Problems & Troubleshooting
+
+| Problem | Cause | Resolution |
+|---|---|---|
+| Exit code marked as "Unknown" | Pipeline runner omitted standard exit code prefix | Add custom regex matchers for proprietary runner log outputs |
+| LLM timeout during RCA | Entire uncompressed log was forwarded to the model | Ensure regex log slicer trims output to the trailing 35 failure lines |
+| False positive error matches | Compiler warnings flagged as fatal errors | Prioritize lines containing terminating keywords (`FAILED`, `fatal:`, `exit code`) |
+| Git diff format invalid | LLM omitted standard unified diff syntax | Prompt model with explicit unified diff template examples |
+
+---
+
+## 7. Important Limitations
+
+- Sliced regex heuristics are optimized for common Python, Node.js, Go, Docker, and Kubernetes outputs; proprietary logging formats may require tailored patterns.
+- AI-generated code diffs serve as engineering recommendations and must be validated through local test execution before merging.
+- Offline mode analyzes ingested or pasted text logs rather than executing live bi-directional webhooks against remote CI/CD systems.
+
+---
+
+## 8. Key Concepts Learned
+
+- Architecting automated CI/CD diagnostics and incident response agents.
+- Heuristic log preprocessing and stack trace signature extraction using Regular Expressions.
+- Failure domain classification across test, container, and cloud deployment boundaries.
+- Generating valid unified Git diff patches using local LLMs.
+- Standardizing automated engineering post-mortems in Streamlit.
+
+
 
