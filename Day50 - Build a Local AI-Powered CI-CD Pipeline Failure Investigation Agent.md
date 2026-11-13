@@ -266,3 +266,15 @@ Successfully designed, implemented, and verified a local AI-powered CI/CD Pipeli
 
 ### Screenshots
 
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/c3b3d220-1ff8-4263-9e32-11e5309589cb" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/22740746-5a9b-4155-9ec6-4a08b1396674" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/4e0efee3-565e-4ff5-ab95-715ec07b22a0" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/a8e25a3e-6826-454e-808a-41f4fbe53e24" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/2840f368-c1ff-46cb-a2bb-e4c6136c25da" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/117368a5-0598-4ad3-9380-8d88cddf7cfe" />
+
+
+
+
+
+
