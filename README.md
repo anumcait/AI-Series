@@ -75,6 +75,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 48 | Build a Local AI-Powered Computer-Use Agent | Python, Ollama, Qwen3, Windows User32, ctypes, PyAutoGUI, psutil, Streamlit, Computer Use, OS Automation, Desktop Keystrokes, Window Inspection, Safety Guardrails, Action Trace |
 | Day 49 | Build a Local AI-Powered Autonomous Website Testing Agent | Python, BeautifulSoup4, Requests, Ollama, Qwen3, Streamlit, Pandas, Plotly, Automated QA, Broken Link Scanner, Accessibility (a11y) Auditing, Security Headers, Health Scoring, Bug Reports |
 | Day 50 | Build a Local AI-Powered CI/CD Pipeline Failure Investigation Agent | Python, Ollama, Qwen3, Streamlit, Regex, Pandas, Plotly, CI/CD Troubleshooting, Root Cause Analysis (RCA), Stack Trace Slicing, Git Diff Generation, Post-Mortem Reports |
+| Day 51 | Build a Local AI-Powered Database Performance & SQL Optimization Agent | Python, SQLite3, Ollama, Qwen3, Streamlit, Pandas, Plotly, EXPLAIN QUERY PLAN, Table Scan Detection, Composite Indexing, DDL Generation, SQL Rewriting, Query Latency Benchmarking |
 
 ---
 
@@ -229,6 +230,10 @@ Build a local AI-powered autonomous Website Testing & QA Agent using Python, Bea
 
 # 🚀 Day 50 — Local AI-Powered CI/CD Pipeline Failure Investigation Agent ⚙️🤖
 Build a local AI-powered CI/CD failure investigation agent using Python, Ollama, Qwen3, Streamlit, Regex, and Pandas that automatically parses verbose build logs, extracts critical failure signatures (exit codes, stack traces, culprit lines), isolates the failing workflow stage, and performs Senior SRE Root Cause Analysis to generate Git diff patches and export incident post-mortems.
+
+# 🚀 Day 51 — Local AI-Powered Database Performance & SQL Optimization Agent 🗄️🤖
+Build a local AI-powered database tuning and SQL optimization agent using Python, SQLite3, Ollama, Qwen3, Streamlit, and Plotly that inspects query execution plans (EXPLAIN QUERY PLAN), detects full table scans and temporary sorting bottlenecks, evaluates execution latency over seeded multi-table schemas, and leverages local Qwen3 to rewrite unoptimized SQL, recommend composite DDL index strategies, and benchmark live before/after speedups.
+
 
 
 
