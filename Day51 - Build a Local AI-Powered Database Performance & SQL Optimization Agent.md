@@ -321,9 +321,11 @@ if st.session_state.profile_result:
 Successfully designed, implemented, and verified a local AI-powered Database Performance & SQL Optimization Agent that analyzes database execution plans (`EXPLAIN QUERY PLAN`), pinpoints table scan and sorting bottlenecks, leverages local Qwen3 to synthesize composite index recommendations and query rewrites, and conducts live before/after latency benchmarking in an interactive Streamlit UI.
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/6639e125-8a33-4db6-a6ef-f5fea2b8f473" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/0e62deb0-c5b5-4472-9af7-d86965ab9341" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/4eb74672-378a-446d-8683-e88c5745a3e4" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/c896bd30-1c3f-4e5a-9e63-5b774ff80986" />
 
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/075d6d8a-a864-4882-bf58-511f2abbf529" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7bb4bc9d-7eee-4c90-af9c-65eea0627fc1" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/24e0fd99-8d9c-4687-abfb-7bb8e6b73ed1" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/e68d6484-99c2-4313-b8f2-289b62f8d4fa" />
+
+
 
