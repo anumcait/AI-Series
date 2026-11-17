@@ -1,0 +1,8 @@
+streamlit
+pydantic
+requests
+pandas
+plotly
+pypdf2
+pillow
+

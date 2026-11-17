@@ -76,6 +76,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 49 | Build a Local AI-Powered Autonomous Website Testing Agent | Python, BeautifulSoup4, Requests, Ollama, Qwen3, Streamlit, Pandas, Plotly, Automated QA, Broken Link Scanner, Accessibility (a11y) Auditing, Security Headers, Health Scoring, Bug Reports |
 | Day 50 | Build a Local AI-Powered CI/CD Pipeline Failure Investigation Agent | Python, Ollama, Qwen3, Streamlit, Regex, Pandas, Plotly, CI/CD Troubleshooting, Root Cause Analysis (RCA), Stack Trace Slicing, Git Diff Generation, Post-Mortem Reports |
 | Day 51 | Build a Local AI-Powered Database Performance & SQL Optimization Agent | Python, SQLite3, Ollama, Qwen3, Streamlit, Pandas, Plotly, EXPLAIN QUERY PLAN, Table Scan Detection, Composite Indexing, DDL Generation, SQL Rewriting, Query Latency Benchmarking |
+| Day 52 | Build a Local AI-Powered Intelligent Document Processing Agent | Python, Pydantic, Ollama, Qwen3, Streamlit, Pandas, Plotly, PyPDF2, Document Processing (IDP), Entity Extraction, Invoice Parsing, Mathematical Validation |
 
 ---
 
@@ -233,6 +234,10 @@ Build a local AI-powered CI/CD failure investigation agent using Python, Ollama,
 
 # 🚀 Day 51 — Local AI-Powered Database Performance & SQL Optimization Agent 🗄️🤖
 Build a local AI-powered database tuning and SQL optimization agent using Python, SQLite3, Ollama, Qwen3, Streamlit, and Plotly that inspects query execution plans (EXPLAIN QUERY PLAN), detects full table scans and temporary sorting bottlenecks, evaluates execution latency over seeded multi-table schemas, and leverages local Qwen3 to rewrite unoptimized SQL, recommend composite DDL index strategies, and benchmark live before/after speedups.
+
+# 🚀 Day 52 — Local AI-Powered Intelligent Document Processing Agent 📄🤖
+Build a local AI-powered Intelligent Document Processing (IDP) agent using Python, Pydantic, Ollama, Qwen3, Streamlit, Pandas, Plotly, and PyPDF2 that ingests unstructured business documents (invoices, contracts, medical claims), extracts schema-enforced key-value entities and tabular line items, performs automated mathematical reconciliation (cross-checking line items, subtotal, and tax against grand totals), and displays interactive audit scorecards in a live mission control dashboard.
+
 
 
 
