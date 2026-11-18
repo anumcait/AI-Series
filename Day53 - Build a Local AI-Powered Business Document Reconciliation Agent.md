@@ -647,3 +647,13 @@ with tab_export:
 Successfully developed and verified a local AI-powered Business Document Reconciliation Agent that performs automated Three-Way Matching across Purchase Orders, Goods Receipt Notes, and Invoices, isolates unit price and quantity discrepancies, generates executive root cause analyses and dispute notices using local Qwen3, and exports full audit packages through a Streamlit mission control dashboard.
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/1c4f0c9a-604e-4a46-b1c0-6763c5e024b5" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/ce7b157a-4c11-4e3a-b32a-f4d3d47793bb" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/2e0291a8-fc17-4304-9f2b-d4dd163e3392" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/c04fc08a-c21d-4657-8a40-b3ad18864c1f" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/c4ac565e-0b55-4c77-84d3-da3c207d17f2" />
+
+
+
+
+
