@@ -77,6 +77,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 50 | Build a Local AI-Powered CI/CD Pipeline Failure Investigation Agent | Python, Ollama, Qwen3, Streamlit, Regex, Pandas, Plotly, CI/CD Troubleshooting, Root Cause Analysis (RCA), Stack Trace Slicing, Git Diff Generation, Post-Mortem Reports |
 | Day 51 | Build a Local AI-Powered Database Performance & SQL Optimization Agent | Python, SQLite3, Ollama, Qwen3, Streamlit, Pandas, Plotly, EXPLAIN QUERY PLAN, Table Scan Detection, Composite Indexing, DDL Generation, SQL Rewriting, Query Latency Benchmarking |
 | Day 52 | Build a Local AI-Powered Intelligent Document Processing Agent | Python, Pydantic, Ollama, Qwen3, Streamlit, Pandas, Plotly, PyPDF2, Document Processing (IDP), Entity Extraction, Invoice Parsing, Mathematical Validation |
+| Day 53 | Build a Local AI-Powered Business Document Reconciliation Agent | Python, Streamlit, Ollama, Qwen3, Pydantic, Pandas, Plotly, Three-Way Matching, Purchase Orders (PO), Goods Receipt Notes (GRN), Invoices, Discrepancy Auditing, Vendor Dispute Letters |
 
 ---
 
@@ -237,6 +238,10 @@ Build a local AI-powered database tuning and SQL optimization agent using Python
 
 # 🚀 Day 52 — Local AI-Powered Intelligent Document Processing Agent 📄🤖
 Build a local AI-powered Intelligent Document Processing (IDP) agent using Python, Pydantic, Ollama, Qwen3, Streamlit, Pandas, Plotly, and PyPDF2 that ingests unstructured business documents (invoices, contracts, medical claims), extracts schema-enforced key-value entities and tabular line items, performs automated mathematical reconciliation (cross-checking line items, subtotal, and tax against grand totals), and displays interactive audit scorecards in a live mission control dashboard.
+
+# 🚀 Day 53 — Local AI-Powered Business Document Reconciliation Agent 📑🤖
+Build a local AI-powered Business Document Reconciliation Agent using Python, Streamlit, Ollama, Qwen3, Pydantic, Pandas, and Plotly that automates Three-Way Matching across Purchase Orders (PO), Goods Receipt Notes (GRN), and Commercial Invoices, identifies quantity and price variances, assesses financial net exposure, uses local Qwen3 to conduct Senior Financial Controller Root Cause Analysis, generates ready-to-send vendor dispute notices, and provides full audit package exports.
+
 
 
 
