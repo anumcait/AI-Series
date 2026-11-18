@@ -743,8 +743,11 @@ else:
 Successfully developed and verified a local AI-powered Natural Language to SQL Analytics Agent that dynamically introspects relational databases, translates user inquiries into optimized read-only queries using local Qwen3, enforces strict SQL safety policies, recovers from syntax errors with autonomous self-healing, and delivers automated Plotly visualizations and executive insights in a Streamlit mission control dashboard.
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/12018d9f-ab61-4ff9-bbbe-0fd7639f7a8d" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/d997a191-2669-453a-8c55-2e6889b9c960" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/ca7ba794-8f13-45a4-af93-05a14b953d5c" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/5db14b53-b304-4e55-8bb1-af72b2937dcf" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/d4bb5f1b-996e-44f3-b964-8c8c8acd487c" />
 
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/075d6d8a-a864-4882-bf58-511f2abbf529" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7bb4bc9d-7eee-4c90-af9c-65eea0627fc1" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/24e0fd99-8d9c-4687-abfb-7bb8e6b73ed1" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/e68d6484-99c2-4313-b8f2-289b62f8d4fa" />
+
+
