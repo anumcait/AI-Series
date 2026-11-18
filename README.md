@@ -78,6 +78,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 51 | Build a Local AI-Powered Database Performance & SQL Optimization Agent | Python, SQLite3, Ollama, Qwen3, Streamlit, Pandas, Plotly, EXPLAIN QUERY PLAN, Table Scan Detection, Composite Indexing, DDL Generation, SQL Rewriting, Query Latency Benchmarking |
 | Day 52 | Build a Local AI-Powered Intelligent Document Processing Agent | Python, Pydantic, Ollama, Qwen3, Streamlit, Pandas, Plotly, PyPDF2, Document Processing (IDP), Entity Extraction, Invoice Parsing, Mathematical Validation |
 | Day 53 | Build a Local AI-Powered Business Document Reconciliation Agent | Python, Streamlit, Ollama, Qwen3, Pydantic, Pandas, Plotly, Three-Way Matching, Purchase Orders (PO), Goods Receipt Notes (GRN), Invoices, Discrepancy Auditing, Vendor Dispute Letters |
+| Day 54 | Build a Local AI-Powered Natural Language to SQL Analytics Agent | Python, SQLite3, Ollama, Qwen3, Streamlit, Pandas, Plotly, Text-to-SQL, Schema Introspection, Self-Healing SQL, Read-Only Security Guardrails, Business Intelligence |
 
 ---
 
@@ -241,6 +242,10 @@ Build a local AI-powered Intelligent Document Processing (IDP) agent using Pytho
 
 # 🚀 Day 53 — Local AI-Powered Business Document Reconciliation Agent 📑🤖
 Build a local AI-powered Business Document Reconciliation Agent using Python, Streamlit, Ollama, Qwen3, Pydantic, Pandas, and Plotly that automates Three-Way Matching across Purchase Orders (PO), Goods Receipt Notes (GRN), and Commercial Invoices, identifies quantity and price variances, assesses financial net exposure, uses local Qwen3 to conduct Senior Financial Controller Root Cause Analysis, generates ready-to-send vendor dispute notices, and provides full audit package exports.
+
+# 🚀 Day 54 — Local AI-Powered Natural Language to SQL Analytics Agent 📊🤖
+Build a local AI-powered Natural Language to SQL (Text-to-SQL) Analytics Agent using Python, SQLite3, Ollama, Qwen3, Streamlit, Pandas, and Plotly that dynamically introspects relational database schemas, translates user inquiries into optimized read-only queries, enforces strict safety policies against destructive statements, recovers from execution errors using an autonomous self-healing loop, and generates dynamic Plotly visualizations and executive business insights in an interactive mission control dashboard.
+
 
 
 
