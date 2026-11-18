@@ -247,5 +247,17 @@ with col_extracted:
 Successfully designed, built, and verified a local AI-powered Intelligent Document Processing (IDP) Agent that ingests complex unstructured business documents, extracts strongly typed key-value pairs and tabular line items using local Qwen3, performs automated financial equation cross-checking, and displays interactive verification scorecards in a Streamlit dashboard.
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/ef314758-4375-4ab8-b9f6-3d276b11cf2c" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/9884b8b1-b8c5-4556-9533-b8cd0705d641" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/60c96ea7-a0ae-4f3c-b238-c6421b80d609" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/52a3bbd0-317f-4f53-a3b3-87a6ccf47164" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/522449a1-8f0b-48b4-ac4e-2a5b05bd8e42" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/53ea7c8f-761e-41a5-ab2f-c07bcb38a055" />
+
+
+
+
+
+
 
 
