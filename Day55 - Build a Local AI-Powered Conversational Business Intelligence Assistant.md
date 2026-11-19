@@ -599,29 +599,17 @@ if st.session_state.conversation_turns:
         )
 ```
 
-## Initial Test & Verification Result
-
-- **Ollama Model**: `qwen3:4b`
-- **Conversational Multi-Turn Test Sequence**:
-  1. *Turn 1 — Department Revenue Overview*: *"What was our gross revenue breakdown by department?"* $\rightarrow$ Queried `departments` and `sales_transactions`. Cloud Infrastructure generated leading revenue ($124,400.00). Automatically rendered a 3D donut chart showing 47.8% corporate share.
-  2. *Turn 2 — Anaphoric Drill-Down*: *"Drill down into Cloud Infrastructure: what were its top products?"* $\rightarrow$ Correctly resolved "its" to Cloud Infrastructure, filtered product catalog, identified *TitanCloud 4U GPU Server* ($72,500.00) and *VaultScale NVMe SAN* ($51,900.00). Rendered teal bar chart.
-  3. *Turn 3 — Scenario / What-If Modeling*: *"What if we increase Cloud product prices by 10%?"* $\rightarrow$ Projected simulated price escalation: baseline revenue of $124,400.00 jumped to $136,840.00 with an incremental margin gain of +$12,440.00. Rendered grouped baseline vs. simulated bar chart.
-- **Query Execution Speed**: Analytical SQL queries executed in **0.78 ms to 1.15 ms**.
-- **End-to-End Turn Latency**: Full context resolution, SQL generation, database execution, and Plotly visual rendering executed in **1.18 seconds**.
-
-## Important Limitations
-
-- Anaphoric resolution over long dialogue chains (>10 turns) requires structured dialogue state tracking or semantic memory summaries to avoid context drift.
-- What-If simulations assume linear demand elasticity (price changes do not model customer churn or demand drop-off without econometric elasticity curves).
-- Highly complex cohort retention metrics (multi-period rolling churn) require pre-computed materialized views in high-volume enterprise data warehouses.
-
 ## Outcome
 
 Successfully designed, built, and verified a local AI-powered Conversational Business Intelligence Assistant that enables executive dialogue exploration with multi-turn anaphora resolution, automated SQL generation, scenario What-If projections, embedded Plotly charts, and downloadable analytical briefing packages in a Streamlit dashboard.
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/b7c4a09b-84e7-4564-862a-b26b64a55d6e" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/593891b6-b6d1-4da3-9b64-cad1f1f06132" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/0d6e224d-6acf-47ce-86f4-7eae00bb2f46" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/085e3a64-1fbd-4a70-bd71-7e75c9f56dd3" />
 
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/075d6d8a-a864-4882-bf58-511f2abbf529" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7bb4bc9d-7eee-4c90-af9c-65eea0627fc1" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/24e0fd99-8d9c-4687-abfb-7bb8e6b73ed1" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/e68d6484-99c2-4313-b8f2-289b62f8d4fa" />
+
+
+
+
