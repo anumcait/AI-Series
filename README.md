@@ -79,6 +79,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 52 | Build a Local AI-Powered Intelligent Document Processing Agent | Python, Pydantic, Ollama, Qwen3, Streamlit, Pandas, Plotly, PyPDF2, Document Processing (IDP), Entity Extraction, Invoice Parsing, Mathematical Validation |
 | Day 53 | Build a Local AI-Powered Business Document Reconciliation Agent | Python, Streamlit, Ollama, Qwen3, Pydantic, Pandas, Plotly, Three-Way Matching, Purchase Orders (PO), Goods Receipt Notes (GRN), Invoices, Discrepancy Auditing, Vendor Dispute Letters |
 | Day 54 | Build a Local AI-Powered Natural Language to SQL Analytics Agent | Python, SQLite3, Ollama, Qwen3, Streamlit, Pandas, Plotly, Text-to-SQL, Schema Introspection, Self-Healing SQL, Read-Only Security Guardrails, Business Intelligence |
+| Day 55 | Build a Local AI-Powered Conversational Business Intelligence Assistant | Python, Streamlit, Ollama, Qwen3, SQLite3, Pandas, Plotly, Conversational BI, Dialogue State Tracking, Multi-Turn Context, Anaphora Resolution, What-If Simulation, Dynamic Visualizations |
 
 ---
 
@@ -245,6 +246,10 @@ Build a local AI-powered Business Document Reconciliation Agent using Python, St
 
 # 🚀 Day 54 — Local AI-Powered Natural Language to SQL Analytics Agent 📊🤖
 Build a local AI-powered Natural Language to SQL (Text-to-SQL) Analytics Agent using Python, SQLite3, Ollama, Qwen3, Streamlit, Pandas, and Plotly that dynamically introspects relational database schemas, translates user inquiries into optimized read-only queries, enforces strict safety policies against destructive statements, recovers from execution errors using an autonomous self-healing loop, and generates dynamic Plotly visualizations and executive business insights in an interactive mission control dashboard.
+
+# 🚀 Day 55 — Local AI-Powered Conversational Business Intelligence Assistant 📈🤖
+Build a local AI-powered Conversational Business Intelligence (Conversational BI) Assistant using Python, Streamlit, Ollama, Qwen3, SQLite3, Pandas, and Plotly that empowers executives to explore enterprise metrics through multi-turn dialogue, resolves contextual anaphora, conducts scenario and What-If price/cost simulation modeling, dynamically embeds Plotly visualizations inside message bubbles, predicts next-best drill-down queries, and exports analytical briefing reports.
+
 
 
 
