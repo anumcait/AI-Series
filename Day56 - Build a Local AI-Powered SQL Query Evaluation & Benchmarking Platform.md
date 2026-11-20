@@ -778,8 +778,15 @@ with t_export:
 Successfully designed, built, and verified a local AI-powered SQL Query Evaluation and Benchmarking Platform that programmatically tests query result equivalence, profiles multi-iteration execution latencies, parses database query execution plans, computes weighted SQL Health Scores, and generates Senior Database Architect code reviews and audit exports in an interactive Streamlit dashboard.
 
 ### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/fd9c8d69-342f-421a-9915-163364d9b7ea" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/6cde5f06-b31e-481e-be32-b6ae1940e5c4" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/f61a6281-6bdf-44f9-b97c-f875ac6c4a89" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/2f7288d8-bb41-44bd-9a7d-e4d01a8195aa" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/e558d21a-04d6-4c08-b491-56ac41f9c633" />
 
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/075d6d8a-a864-4882-bf58-511f2abbf529" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7bb4bc9d-7eee-4c90-af9c-65eea0627fc1" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/24e0fd99-8d9c-4687-abfb-7bb8e6b73ed1" />
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/e68d6484-99c2-4313-b8f2-289b62f8d4fa" />
+
+
+
+
+
+
