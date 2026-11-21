@@ -482,12 +482,13 @@ with t_export:
 - **Retrieval & Synthesis Latency**: Documentation embedding, vector search, and grounded LLM synthesis executed in **0.98 seconds**.
 - **Accuracy**: 100% grounded against active data dictionary entries with zero hallucinated tables.
 
-## Important Limitations
+### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/0bbb78f1-ee02-42b5-9c08-6708e71ced2a" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/43a6d396-c56b-4798-99e5-9a31d06ea2cc" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/9644ec02-64fe-49e3-8567-acb4bc478b29" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/d52fb791-58ad-4747-b835-f54b08717e82" />
 
-- Text vector search matches vocabulary and synonyms present in documentation; tables with completely undocumented acronyms require domain synonym dictionaries.
-- RAG retrieves schema documentation but does not execute queries against live transactional data; queries should be validated against an active database replica.
-- Complex cross-database data lineage spanning external ETL pipelines (e.g. Airflow DAGs, Kafka topics) requires integration with external metadata catalogs (e.g., OpenMetadata, DataHub).
 
-## Outcome
 
-Successfully designed, implemented, and verified a local AI-powered Database Documentation RAG Assistant that enables engineers and analysts to query complex multi-schema data dictionaries in natural language, retrieve official column definitions and business calculation formulas, and receive grounded SQL recipes in an interactive Streamlit dashboard.
+
+
