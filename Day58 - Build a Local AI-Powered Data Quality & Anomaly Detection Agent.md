@@ -870,3 +870,21 @@ with tab_export:
 ## Outcome
 
 Successfully built, verified, and packaged an autonomous Local AI Data Quality & Anomaly Detection Agent that empowers organizations to transition from passive data dashboards to active, defensive data reliability engineering, ensuring operational ERP and analytics datasets can be verified and trusted before feeding business decisions.
+
+### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/37a40d61-a812-40af-8393-b7dc17063770" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/12a72ec7-4e83-46e2-8615-306dd65cfa04" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/849006ca-b8a3-4fd7-8d58-3ccde5bc7c05" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/b629fccf-57c4-4240-ad46-61b19d7cd632" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/12927687-3169-4af6-a401-cfa12d770c2b" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/454223e0-e0a8-42ab-98d2-41a6ac1daa51" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/a39ffbb6-14b3-4072-98dd-47fec5975999" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/9c0e4eb6-dfd8-4cd9-8538-6cfb69723dc8" />
+
+
+
+
+
+
+
+
