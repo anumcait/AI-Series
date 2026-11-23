@@ -82,6 +82,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 55 | Build a Local AI-Powered Conversational Business Intelligence Assistant | Python, Streamlit, Ollama, Qwen3, SQLite3, Pandas, Plotly, Conversational BI, Dialogue State Tracking, Multi-Turn Context, Anaphora Resolution, What-If Simulation, Dynamic Visualizations |
 | Day 56 | Build a Local AI-Powered SQL Query Evaluation & Benchmarking Platform | Python, SQLite3, Ollama, Qwen3, Streamlit, Pandas, Plotly, SQL Evaluation, Ground Truth Benchmarking, Multi-Run Latency Profiling, EXPLAIN Query Plan, Automated Code Review |
 | Day 57 | Build a Local AI-Powered Database Documentation RAG Assistant | Python, Streamlit, Ollama, Qwen3, Scikit-learn, TF-IDF, Cosine Similarity, Data Dictionary, Schema RAG, Lineage, Business Rules, Grounded SQL Synthesis |
+| Day 58 | Build a Local AI-Powered Data Quality & Anomaly Detection Agent | Python, Streamlit, Ollama, Qwen3, Scikit-learn, Isolation Forest, Pandas, NumPy, Plotly, OpenPyXL, Data Quality Profiling, Anomaly Detection, Business Rules, dbt Assertions |
 
 ---
 
@@ -257,3 +258,6 @@ Build a local AI-powered SQL Query Evaluation and Benchmarking Platform using Py
 
 # 🚀 Day 57 — Local AI-Powered Database Documentation RAG Assistant 📚🗄️🤖
 Build a local AI-powered Database Documentation RAG Assistant using Python, Streamlit, Ollama, Qwen3, Scikit-learn, and Pandas that indexes multi-schema enterprise data dictionaries (CRM, billing, usage, compliance, analytics), retrieves relevant schema chunks via TF-IDF vector cosine similarity, and synthesizes grounded explanations, table citations, business calculation rules, and verified SQL recipes in an interactive dashboard.
+
+# 🚀 Day 58 — Local AI-Powered Data Quality & Anomaly Detection Agent 🛡️📊🤖
+Build an autonomous local AI-powered Data Quality & Anomaly Detection Agent using Python, Streamlit, Ollama, Qwen3, Scikit-learn, Isolation Forest, Pandas, NumPy, Plotly, and OpenPyXL that automatically profiles enterprise ERP datasets (Sales, Purchase, Inventory), validates completeness, uniqueness, and business logic constraints, flags multi-variable statistical outliers, computes composite Data Quality Health Scores (DQI), and leverages local Qwen3 to conduct Senior Data Steward root cause analysis, quantify commercial risk, and synthesize automated SQL quarantine scripts and dbt schema assertions.
