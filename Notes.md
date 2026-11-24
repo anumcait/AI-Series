@@ -21771,3 +21771,167 @@ The model receives structured JSON telemetry detailing overall health scores, di
 - Multivariate outlier isolation using Scikit-learn's Isolation Forest and Interquartile Range (IQR).
 - Conditioning local LLMs as Senior Data Stewards to generate actionable SQL quarantine scripts and production dbt schema assertions.
 - Multi-sheet Excel workbook generation using OpenPyXL and automated sanitized dataset export.
+
+
+# 🚀 Day 59 — Local AI-Powered ETL Pipeline Generation Assistant 🔄⚡🤖
+
+## 1. Executive & Architectural Overview
+
+In modern data platform engineering, Extract, Transform, Load (ETL) and Extract, Load, Transform (ELT) pipelines form the foundational circulatory system of analytical infrastructure. Raw data originating from transactional OLTP databases, third-party payment gateways, IoT telemetry sensors, and external partner APIs arrives in heterogeneous, nested, and noisy formats. Translating raw operational schemas into high-performance, standardized analytical dimensional models (such as Star Schemas, Kimball marts, or One Big Tables) typically requires data engineers to manually author boilerplate code across multiple disparate technologies: Python data-manipulation scripts, workflow orchestration DAGs (e.g., Apache Airflow), transformation layer models (e.g., dbt), and warehouse migration DDL scripts.
+
+The Local AI-Powered ETL Pipeline Generation Assistant bridges the gap between raw data landing zones and curated warehouse marts. By combining schema introspection, automated transformation mapping, in-memory execution simulation with live telemetry, and local LLM reasoning (Qwen3 via Ollama), the assistant autonomously synthesizes production-grade, modular code across four primary target frameworks: standalone Python/Pandas/SQLite pipelines, Apache Airflow TaskFlow DAGs, dbt incremental models with schema tests, and idempotent SQL DDL/upsert statements.
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                   Source Landing Zone (Extraction)                     │
+│    (Raw Events, Payment Webhooks, Clickstreams, Edge Sensor Logs)      │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                   Schema Mapping & Transformation Engine               │
+│  - Primary Key Deduplication (Windowed Latest-Record Retention)       │
+│  - Currency & Unit Normalization (EUR/GBP/CAD -> USD Base)             │
+│  - PII Cryptographic Anonymization (SHA-256 Digest Hashing)           │
+│  - Temporal Unification (Mixed UNIX & ISO -> UTC Date/Hour Dimensions) │
+│  - Defensive Integrity Quarantining (Quantity > 0, Status != Cancel)   │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│              In-Memory Dry-Run Simulator & SQLite Target Load          │
+│  - Vectorized In-Process Transformation                                │
+│  - Immediate Telemetry Profiling (Latency ms, Throughput rows/sec)     │
+│  - Target Schema Compliance Verification via SQLite `:memory:` Engine  │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                Local AI Pipeline Code Synthesizer (Qwen3)              │
+│  - Target 1: Standalone Modular Python Script (Extract/Transform/Load) │
+│  - Target 2: Apache Airflow TaskFlow DAG (@dag, @task, Retries, Cron)  │
+│  - Target 3: dbt Dimensional Model (Incremental Merge + Schema Tests)  │
+│  - Target 4: Idempotent SQL DDL & Upsert (ON CONFLICT DO UPDATE)       │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│              Streamlit Mission Control & Artifact Exporter             │
+│  - Visual Lineage DAG (Plotly Stage Flow: Landing -> Transform -> Mart)│
+│  - Side-by-Side Raw vs Curated Data Inspection                         │
+│  - Single-Click Pipeline Code and Dataset Export Bundle                │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 2. Core Technical Components & Data Flow
+
+### 2.1 Multi-Domain Pipeline Scenario Engine
+Operational pipelines require tailored transformation semantics depending on the business domain:
+1. **E-Commerce Commerce Mart (`raw_commerce_events` $\to$ `fct_orders_curated`)**:
+   - Ingests multi-currency transactions containing duplicate order IDs from mobile app retries and cancelled transactions.
+   - Normalizes heterogeneous currencies to a USD baseline using dynamic lookup factors.
+   - Anonymizes customer emails into non-reversible cryptographic hashes satisfying GDPR Article 17 compliance.
+   - Computes derived financial metrics: gross revenue, sales tax ($8.25\%$), and net revenue.
+2. **SaaS Revenue & Billing Mart (`raw_stripe_webhook_events` $\to$ `fct_monthly_recurring_revenue`)**:
+   - Filters asynchronous event streams to isolate successful invoice completions (`invoice.payment_succeeded`).
+   - Normalizes integer cents to decimal currencies (`amount_cents / 100.0`).
+   - Maps technical plan keys into dimensional tiers (Enterprise, Growth, Starter) and projects Annual Contract Value (ACV).
+3. **Industrial IoT Telemetry (`raw_device_sensor_stream` $\to$ `fct_device_daily_telemetry`)**:
+   - Filters hardware disconnect spikes and invalid thermal readings ($<-40^\circ\text{C}$ or $>125^\circ\text{C}$).
+   - Aggregates high-frequency time series into daily summary rows (mean temperature, peak temperature, average CPU load, critical error tallies).
+   - Classifies device health grades (OPTIMAL, WARNING, CRITICAL) based on operating parameter breaches.
+
+### 2.2 In-Memory Dry-Run Simulator & Validation Engine
+Before any code artifact is deployed to production Airflow or dbt environments, the engine validates transformations live inside Python memory:
+- **Vectorized Pandas Processing**: Executes array-level filtering, mapping, and calculations.
+- **SQLite In-Memory Target Verification**: Loads transformed rows directly into an ephemeral SQLite instance (`sqlite3.connect(":memory:")`), verifying column type coercions, primary key constraints, and record counts.
+- **Telemetry Capture**: Records microsecond-level execution latency, calculated throughput in rows per second, and quarantine counts.
+
+---
+
+## 3. Mathematical & Algorithmic Foundations
+
+### 3.1 Idempotent Deduplication Logic
+To prevent duplicate records caused by upstream retry storms, pipelines enforce windowed deduplication over natural business keys:
+
+$$\text{Keep Record } R_i \iff R_i.\text{timestamp} = \max_{j} \{R_j.\text{timestamp} \mid R_j.\text{key} = R_i.\text{key}\}$$
+
+In relational SQL implementations, this corresponds to window partitioning:
+
+$$\text{ROW\_NUMBER}()\ \text{OVER}\ (\text{PARTITION BY}\ \text{order\_id}\ \text{ORDER BY}\ \text{order\_timestamp}\ \text{DESC}) = 1$$
+
+### 3.2 Currency & Metric Normalization
+Multi-currency operational records must be converted into a base reporting currency using spot conversion matrices:
+
+$$\text{Unit Price}_{\text{USD}} = \text{Unit Price}_{\text{Source}} \times \Phi(\text{Currency})$$
+
+$$\text{Gross Amount}_{\text{USD}} = \text{Quantity} \times \text{Unit Price}_{\text{USD}}$$
+
+$$\text{Tax Amount}_{\text{USD}} = \text{Gross Amount}_{\text{USD}} \times \tau$$
+
+$$\text{Net Amount}_{\text{USD}} = \text{Gross Amount}_{\text{USD}} - \text{Tax Amount}_{\text{USD}}$$
+
+Where $\Phi$ represents the exchange rate conversion vector and $\tau = 0.0825$ represents the statutory sales tax rate.
+
+### 3.3 Cryptographic One-Way PII Masking
+Under regulatory standards such as GDPR and CCPA, customer personally identifiable information (PII) must not be stored in unmasked form in downstream analytical datamarts. The transformation applies SHA-256 cryptographic digests:
+
+$$H(x) = \text{SHA-256}(\text{normalize}(x))[:16]$$
+
+Where normalization enforces lowercase trimming to guarantee deterministic key matching across joins while preventing plaintext exposure.
+
+---
+
+## 4. Step-by-Step Implementation Breakdown
+
+### 4.1 Modular Python ETL Architecture
+The generated Python pipeline enforces clean functional separation of concerns:
+- `extract(source_uri: str) -> pd.DataFrame`: Handles network ingestion, file parsing, and schema header verification.
+- `transform(df_raw: pd.DataFrame) -> pd.DataFrame`: Implements data deduplication, currency standardization, metric derivation, and PII anonymization.
+- `validate(df_clean: pd.DataFrame) -> bool`: Enforces non-null assertions and schema type compliance before database writes.
+- `load(df_clean: pd.DataFrame, target_uri: str)`: Executes transactional insertion or merge operations into the target relational warehouse.
+
+### 4.2 Apache Airflow TaskFlow Orchestration
+Modern Airflow implementations replace legacy monolithic operators with the TaskFlow API (`@dag` and `@task` decorators):
+- Tasks pass data references or XCom storage paths.
+- Configurable retry policies (`retries=3`, `retry_delay=timedelta(minutes=5)`) ensure automated recovery from transient database or network failures.
+- Strict scheduling intervals (e.g. `@daily`, `@hourly`, `*/15 * * * *`) ensure timely data delivery.
+
+### 4.3 dbt Dimensional Modeling & Schema Testing
+The dbt architecture implements Kimball dimensional modeling:
+- **Staging Layer (`stg_*.sql`)**: Direct view onto raw sources with column renaming and data type casting.
+- **Intermediate Layer (`int_*.sql`)**: Deduplication and currency normalization CTEs.
+- **Mart Fact Layer (`fct_*.sql`)**: Materialized as incremental merge tables (`unique_key='order_id'`, `incremental_strategy='merge'`).
+- **Schema Assertions (`schema.yml`)**: Automated CI/CD assertions validating `unique` and `not_null` constraints.
+
+---
+
+## 5. Common Pitfalls & Troubleshooting
+
+| Problem | Root Cause | Solution |
+| :--- | :--- | :--- |
+| **Duplicate rows in target table** | Non-idempotent `INSERT INTO` statements rerun during pipeline failure retries | Use upsert semantics (`ON CONFLICT (key) DO UPDATE` or `MERGE INTO`) with deterministic surrogate keys |
+| **Timestamp parsing failures** | Mixed UNIX integer epochs and ISO-8601 strings in the same column | Inspect data type with `.isdigit()` before applying `pd.to_datetime` or `datetime.fromtimestamp` |
+| **Memory spikes on large raw files** | Loading entire historical dataset into memory at once | Implement chunked batching (`pd.read_csv(..., chunksize=10000)`) or stream into staging tables |
+| **Streamlit duplicate chart ID error** | Plotly charts rendered without explicit unique keys | Pass explicit keys to every chart call: `key="chart_lineage_dag"`, `key="chart_latency"` |
+
+---
+
+## 6. Important Limitations
+
+- In-memory SQLite dry runs are intended for interactive verification of micro-batches (up to $50,000$ rows); large petabyte-scale workloads require execution on distributed engines such as PySpark, Snowpark, or Databricks.
+- Static currency conversion rates require connection to live foreign exchange rates (e.g., ECB or Open Exchange Rates API) in production deployments.
+- One-way hashing (SHA-256) is irreversible; if operational workflows require downstream re-identification, a secure tokenization vault must be integrated.
+
+---
+
+## 7. Key Concepts Learned
+
+- Modern automated ETL/ELT architecture and schema transformation engineering.
+- Kimball dimensional modeling and Star Schema fact table design.
+- Multi-target code synthesis across Python, Apache Airflow TaskFlow, dbt, and ANSI SQL.
+- In-memory pipeline dry-run simulation and microsecond-latency profiling using SQLite.
+- Cryptographic PII anonymization under GDPR Article 17.
+- Visualizing data lineage graphs using interactive Plotly DAG diagrams.

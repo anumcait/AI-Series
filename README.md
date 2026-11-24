@@ -83,6 +83,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 56 | Build a Local AI-Powered SQL Query Evaluation & Benchmarking Platform | Python, SQLite3, Ollama, Qwen3, Streamlit, Pandas, Plotly, SQL Evaluation, Ground Truth Benchmarking, Multi-Run Latency Profiling, EXPLAIN Query Plan, Automated Code Review |
 | Day 57 | Build a Local AI-Powered Database Documentation RAG Assistant | Python, Streamlit, Ollama, Qwen3, Scikit-learn, TF-IDF, Cosine Similarity, Data Dictionary, Schema RAG, Lineage, Business Rules, Grounded SQL Synthesis |
 | Day 58 | Build a Local AI-Powered Data Quality & Anomaly Detection Agent | Python, Streamlit, Ollama, Qwen3, Scikit-learn, Isolation Forest, Pandas, NumPy, Plotly, OpenPyXL, Data Quality Profiling, Anomaly Detection, Business Rules, dbt Assertions |
+| Day 59 | Build a Local AI-Powered ETL Pipeline Generation Assistant | Python, Streamlit, Ollama, Qwen3, SQLite3, Pandas, NumPy, Plotly, Pydantic, ETL Pipeline Synthesis, Apache Airflow DAGs, dbt Modeling, Data Lineage, Schema Mapping, In-Memory Dry Run |
 
 ---
 
@@ -261,3 +262,7 @@ Build a local AI-powered Database Documentation RAG Assistant using Python, Stre
 
 # 🚀 Day 58 — Local AI-Powered Data Quality & Anomaly Detection Agent 🛡️📊🤖
 Build an autonomous local AI-powered Data Quality & Anomaly Detection Agent using Python, Streamlit, Ollama, Qwen3, Scikit-learn, Isolation Forest, Pandas, NumPy, Plotly, and OpenPyXL that automatically profiles enterprise ERP datasets (Sales, Purchase, Inventory), validates completeness, uniqueness, and business logic constraints, flags multi-variable statistical outliers, computes composite Data Quality Health Scores (DQI), and leverages local Qwen3 to conduct Senior Data Steward root cause analysis, quantify commercial risk, and synthesize automated SQL quarantine scripts and dbt schema assertions.
+
+
+# 🚀 Day 59 — Local AI-Powered ETL Pipeline Generation Assistant 🔄⚡🤖
+Build an autonomous local AI-powered ETL Pipeline Generation Assistant using Python, Streamlit, Ollama, Qwen3, SQLite3, Pandas, NumPy, and Plotly that analyzes raw and target schema specifications across enterprise business scenarios (E-Commerce, Billing, IoT), maps transformations and currency normalizations, executes live in-memory dry-runs with latency and throughput telemetry, and synthesizes production-ready modular Python ETL scripts, TaskFlow Apache Airflow DAGs, dbt dimensional models with schema tests, and idempotent SQL DDL/upsert statements.
