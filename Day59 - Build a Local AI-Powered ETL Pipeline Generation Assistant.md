@@ -908,12 +908,17 @@ with t_export:
   - dbt Modeling: Generated incremental merge SQL models and schema test YAMLs.
   - SQL DDL: Generated idempotent `CREATE TABLE IF NOT EXISTS` and `ON CONFLICT DO UPDATE` upserts.
 
-## Important Limitations
+### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/58df4711-da81-451e-8aae-19c9199e3c60" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/e19b986f-6262-463d-9164-fbea5fd4c391" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/65698009-e2cb-40c1-a832-90baaab2231c" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/182e974e-1252-42b9-824a-0fac098d176b" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/4b25f269-e2b4-4b0e-a7c4-4d593536edc9" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/aca0ba5a-4e76-4100-a204-9f92f31644d7" />
 
-- In-memory SQLite dry runs are optimized for interactive micro-batch validation (up to $50,000$ rows); distributed petabyte-scale execution requires translating logic to PySpark, Snowpark, or BigQuery SQL.
-- Currency conversion uses static reference rates; real-time production pipelines require dynamic forex API hooks or daily ECB rate table lookups.
-- PII masking via one-way SHA-256 prevents reverse lookup; if reversible tokenization is required for regulatory compliance, a deterministic vault key must be used.
 
-## Outcome
 
-Successfully built, verified, and packaged an autonomous Local AI-Powered ETL Pipeline Generation Assistant that bridges raw landing schemas and production analytics warehouses, provides instant in-memory dry-run validation, and generates production-ready pipeline code across Python, Airflow, dbt, and ANSI SQL.
+
+
+
+
