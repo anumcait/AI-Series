@@ -863,6 +863,9 @@ with tab_export:
 - Period-over-period comparisons reflect monthly cycles; businesses with high quarterly or seasonal cyclicity should incorporate Year-over-Year (YoY) comparisons.
 - HTML-to-PDF export relies on client browser PDF print drivers; server-side headless PDF rendering in headless Linux environments requires installing WeasyPrint or wkhtmltopdf.
 
-## Outcome
+### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/ae89ba0e-17d6-44cd-80bb-10746e13fe9b" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/a3d6751e-6559-425a-912e-54d6303259a2" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/edfae7e2-1a43-4515-95bc-77c0816c0d5e" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/52015fe1-2bf7-45c2-b7b3-f0ed45784389" />
 
-Successfully designed, implemented, and verified an autonomous Local AI-Powered Automated Business Report Generator that transforms raw multi-departmental corporate data into authoritative executive briefings, complete with automated KPI variance calculations, interactive Plotly visualizations, print-ready HTML documents, and multi-sheet Excel packages.
