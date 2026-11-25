@@ -84,6 +84,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 57 | Build a Local AI-Powered Database Documentation RAG Assistant | Python, Streamlit, Ollama, Qwen3, Scikit-learn, TF-IDF, Cosine Similarity, Data Dictionary, Schema RAG, Lineage, Business Rules, Grounded SQL Synthesis |
 | Day 58 | Build a Local AI-Powered Data Quality & Anomaly Detection Agent | Python, Streamlit, Ollama, Qwen3, Scikit-learn, Isolation Forest, Pandas, NumPy, Plotly, OpenPyXL, Data Quality Profiling, Anomaly Detection, Business Rules, dbt Assertions |
 | Day 59 | Build a Local AI-Powered ETL Pipeline Generation Assistant | Python, Streamlit, Ollama, Qwen3, SQLite3, Pandas, NumPy, Plotly, Pydantic, ETL Pipeline Synthesis, Apache Airflow DAGs, dbt Modeling, Data Lineage, Schema Mapping, In-Memory Dry Run |
+| Day 60 | Build a Local AI-Powered Automated Business Report Generator | Python, Streamlit, Ollama, Qwen3, Pandas, NumPy, Plotly, OpenPyXL, Jinja2, Business Intelligence, Executive Management Reporting, Period-over-Period Variance, Multi-Format HTML/Excel Export |
 
 ---
 
@@ -266,3 +267,7 @@ Build an autonomous local AI-powered Data Quality & Anomaly Detection Agent usin
 
 # 🚀 Day 59 — Local AI-Powered ETL Pipeline Generation Assistant 🔄⚡🤖
 Build an autonomous local AI-powered ETL Pipeline Generation Assistant using Python, Streamlit, Ollama, Qwen3, SQLite3, Pandas, NumPy, and Plotly that analyzes raw and target schema specifications across enterprise business scenarios (E-Commerce, Billing, IoT), maps transformations and currency normalizations, executes live in-memory dry-runs with latency and throughput telemetry, and synthesizes production-ready modular Python ETL scripts, TaskFlow Apache Airflow DAGs, dbt dimensional models with schema tests, and idempotent SQL DDL/upsert statements.
+
+
+# 🚀 Day 60 — Local AI-Powered Automated Business Report Generator 📊📑🤖
+Build an autonomous local AI-powered Executive Business Report Generator using Python, Streamlit, Ollama, Qwen3, Pandas, NumPy, Plotly, OpenPyXL, and Jinja2 that automates data aggregation across operational divisions (Sales, Purchases, Inventory, Production), performs automated Period-over-Period (MoM) variance analysis, and leverages local Qwen3 to synthesize C-Suite executive summaries, financial commentaries, critical operational risks, and 90-day strategic roadmaps with print-ready HTML and multi-sheet Excel exports.
