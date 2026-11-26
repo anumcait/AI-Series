@@ -829,6 +829,15 @@ with t_db:
 - Sensitive write operations are gated by human approval tokens; automated multi-signature approval workflows require enterprise identity provider (SAML / OAuth2 / OIDC) integration.
 - Read-only SQL safety checks use token and keyword blacklisting; production environments should enforce read-only database user credentials at the connection pooling layer (e.g. `read_only = true` user roles in Postgres).
 
-## Outcome
+## Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/af570399-f51e-4af7-907b-729ab0bdc8d0" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/6f435386-3eba-43ba-807b-02c47d147d72" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/4fd8c55f-5ae8-4733-b2bb-b0f6d45a0da9" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/365af8e6-b807-456a-93bb-6212ad791f3c" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/0680689c-f42f-453d-a3f8-202b7d476bf3" />
 
-Successfully designed, implemented, and verified an enterprise Model Context Protocol (MCP) Server and Client ecosystem that transitions local LLMs from passive text generators into governed, tool-using autonomous agents capable of safely inspecting and operating multi-module relational ERP databases.
+
+
+
+
+
