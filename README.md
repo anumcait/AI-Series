@@ -85,6 +85,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 58 | Build a Local AI-Powered Data Quality & Anomaly Detection Agent | Python, Streamlit, Ollama, Qwen3, Scikit-learn, Isolation Forest, Pandas, NumPy, Plotly, OpenPyXL, Data Quality Profiling, Anomaly Detection, Business Rules, dbt Assertions |
 | Day 59 | Build a Local AI-Powered ETL Pipeline Generation Assistant | Python, Streamlit, Ollama, Qwen3, SQLite3, Pandas, NumPy, Plotly, Pydantic, ETL Pipeline Synthesis, Apache Airflow DAGs, dbt Modeling, Data Lineage, Schema Mapping, In-Memory Dry Run |
 | Day 60 | Build a Local AI-Powered Automated Business Report Generator | Python, Streamlit, Ollama, Qwen3, Pandas, NumPy, Plotly, OpenPyXL, Jinja2, Business Intelligence, Executive Management Reporting, Period-over-Period Variance, Multi-Format HTML/Excel Export |
+| Day 61 | Build a Local AI-Powered MCP Server for Database & ERP Operations | Python, Streamlit, Ollama, Qwen3, SQLite3, Pandas, Plotly, Pydantic, Model Context Protocol (MCP), JSON-RPC 2.0, Tool Discovery, RBAC Security, Human-in-the-Loop Governance |
 
 ---
 
@@ -271,3 +272,7 @@ Build an autonomous local AI-powered ETL Pipeline Generation Assistant using Pyt
 
 # 🚀 Day 60 — Local AI-Powered Automated Business Report Generator 📊📑🤖
 Build an autonomous local AI-powered Executive Business Report Generator using Python, Streamlit, Ollama, Qwen3, Pandas, NumPy, Plotly, OpenPyXL, and Jinja2 that automates data aggregation across operational divisions (Sales, Purchases, Inventory, Production), performs automated Period-over-Period (MoM) variance analysis, and leverages local Qwen3 to synthesize C-Suite executive summaries, financial commentaries, critical operational risks, and 90-day strategic roadmaps with print-ready HTML and multi-sheet Excel exports.
+
+
+# 🚀 Day 61 — Local AI-Powered MCP Server for Database & ERP Operations 🔌🗄️🤖
+Build an enterprise-grade Model Context Protocol (MCP) server using Python, SQLite3, Ollama, Qwen3, Pydantic, and Streamlit that exposes standardized JSON-RPC 2.0 tools for multi-module ERP database operations (HR, Sales, Purchases, Inventory, Production), enables local AI assistants to autonomously discover tools, inspect relational schemas, retrieve live business records, enforce Role-Based Access Control (RBAC), and manage Human-in-the-Loop (HITL) approval gates for sensitive write operations with full protocol audit logging.

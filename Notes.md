@@ -22105,3 +22105,189 @@ To satisfy executive presentation standards, the report generator compiles clean
 - Industrial Overall Equipment Effectiveness (OEE) and plant downtime analysis.
 - Multi-sheet Excel workbook compilation with OpenPyXL.
 - Executive print-ready document styling using modern Teal & Purple palette and `@media print` CSS.
+
+
+# 🚀 Day 61 — Local AI-Powered MCP Server for Database & ERP Operations 🔌🗄️🤖
+
+## 1. Executive & Architectural Overview
+
+In legacy AI system integrations, connecting Large Language Models (LLMs) to enterprise databases and Enterprise Resource Planning (ERP) backends relied on fragile, proprietary tool-calling conventions, unconstrained direct Text-to-SQL generation, or custom HTTP wrappers. These ad-hoc integrations suffered from severe operational liabilities:
+1. **Lack of Interoperability**: Every LLM platform implemented disparate function-calling schemas, requiring custom adapter code for every database connection.
+2. **Security & Governance Deficits**: Passing raw SQL generation to LLMs risked catastrophic SQL injection attacks, unintentional table drops, and unmonitored data exfiltration.
+3. **Absence of Standardized Discovery**: AI agents had no standardized mechanism to discover available tools, inspect required parameter schemas, or negotiate capability contracts with backend servers.
+
+The Model Context Protocol (MCP), pioneered by Anthropic and established as an open industry standard, resolves these challenges. MCP standardizes communication between AI clients (LLM agents) and external resources, prompts, and tools over JSON-RPC 2.0.
+
+The Local AI-Powered MCP Server for Database & ERP Operations establishes a secure, protocol-driven bridge between a local LLM (Qwen3 via Ollama) and a multi-module enterprise relational database (HR, Sales, Purchases, Inventory, and Production). The architecture standardizes dynamic tool discovery (`tools/list`), structured parameter validation via JSON Schema, Role-Based Access Control (RBAC), and Human-in-the-Loop (HITL) approval gates for sensitive state-modifying operations, accompanied by wire-level protocol audit logging.
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                        User Natural Language Request                   │
+│         ("Show all pending purchase orders with vendors & amounts")    │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                         MCP Client & AI Agent                          │
+│  - Step 1: Discover Tools via JSON-RPC `tools/list`                    │
+│  - Step 2: Local Qwen3 Planner Selects Optimal Tool & Arguments       │
+│  - Step 3: Client Formats JSON-RPC 2.0 `tools/call` Payload            │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                          JSON-RPC 2.0 Protocol Wire
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                      Enterprise MCP Server Core                        │
+│  - Protocol Handshake & Capability Discovery (`initialize`)            │
+│  - Role-Based Access Control (RBAC: Viewer, Operator, Admin)           │
+│  - JSON Schema Parameter Validation (Types, Required Keys)             │
+│  - Human-in-the-Loop (HITL) Queue for Sensitive Write Operations       │
+│  - Full Wire Protocol Audit Logger                                     │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                   Multi-Module Enterprise Database                     │
+│   ┌───────────────────┬───────────────────┬────────────────────────┐   │
+│   │ hr_employees      │ sales_orders      │ purchase_orders        │   │
+│   ├───────────────────┼───────────────────┼────────────────────────┤   │
+│   │ inventory_stock   │ production_work_orders                     │   │
+│   └───────────────────┴───────────────────┴────────────────────────┘   │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                 Grounded Synthesis & UI Presentation                   │
+│  - Local Qwen3 Ingests Structured JSON-RPC Result                      │
+│  - Synthesizes Authoritative, Context-Grounded Executive Briefing      │
+│  - Interactive Streamlit Mission Control with Protocol Inspector       │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 2. Core Technical Components & Data Flow
+
+### 2.1 Multi-Module Relational ERP Data Corpus
+The underlying relational schema (`erp_operations.db`) represents five mission-critical enterprise domains:
+1. `hr_employees`: Personnel records tracking employee IDs, departments, executive roles, emails, salary bands, and hire dates.
+2. `sales_orders`: Commercial transaction logs detailing customer entities, order dates, net billings, and settlement statuses.
+3. `purchase_orders`: Procurement ledger capturing supplier accounts, order amounts, and approval states (PENDING, APPROVED, RECEIVED).
+4. `inventory_stock`: Warehouse inventory records tracking stock on hand, configured reorder thresholds, safety stock limits, and unit costs.
+5. `production_work_orders`: Shop-floor assembly orders tracking target units, completed units, line assignments, and delivery schedules.
+
+### 2.2 Model Context Protocol (MCP) Server Architecture
+The server implements standard JSON-RPC 2.0 dispatching:
+- **`initialize`**: Broadcasts protocol version (`2024-11-05`), server identity, and capability sets (`tools`).
+- **`tools/list`**: Returns an array of registered tools with full JSON Schema definitions for inputs.
+- **`tools/call`**: Receives tool name and argument dictionary, validates client authorization, executes database queries, and packages output into MCP content blocks (`{"type": "text", "text": "..."}`).
+
+### 2.3 Registered Enterprise MCP Tools
+
+| Tool Name | Scope | Role Required | Description |
+| :--- | :--- | :--- | :--- |
+| `erp_list_tables` | Metadata | Viewer | Lists all relational tables and current row counts |
+| `erp_describe_table` | Metadata | Viewer | Returns column definitions, types, and primary key constraints |
+| `get_pending_purchase_orders` | Procurement | Viewer | Retrieves purchase orders filtered by approval state |
+| `check_inventory_stock` | Warehouse | Viewer | Evaluates stock on hand against reorder thresholds |
+| `get_employee_details` | Personnel | Operator | Retrieves personnel profile by ID or department |
+| `list_latest_sales_orders` | Revenue | Viewer | Returns high-value commercial sales transactions |
+| `get_production_work_orders` | Manufacturing | Operator | Tracks assembly line schedules and completed units |
+| `execute_safe_sql` | Analytics | Operator | Executes read-only SELECT queries; blocks mutating keywords |
+| `approve_purchase_order` | Governance | Admin | Sensitive state modification requiring confirmation token |
+
+---
+
+## 3. Mathematical & Algorithmic Foundations
+
+### 3.1 JSON-RPC 2.0 Protocol Specification
+Communication between client and server adheres strictly to the JSON-RPC 2.0 specification:
+
+$$\text{Request} = \{\text{"jsonrpc"}: \text{"2.0"}, \text{"id"}: k, \text{"method"}: M, \text{"params"}: P\}$$
+
+$$\text{Success Response} = \{\text{"jsonrpc"}: \text{"2.0"}, \text{"id"}: k, \text{"result"}: R\}$$
+
+$$\text{Error Response} = \{\text{"jsonrpc"}: \text{"2.0"}, \text{"id"}: k, \text{"error"}: \{\text{"code"}: C, \text{"message"}: \text{Msg}\}\}$$
+
+Where standard error codes follow JSON-RPC standards:
+- `-32600`: Invalid Request
+- `-32601`: Method Not Found
+- `-32602`: Invalid Params
+- `-32603`: Internal Server Error
+
+### 3.2 Role-Based Access Control (RBAC) Lattice
+Access rights are evaluated using a strict partial-order hierarchy:
+
+$$\text{Roles} = \{\text{Viewer} \prec \text{Operator} \prec \text{Admin}\}$$
+
+Let $r_{\text{client}}$ be the authenticated role of the client and $r_{\text{tool}}$ be the minimum required role configured on the MCP tool. The server enforces the authorization invariant:
+
+$$\text{Authorize}(r_{\text{client}}, r_{\text{tool}}) \iff r_{\text{client}} \succeq r_{\text{tool}}$$
+
+If $r_{\text{client}} \prec r_{\text{tool}}$, execution halts immediately and returns an access-denied error payload without querying the database.
+
+### 3.3 Inventory Stock-Health Classification
+Inventory evaluation applies deterministic threshold classification:
+
+$$\text{Health}(\text{Stock}, \text{Reorder}) = \begin{cases} \text{RESTOCK REQUIRED}, & \text{if Stock} \le \text{Reorder} \\ \text{ADEQUATE}, & \text{otherwise} \end{cases}$$
+
+---
+
+## 4. Step-by-Step Implementation Breakdown
+
+### 4.1 MCP JSON-RPC Server Implementation
+The `MCPServer` handles wire payloads in-process:
+```python
+def handle_jsonrpc(self, request: Dict[str, Any], user_role: str = "Admin") -> Dict[str, Any]:
+    method = request.get("method", "")
+    params = request.get("params", {})
+    if method == "tools/list":
+        return {"jsonrpc": "2.0", "id": request.get("id"), "result": {"tools": self.list_tools()}}
+    elif method == "tools/call":
+        content, is_error = self.execute_tool(params["name"], params["arguments"], user_role)
+        return {"jsonrpc": "2.0", "id": request.get("id"), "result": {"content": [{"type": "text", "text": content}], "isError": is_error}}
+```
+
+### 4.2 Autonomous MCP Client Loop
+The client executes a four-stage loop:
+1. **Discovery**: Client queries `tools/list` to retrieve current tool capabilities and parameter schemas.
+2. **Planning**: Prompted with the tool catalogue, the local LLM identifies the target tool and generates schema-conforming arguments in JSON format.
+3. **Execution**: Client dispatches `tools/call` over the JSON-RPC interface to the MCP server.
+4. **Grounded Synthesis**: LLM ingests the returned structured text payload and formulates a concise, factual natural-language answer.
+
+### 4.3 Human-in-the-Loop (HITL) Approval Architecture
+For sensitive write operations (such as `approve_purchase_order`), the MCP server does not immediately execute the mutation. Instead:
+1. The server intercepts the call and verifies the presence of an administrative confirmation token (`ADMIN_CONFIRMED_2026`).
+2. If the token is absent, the server registers the request into a persistent `pending_approvals` queue and returns a status informing the client that human authorization is required.
+3. An authorized human supervisor reviews the request in the mission control UI and grants or denies execution.
+
+---
+
+## 5. Common Pitfalls & Troubleshooting
+
+| Problem | Root Cause | Solution |
+| :--- | :--- | :--- |
+| **Model hallucinates non-existent tools** | Client prompt omits strict tool constraints | Provide exact JSON Schema descriptions from `tools/list` and instruct the model to choose exclusively from that list |
+| **JSON Schema parameter mismatch** | LLM passes arguments with mismatched keys or incorrect types | Validate tool arguments against Pydantic models before executing SQL queries |
+| **Accidental database corruption** | Read-only tools executing unfiltered user SQL | Enforce token blacklisting and verify that query strings strictly start with `SELECT` |
+| **Streamlit duplicate chart/widget ID** | Multiple interactive buttons rendered inside loops | Append unique row or request IDs to widget keys: `key=f"btn_app_{app['id']}"` |
+
+---
+
+## 6. Important Limitations
+
+- In-process MCP execution is designed for single-node validation; distributed microservice architectures require hosting the MCP server over SSE (Server-Sent Events) or WebSockets with TLS encryption.
+- Role-Based Access Control operates on session tokens; enterprise production deployments must integrate with centralized IAM protocols (OAuth 2.0 / OIDC / SAML).
+- Relational query routing operates against a single SQLite database; federated multi-database environments require query routing across separate database drivers.
+
+---
+
+## 7. Key Concepts Learned
+
+- Architecture and specification of the Model Context Protocol (MCP v2024-11-05).
+- Implementing compliant JSON-RPC 2.0 servers and clients in Python.
+- Dynamic tool discovery (`tools/list`) and schema-driven execution (`tools/call`).
+- Role-Based Access Control (RBAC) and security boundary enforcement for AI tool execution.
+- Human-in-the-Loop (HITL) approval workflows for sensitive database write mutations.
+- Wire-level protocol auditing and real-time telemetry inspection in Streamlit.
