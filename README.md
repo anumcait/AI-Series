@@ -86,6 +86,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 59 | Build a Local AI-Powered ETL Pipeline Generation Assistant | Python, Streamlit, Ollama, Qwen3, SQLite3, Pandas, NumPy, Plotly, Pydantic, ETL Pipeline Synthesis, Apache Airflow DAGs, dbt Modeling, Data Lineage, Schema Mapping, In-Memory Dry Run |
 | Day 60 | Build a Local AI-Powered Automated Business Report Generator | Python, Streamlit, Ollama, Qwen3, Pandas, NumPy, Plotly, OpenPyXL, Jinja2, Business Intelligence, Executive Management Reporting, Period-over-Period Variance, Multi-Format HTML/Excel Export |
 | Day 61 | Build a Local AI-Powered MCP Server for Database & ERP Operations | Python, Streamlit, Ollama, Qwen3, SQLite3, Pandas, Plotly, Pydantic, Model Context Protocol (MCP), JSON-RPC 2.0, Tool Discovery, RBAC Security, Human-in-the-Loop Governance |
+| Day 62 | Build a Local AI-Powered Tool-Calling Enterprise Agent | Python, Streamlit, Ollama, Qwen3, SQLite3, Pandas, Plotly, Pydantic, Model Context Protocol (MCP), ReAct Agent Planning, Multi-Step Tool Chaining, Safety Stock Optimization, Human-in-the-Loop Governance |
 
 ---
 
@@ -276,3 +277,7 @@ Build an autonomous local AI-powered Executive Business Report Generator using P
 
 # 🚀 Day 61 — Local AI-Powered MCP Server for Database & ERP Operations 🔌🗄️🤖
 Build an enterprise-grade Model Context Protocol (MCP) server using Python, SQLite3, Ollama, Qwen3, Pydantic, and Streamlit that exposes standardized JSON-RPC 2.0 tools for multi-module ERP database operations (HR, Sales, Purchases, Inventory, Production), enables local AI assistants to autonomously discover tools, inspect relational schemas, retrieve live business records, enforce Role-Based Access Control (RBAC), and manage Human-in-the-Loop (HITL) approval gates for sensitive write operations with full protocol audit logging.
+
+
+# 🚀 Day 62 — Local AI-Powered Tool-Calling Enterprise Agent 🤖💼🛠️
+Build an autonomous local AI-powered Tool-Calling Enterprise Agent using Python, Streamlit, Ollama, Qwen3, SQLite3, Pandas, and Plotly that coordinates complex multi-step business requests over Model Context Protocol (MCP) tools, chains sequential inventory lookups, in-transit purchase order tracking, and supplier contractual constraints, validates intermediate observations, calculates optimal ERP replenishment buffers, and enforces Human-in-the-Loop (HITL) approval gates before drafting purchase order commitments.
