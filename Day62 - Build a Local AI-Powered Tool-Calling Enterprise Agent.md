@@ -728,12 +728,15 @@ with tab_database:
   3. *Human-in-the-Loop Sign-off*:
      - Admin verified Ticket `REQ-PO-3891` in the Streamlit Approval tab and clicked **Authorize**. Active purchase order `PO-2026-AUTO-921` was successfully committed to the database.
 
-## Important Limitations
+### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/eea595a8-1271-4c72-be79-46fae3ccc6fe" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/378015f5-0c9e-43c3-81c7-a15f57bfe656" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/ba4f0179-924f-4bb5-9690-250d1d35f62f" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/fbc8be0b-74d7-4583-8393-3bad8923a25a" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/ce3e83d3-79ee-43f0-a473-5fc72f8e9cc5" />
 
-- Tool chaining is currently linear sequential; complex branched graph execution (e.g. evaluating 3 alternative suppliers simultaneously) requires DAG orchestration frameworks like LangGraph.
-- The calculation engine uses static deterministic safety stock models; highly dynamic supply chains with stochastic demand require Poisson or Monte Carlo replenishment simulations.
-- SENSITIVE operations are held in an in-database approval queue; enterprise multi-stage sign-offs require integration with enterprise notification webhooks (Slack/Teams/Email).
 
-## Outcome
 
-Successfully designed, built, and verified an autonomous Local AI-Powered Tool-Calling Enterprise Agent that moves beyond passive text chatbots into active multi-step business task execution, dynamically chaining MCP tools, retaining context across execution traces, validating intermediate metrics, and enforcing Human-in-the-Loop governance.
+
+
+
