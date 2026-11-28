@@ -87,6 +87,7 @@ Each project focuses on solving a practical problem while understanding the conc
 | Day 60 | Build a Local AI-Powered Automated Business Report Generator | Python, Streamlit, Ollama, Qwen3, Pandas, NumPy, Plotly, OpenPyXL, Jinja2, Business Intelligence, Executive Management Reporting, Period-over-Period Variance, Multi-Format HTML/Excel Export |
 | Day 61 | Build a Local AI-Powered MCP Server for Database & ERP Operations | Python, Streamlit, Ollama, Qwen3, SQLite3, Pandas, Plotly, Pydantic, Model Context Protocol (MCP), JSON-RPC 2.0, Tool Discovery, RBAC Security, Human-in-the-Loop Governance |
 | Day 62 | Build a Local AI-Powered Tool-Calling Enterprise Agent | Python, Streamlit, Ollama, Qwen3, SQLite3, Pandas, Plotly, Pydantic, Model Context Protocol (MCP), ReAct Agent Planning, Multi-Step Tool Chaining, Safety Stock Optimization, Human-in-the-Loop Governance |
+| Day 63 | Build a Local AI-Powered Multi-Agent Procurement Automation System | Python, Streamlit, Ollama, Qwen3, SQLite3, Pandas, NumPy, Plotly, Pydantic, Multi-Agent Orchestration, State Blackboard, Inventory Auditing, Lot Sizing, Multi-Criteria Supplier Benchmarking (MCDA), Cost Optimization, Human-in-the-Loop Governance |
 
 ---
 
@@ -281,3 +282,7 @@ Build an enterprise-grade Model Context Protocol (MCP) server using Python, SQLi
 
 # 🚀 Day 62 — Local AI-Powered Tool-Calling Enterprise Agent 🤖💼🛠️
 Build an autonomous local AI-powered Tool-Calling Enterprise Agent using Python, Streamlit, Ollama, Qwen3, SQLite3, Pandas, and Plotly that coordinates complex multi-step business requests over Model Context Protocol (MCP) tools, chains sequential inventory lookups, in-transit purchase order tracking, and supplier contractual constraints, validates intermediate observations, calculates optimal ERP replenishment buffers, and enforces Human-in-the-Loop (HITL) approval gates before drafting purchase order commitments.
+
+
+# 🚀 Day 63 — Local AI-Powered Multi-Agent Procurement Automation System 🤖🏢📦
+Build an autonomous local AI-powered Multi-Agent Procurement Automation System using Python, Streamlit, Ollama, Qwen3, SQLite3, Pandas, NumPy, Plotly, and Pydantic that distributes end-to-end industrial purchasing workflows across five specialized autonomous AI agents (Inventory, Procurement, Supplier Evaluation, Cost Analysis, and Coordinator) collaborating over a shared state blackboard to audit stock, size order batches, benchmark vendors with Multi-Criteria Decision Analysis (MCDA), evaluate budget headroom, and enforce Human-in-the-Loop (HITL) approval gates.
