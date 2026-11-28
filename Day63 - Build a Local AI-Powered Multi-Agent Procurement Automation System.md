@@ -1106,6 +1106,17 @@ with tab_db:
 - Multi-Criteria Decision Analysis (MCDA) uses fixed default stakeholder weights (35% quality, 25% delivery, 25% price, 15% lead time); dynamic enterprise operations require configurable role-based weight tuning.
 - Budget verification operates at the monthly departmental level; advanced ERP implementations require general ledger (GL) account code and cost center validation.
 
-## Outcome
+### Screenshots
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/b93a0074-d668-4a5f-b1cf-89987fd10522" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/26c4b6bf-c8de-4b31-963c-ea80119c61db" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/d722ea9a-fd54-455a-b1ba-b80d8687d885" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/40f73ab1-2989-4455-b033-c72984ff53c6" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/05391bf3-cef3-4831-bf74-d2f9acda038b" />
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/c6f704aa-9686-45ca-b274-70852e091b66" />
 
-Successfully designed, implemented, and verified an autonomous Local AI-Powered Multi-Agent Procurement Automation System that distributes complex industrial supply chain workflows across five collaborative specialized agents, balances multi-criteria supplier trade-offs, eliminates rogue spending, and enforces strict Human-in-the-Loop governance.
+
+
+
+
+
+
